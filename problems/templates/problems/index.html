@@ -1,0 +1,9 @@
+{% if problemset %}
+    <ul>
+    {% for problem in problemset %}
+        <li>{{ problem.content }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No problems are available.</p>
+{% endif %}

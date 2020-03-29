@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 class Problem(models.Model):
     content = models.TextField()
 
@@ -12,12 +10,12 @@ class SolutionTag(models.Model):
     name = models.CharField(max_length=100)
     problems = models.ManyToManyField(Problem)
 
-    def __str__(self)
+    def __str__(self):
         return self.name
 
 class SourceTag(models.Model):
     name = models.CharField(max_length=100)
     problems = models.ManyToManyField(Problem)
 
-    def __str__(self)
+    def __str__(self):
         return self.name
