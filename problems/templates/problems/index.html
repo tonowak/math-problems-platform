@@ -1,3 +1,5 @@
+<h1> Problemset </h1>
+
 {% if problemset %}
     <ul>
     {% for problem in problemset %}
@@ -7,3 +9,5 @@
 {% else %}
     <p>No problems are available.</p>
 {% endif %}
+
+<a href="{% url 'problems:add' %}">Add some problems</a>

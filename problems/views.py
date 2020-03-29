@@ -1,5 +1,7 @@
-from django.shortcuts import render
+from django.http import HttpResponseRedirect
 from django.views import generic
+from django.urls import reverse
+from django.shortcuts import render
 
 from .models import Problem
 
@@ -13,4 +15,9 @@ class IndexView(generic.ListView):
 class AddView(generic.View):
     def get(self, request):
         return render(request, 'problems/add.html')
+
+    def post(self, request):
+        problem = Problem(content=request.POST['statement'])
+        problem.save()
+        return HttpResponseRedirect(reverse('problems:add'))
 

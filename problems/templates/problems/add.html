@@ -1,10 +1,10 @@
 <h1>Add problem</h1>
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-
 <form action="{% url 'problems:add' %}" method = "post">
 {% csrf_token %}
-	<input type="text" id="statement" name="Put statement here"><br>
+	<input type="text" id="statement" name="statement"><br>
 	<input type="submit" value="Add problem">
 </form>
+
+<a href="{% url 'problems:index' %}">Back to problemset</a>
 
