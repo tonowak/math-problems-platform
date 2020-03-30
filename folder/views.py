@@ -79,6 +79,8 @@ class AddView(generic.View):
         folder = context['folder']
         pretty_name = request.POST['pretty_name']
         folder_name = convert_pretty_to_folder_name(pretty_name)
+        if folder_name == '' or folder_name == '-':
+            return redirect('add', folder_path)
         context['pretty_name'] = pretty_name
         context['folder_name'] = folder_name
 
