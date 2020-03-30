@@ -3,17 +3,17 @@
 {% block content %}
 <h1>Dodaj zadanko</h1>
 
-	<form action="{% url 'problems:add' %}" method="post">
-	{% csrf_token %}
-		<textarea name="statement" cols="30" rows="10"></textarea><br><br>
-		<input type="submit" value="Dodaj zadanko">
-	</form>
+<form action="{% url 'problems:add' %}" method="post">
+{% csrf_token %}
+	<textarea name="statement" cols="30" rows="10"></textarea><br><br>
+	<input type="submit" value="Dodaj zadanko">
+</form>
 
-	{% if messages %}
-		{% for message in messages %}
-			{{ message }}<br>
-		{% endfor %}
-	{% endif %}
+{% if messages %}
+	{% for message in messages %}
+		{{ message }}<br>
+	{% endfor %}
+{% endif %}
 
-	<a href="{% url 'problems:index' %}">Powrót do zbioru zadań</a>
+<a href="{% url 'problems:index' %}">Powrót do zbioru zadań</a>
 {% endblock %}

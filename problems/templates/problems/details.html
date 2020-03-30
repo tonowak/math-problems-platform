@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<h1>Zadanie {{ problem.id }}</h1>
+<h1>Zadanie {{ problem.id }}</h1>
 
-	{{ problem.content }}
+{{ problem.content }}
 
-	<br><a href="{% url 'problems:edit' problem.id %}">Edytuj treść</a>
+<br><a href="{% url 'problems:edit' problem.id %}">Edytuj treść</a>
 
-	<br><a href="{% url 'problems:index' %}">Powrót do zbioru zadań</a>
+<br><a href="{% url 'problems:index' %}">Powrót do zbioru zadań</a>
 {% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1> Tagi </h1>
+
+<p>Tagi rozwiązania:</p>
+
+{% if solution_tags %}
+	<ul>
+	{% for tag in solution_tags %}
+	<li>{{ tag.name }}</li>
+	{% endfor %}
+	</ul>
+{% else %}
+	<p>Nie ma jeszcze tagów rozwiązania</p>
+{% endif %}
+
+<a href="{% url 'problems:add_solution_tag' %}">Dodaj tag rozwiązania</a>
+
+<p>Tagi źródła:</p>
+
+{% if source_tags %}
+	<ul>
+	{% for tag in source_tags %}
+	<li>{{ tag.name }}</li>
+	{% endfor %}
+	</ul>
+{% else %}
+	<p>Nie ma jeszcze tagów źródła</p>
+{% endif %}
+
+<a href="{% url 'problems:add_source_tag' %}">Dodaj tag źródła</a>
+
+{% endblock %}

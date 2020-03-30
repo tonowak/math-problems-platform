@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Dodaj tag {% block tag_type %}{% endblock %}</h1>
+
+<form action="{% block action_url %}{% endblock %}" method="post">
+{% csrf_token %}
+	<textarea name="name" cols="30" rows="10"></textarea><br><br>
+	<input type="submit" value="Dodaj tag">
+</form>
+
+{% if messages %}
+	{% for message in messages %}
+		{{ message }}<br>
+	{% endfor %}
+{% endif %}
+
+<a href="{% url 'problems:tags' %}">Powrót do listy tagów</a>
+
+{% endblock %}
