@@ -4,7 +4,7 @@ from django.db import migrations
 
 def create_root_folder(apps, schema_editor):
     Folder = apps.get_model('folder', 'Folder')
-    Folder.objects.create(name='/')
+    Folder.objects.create(folder_name='all', pretty_name='/')
 
 class Migration(migrations.Migration):
 
@@ -15,3 +15,4 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunPython(create_root_folder),
     ]
+

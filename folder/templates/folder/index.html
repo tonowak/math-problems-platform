@@ -1,1 +1,19 @@
-Hello world!
+<p>Aktualna ścieżka: {{ folder_path }}</p>
+<p>Synowie:</p>
+{% if sons %}
+<ul>
+	{% for son in sons %}
+	{% with son_path_prefix|add:son.folder_name as son_path %}
+	<li><a href="{% url 'folder:index' son_path %}">{{ son.pretty_name }}</a></li>
+	{% endwith %}
+	{% endfor %}
+</ul>
+{% else %}
+<p>Brak synów</p>
+{% endif %}
+
+<a href="{% url 'folder:add' folder_path %}">Dodaj synów</a>
+<br>
+{% if parent_path %}
+<a href="{% url 'folder:index' parent_path %}">Cofnij</a>
+{% endif %}
