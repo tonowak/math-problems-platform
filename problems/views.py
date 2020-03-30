@@ -1,7 +1,8 @@
 from django.http import HttpResponseRedirect
 from django.views import generic
 from django.urls import reverse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
 
 from .models import Problem
 
@@ -19,5 +20,11 @@ class AddView(generic.View):
     def post(self, request):
         problem = Problem(content=request.POST['statement'])
         problem.save()
+        messages.success(request, "Dodano zadanie!")
         return HttpResponseRedirect(reverse('problems:add'))
+
+class DetailsView(generic.View):
+    def get(self, request, pk):
+        problem = get_object_or_404(Problem, pk=pk)
+        return render(request, 'problems/details.html', {'problem': problem})
 

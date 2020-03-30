@@ -1,13 +1,35 @@
-<h1> Problemset </h1>
+<head>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+  text-align: left;    
+}
+</style>
+</head>
+
+<h1> Zbiór zadań </h1>
 
 {% if problemset %}
-    <ul>
+	<center><table>
+	<tr> 
+		<th>id</th>
+		<th>treść</th>
+		<th>akcje</th>
+	</tr>
     {% for problem in problemset %}
-        <li>{{ problem.content }}</li>
+	<tr>
+		<td>{{ problem.id }}</td>
+		<td>{{ problem.content }}</td>
+		<td><a href="{% url 'problems:details' problem.id %}">edytuj</a></td>
+	</tr>
     {% endfor %}
-    </ul>
+	</table></center>
 {% else %}
-    <p>No problems are available.</p>
+	<p>Nie ma dostępnych zadań</p>
 {% endif %}
 
-<a href="{% url 'problems:add' %}">Add some problems</a>
+<br><a href="{% url 'problems:add' %}">Dodaj zadanka</a>

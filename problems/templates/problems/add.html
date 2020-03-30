@@ -1,10 +1,18 @@
-<h1>Add problem</h1>
+<h1>Dodaj zadanko</h1>
 
-<form action="{% url 'problems:add' %}" method = "post">
-{% csrf_token %}
-	<input type="text" id="statement" name="statement"><br>
-	<input type="submit" value="Add problem">
-</form>
+<center>
+	<form action="{% url 'problems:add' %}" method="post">
+	{% csrf_token %}
+		<textarea name="statement" cols="30" rows="10"></textarea><br><br>
+		<input type="submit" value="Dodaj zadanko">
+	</form>
 
-<a href="{% url 'problems:index' %}">Back to problemset</a>
+	{% if messages %}
+		{% for message in messages %}
+			{{ message }}<br>
+		{% endfor %}
+	{% endif %}
+</center>
+
+<a href="{% url 'problems:index' %}">Powrót do zbioru zadań</a>
 
