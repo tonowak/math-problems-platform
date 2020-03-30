@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Edycja zadania {{ problem.id }}</h1>
+
+	<br><a href="{% url 'problems:details' problem.id %}">Powrót do zadania</a>
+{% endblock %}

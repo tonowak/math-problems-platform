@@ -1,7 +1,11 @@
-<h1>Edycja zadania</h1>
-<ul>
-	<li>id: {{ problem.id }}</li>
-	<li>treść: {{ problem.content }}</li>
-</ul>
+{% extends "base.html" %}
 
-<br><a href="{% url 'problems:index' %}">Powrót do zbioru zadań</a>
+{% block content %}
+	<h1>Zadanie {{ problem.id }}</h1>
+
+	{{ problem.content }}
+
+	<br><a href="{% url 'problems:edit' problem.id %}">Edytuj treść</a>
+
+	<br><a href="{% url 'problems:index' %}">Powrót do zbioru zadań</a>
+{% endblock %}
