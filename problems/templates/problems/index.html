@@ -1,26 +1,23 @@
 {% extends "base.html" %}
-
 {% block content %}
-<h1> Zbiór zadań </h1>
 
-{% if problemset %}
-	<table>
-	<tr> 
-		<th>id</th>
-		<th>treść</th>
-		<th>akcje</th>
-	</tr>
-	{% for problem in problemset %}
-	<tr>
-		<td>{{ problem.id }}</td>
-		<td>{{ problem.content }}</td>
-		<td><a href="{% url 'problems:details' problem.id %}">pokaż</a></td>
-	</tr>
-	{% endfor %}
-	</table>
-{% else %}
+<!-- <div class="mdl-cell mdl-color-white mdl-shadow-4dp"> -->
+<div class="math-cell">
+	<h1> Zbiór zadań </h1>
+
+	<br><a href="{% url 'problems:add' %}">Dodaj zadanka</a>
+
+	{% if not problemset %}
 	<p>Nie ma dostępnych zadań</p>
-{% endif %}
+	{% endif %}
+</div>
 
-<br><a href="{% url 'problems:add' %}">Dodaj zadanka</a>
+{% for problem in problemset %}
+<div class="math-cell">
+	<p>{{ problem.id }}</p>
+	<p>{{ problem.content }}</p>
+	<a href="{% url 'problems:details' problem.id %}">pokaż</a>
+</div>
+{% endfor %}
+
 {% endblock %}
