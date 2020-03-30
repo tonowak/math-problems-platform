@@ -14,9 +14,10 @@
 
 {% for problem in problemset %}
 <div class="math-cell">
-	<p>{{ problem.id }}</p>
+	<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--mini-fab"
+			onclick="location.href='{% url 'problems:details' problem.id %}'" type="button">
+		{{ problem.id }}</button>	
 	<p>{{ problem.content }}</p>
-	<a href="{% url 'problems:details' problem.id %}">pokaż</a>
 </div>
 {% endfor %}
 

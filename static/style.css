@@ -3,9 +3,19 @@
 
 .math-cell {
 	box-sizing: border-box;
-	border-radius: 2px;
+	border-radius: 5px;
 	background-color: #fff !important;
 	box-shadow:0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12),0 2px 4px -1px rgba(0,0,0,.2);
-	padding: 2em;
-	margin-bottom: 2em;
+	margin-bottom: 1em;
+	min-height: 3.4em;
+}
+
+.math-cell button {
+	font-size: 1em;
+	float: left;
+	margin: 0.2em;
+	margin-right: 1.5em;
+}
+.math-cell p {
+	padding: 0.8em;
 }
