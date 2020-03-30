@@ -1,6 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
 <h1>Dodaj zadanko</h1>
 
-<center>
 	<form action="{% url 'problems:add' %}" method="post">
 	{% csrf_token %}
 		<textarea name="statement" cols="30" rows="10"></textarea><br><br>
@@ -12,7 +14,6 @@
 			{{ message }}<br>
 		{% endfor %}
 	{% endif %}
-</center>
 
-<a href="{% url 'problems:index' %}">Powrót do zbioru zadań</a>
-
+	<a href="{% url 'problems:index' %}">Powrót do zbioru zadań</a>
+{% endblock %}

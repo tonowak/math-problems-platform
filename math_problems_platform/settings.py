@@ -56,7 +56,9 @@ ROOT_URLCONF = 'math_problems_platform.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            'math_problems_platform/templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

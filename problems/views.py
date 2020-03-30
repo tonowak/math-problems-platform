@@ -28,3 +28,7 @@ class DetailsView(generic.View):
         problem = get_object_or_404(Problem, pk=pk)
         return render(request, 'problems/details.html', {'problem': problem})
 
+class EditView(generic.View):
+    def get(self, request, pk):
+        problem = get_object_or_404(Problem, pk=pk)
+        return render(request, 'problems/edit.html', {'problem': problem})

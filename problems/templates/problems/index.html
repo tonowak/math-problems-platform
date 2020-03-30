@@ -1,35 +1,26 @@
-<head>
-<style>
-table, th, td {
-  border: 1px solid black;
-  border-collapse: collapse;
-}
-th, td {
-  padding: 5px;
-  text-align: left;    
-}
-</style>
-</head>
+{% extends "base.html" %}
 
-<h1> Zbiór zadań </h1>
+{% block content %}
+	<h1> Zbiór zadań </h1>
 
-{% if problemset %}
-	<center><table>
-	<tr> 
-		<th>id</th>
-		<th>treść</th>
-		<th>akcje</th>
-	</tr>
-    {% for problem in problemset %}
-	<tr>
-		<td>{{ problem.id }}</td>
-		<td>{{ problem.content }}</td>
-		<td><a href="{% url 'problems:details' problem.id %}">edytuj</a></td>
-	</tr>
-    {% endfor %}
-	</table></center>
-{% else %}
-	<p>Nie ma dostępnych zadań</p>
-{% endif %}
+	{% if problemset %}
+		<table>
+		<tr> 
+			<th>id</th>
+			<th>treść</th>
+			<th>akcje</th>
+		</tr>
+		{% for problem in problemset %}
+		<tr>
+			<td>{{ problem.id }}</td>
+			<td>{{ problem.content }}</td>
+			<td><a href="{% url 'problems:details' problem.id %}">pokaż</a></td>
+		</tr>
+		{% endfor %}
+		</table>
+	{% else %}
+		<p>Nie ma dostępnych zadań</p>
+	{% endif %}
 
-<br><a href="{% url 'problems:add' %}">Dodaj zadanka</a>
+	<br><a href="{% url 'problems:add' %}">Dodaj zadanka</a>
+{% endblock %}
