@@ -7,10 +7,43 @@
 	<p>{{ problem.content }}</p>
 </div>
 
-<a href="{% url 'problems:edit' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised">Edytuj</a>
+<a href="{% url 'problems:edit' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Edytuj</a>
+
+&nbsp;
+
+<button id="show-delete" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Usuń</button>
 
 &nbsp;
 
 <a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do zbioru zadań</a>
+
+<form action="{% url 'problems:delete' problem.id %}" method="post" id="delete_form">
+{% csrf_token %}
+</form>
+
+<dialog class="mdl-dialog" width=100>
+	<h5 class = "mdl-doalog__title">Czy chcesz usunąć zadanie?</h5>
+	<div class="mdl-dialog__content">
+	</div>
+	<div class="mdl-dialog__actions">
+		<button form="delete_form" type="submit" class="mdl-button">Usuń</button>
+		<button type="button" class="mdl-button close">Anuluj</button>
+	</div>
+</dialog>
+
+<script>
+	var dialog = document.querySelector('dialog');
+	dialogPolyfill.registerDialog(dialog)
+	var showDialogButton = document.querySelector('#show-delete');
+	if(!dialog.showModal) {
+		dialogPolyfill.registerDialog(dialog);
+	}
+	showDialogButton.addEventListener('click', function() {
+		dialog.showModal();
+	});
+	dialog.querySelector('.close').addEventListener('click', function() {
+		dialog.close();
+	});
+</script>
 
 {% endblock %}

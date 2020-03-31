@@ -44,3 +44,10 @@ class EditView(generic.View):
         problem.save()
         messages.success(request, "Zapisano zmiany!")
         return HttpResponseRedirect(reverse('problems:edit', args=[pk]))
+
+class DeleteView(generic.View):
+    def post(self, request, pk):
+        problem = get_object_or_404(Problem, pk=pk)
+        problem.delete();
+        messages.success(request, "Zadanie usunięte!")
+        return HttpResponseRedirect(reverse('problems:index'))
