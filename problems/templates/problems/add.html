@@ -18,10 +18,4 @@
 &nbsp;
 <a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do zbioru zadań</a>
 
-{% if messages %}
-	{% for message in messages %}
-	<br>{{ message }}
-	{% endfor %}
-{% endif %}
-
 {% endblock %}
