@@ -19,22 +19,4 @@
 
 <a href="{% url 'problems:details' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do zadania</a>
 
-<div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
-  <div class="mdl-snackbar__text"></div>
-  <button class="mdl-snackbar__action" type="button"></button>
-</div>
-
-
-{% if messages %}
-	{% for message in messages %}
-		<script>
-		r(function(){
-			var notification = document.querySelector('.mdl-js-snackbar');
-			notification.MaterialSnackbar.showSnackbar({message: '{{ message }}'})
-		});
-		function r(f){/in/.test(document.readyState)?setTimeout('r('+f+')',9):f()}
-		</script>
-	{% endfor %}
-{% endif %}
-
 {% endblock %}
