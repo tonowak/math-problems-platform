@@ -4,7 +4,8 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 
-from .models import Problem, SolutionTag, SourceTag
+from .models import Problem
+from tags.models import Tag
 
 class IndexView(generic.ListView):
     template_name = 'problems/index.html'
@@ -31,43 +32,15 @@ class DetailsView(generic.View):
 class EditView(generic.View):
     def get(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
-        return render(request, 'problems/edit.html', {'problem': problem})
+        return render(request, 'problems/edit.html', {
+            'problem': problem,
+            'problems_tags': problem.tag_set.all(),
+            'tag_set': Tag.objects.all()
+        })
 
-class EditStatementView(generic.View):
     def post(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
         problem.content=request.POST['statement']
         problem.save()
-        messages.success(request, "Zapisano treść!")
+        messages.success(request, "Zapisano zmiany!")
         return HttpResponseRedirect(reverse('problems:edit', args=[pk]))
-
-
-class TagsView(generic.View):
-    def get(self, request):
-       solution_tags = SolutionTag.objects.all()
-       source_tags = SourceTag.objects.all()
-       return render(request, 'problems/tags.html', {
-           'solution_tags': solution_tags,
-           'source_tags': source_tags,
-        })
-
-class AddSolutionTagView(generic.View):
-    def get(self, request):
-        return render(request, 'problems/add_solution_tag.html')
-
-    def post(self, request):
-        solution_tag = SolutionTag(name=request.POST['name'])
-        solution_tag.save()
-        messages.success(request, "Dodano tag!")
-        return HttpResponseRedirect(reverse('problems:add_solution_tag'))
-
-class AddSourceTagView(generic.View):
-    def get(self, request):
-        return render(request, 'problems/add_source_tag.html')
-
-    def post(self, request):
-        source_tag = SourceTag(name=request.POST['name'])
-        source_tag.save()
-        messages.success(request, "Dodano tag!")
-        return HttpResponseRedirect(reverse('problems:add_source_tag'))
-

@@ -1,0 +1,21 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Dodaj tag</h2>
+
+<form action="{% url 'tags:add' %}" method="post" id="tag_form">
+{% csrf_token %}
+	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		<input class="mdl-textfield__input" type="text" name="name" id="name">
+		<label class="mdl-textfield__label" for="name">Nazwa tagu</label>
+	</div>
+</form>
+
+<button type=submit" form="tag_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+	Dodaj tag
+</button>
+&nbsp;
+<a href="{% url 'tags:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do listy tagów</a>
+
+{% endblock %}
