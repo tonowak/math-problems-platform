@@ -5,7 +5,7 @@
 <div class="math-cell">
 	<h1> Zbiór zadań </h1>
 
-	<br><a href="{% url 'problems:add' %}">Dodaj zadanka</a>
+	<a href="{% url 'problems:add' %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Dodaj zadanka</a>
 
 	{% if not problemset %}
 	<p>Nie ma dostępnych zadań</p>

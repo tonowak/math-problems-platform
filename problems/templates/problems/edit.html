@@ -1,7 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Edycja zadania {{ problem.id }}</h1>
+<h2>Edycja zadania {{ problem.id }}</h2>
 
-<br><a href="{% url 'problems:details' problem.id %}">Powrót do zadania</a>
+<form action="{% url 'problems:edit' problem.id %}" method="post" id="problem_form">
+{% csrf_token %}
+	<div class="mdl-textfield mdl-js-textfield">
+		<textarea class="mdl-textfield__input" type="text" rows= "5" name="statement" id="text_statement"></textarea>
+		<label class="mdl-textfield__label" for="text_statement">Treść zadania</label>
+	</div>
+</form>
+
+<button type=submit" form="problem_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+	Edytuj treść
+</button>
+
+&nbsp;
+
+<a href="{% url 'problems:details' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do zadania</a>
+
+{% if messages %}
+	{% for message in messages %}
+	<br>{{ message }}
+	{% endfor %}
+{% endif %}
+
 {% endblock %}
