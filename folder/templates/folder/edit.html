@@ -2,10 +2,6 @@
 {% block content %}
 
 <div class="math-cell-button">
-	<button class="right-action-button mdl-button mdl-js-button mdl-button--icon" onclick="location.href='{% url 'folder:edit' folder_path %}'" type="button">
-		<i class="material-icons"><small>edit</small></i>
-	</button>
-
 	<div class="center-vert">
 		<a class="center-vert" href="{% url 'folder:index' 'all' %}"><i class="material-icons center-vert">first_page</i></a>
 		{% for p in parent_paths %}
@@ -25,6 +21,16 @@
 {% endwith %}
 {% endfor %}
 
+<div class="math-cell">
+	<form action="{% url 'folder:add_folder' folder_path %}" method="post">
+	{% csrf_token %}
+		<div class="mdl-textfield mdl-js-textfield">
+			<input class="mdl-textfield__input" type="text" name="pretty_name" id="txt">
+			<label class="mdl-textfield__label" for="txt">Nazwa nowego podfolderu</label>
+		</div>
+	</form>
+</div>
+
 {% for problem in problems %}
 <div class="math-cell">
 	<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--mini-fab"
@@ -34,5 +40,16 @@
 </div>
 {% endfor %}
 
+<div class="math-cell">
+	<form action="{% url 'folder:add_problem' folder_path %}" method="post">
+	{% csrf_token %}
+		<div class="mdl-textfield mdl-js-textfield">
+			<input class="mdl-textfield__input" type="text" name="p_id" id="txt">
+			<label class="mdl-textfield__label" for="txt">Dodanie zadania (ID)</label>
+		</div>
+	</form>
+</div>
+
 {% endblock %}
+
 

@@ -11,12 +11,27 @@
 	/*min-height: 3.4em;*/
 }
 
-.math-cell-button {
+.right-action-button {
+	float: right;
+	/*text-align: right;*/
+}
+
+.center-vert {
 	display: flex;
+	align-self: center;
+}
+
+.math-cell-button i, p, a {
+	text-decoration: none;
+	align-self: center;
+	margin: 0.1em;
 	text-align: left;
 }
-.math-cell-button i {
-	align-self: center;
+.math-cell-button a {
+	color: rgb(139,195,74)
+}
+.math-cell-button p {
+	color: #000
 }
 
 .math-cell button {
@@ -27,4 +42,7 @@
 }
 .math-cell p {
 	padding: 0.8em;
+}
+.math-cell input, label {
+	margin-left: 1em;
 }
