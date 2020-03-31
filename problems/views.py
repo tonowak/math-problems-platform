@@ -33,6 +33,15 @@ class EditView(generic.View):
         problem = get_object_or_404(Problem, pk=pk)
         return render(request, 'problems/edit.html', {'problem': problem})
 
+class EditStatementView(generic.View):
+    def post(self, request, pk):
+        problem = get_object_or_404(Problem, pk=pk)
+        problem.content=request.POST['statement']
+        problem.save()
+        messages.success(request, "Zapisano treść!")
+        return HttpResponseRedirect(reverse('problems:edit', args=[pk]))
+
+
 class TagsView(generic.View):
     def get(self, request):
        solution_tags = SolutionTag.objects.all()

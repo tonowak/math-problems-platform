@@ -3,25 +3,37 @@
 {% block content %}
 <h2>Edycja zadania {{ problem.id }}</h2>
 
-<form action="{% url 'problems:edit' problem.id %}" method="post" id="problem_form">
+<form action="{% url 'problems:edit_statement' problem.id %}" method="post" id="problem_form">
 {% csrf_token %}
 	<div class="mdl-textfield mdl-js-textfield">
-		<textarea class="mdl-textfield__input" type="text" rows= "5" name="statement" id="text_statement"></textarea>
+		<textarea class="mdl-textfield__input" type="text" rows= "5" name="statement" id="text_statement">{{ problem.content }}</textarea>
 		<label class="mdl-textfield__label" for="text_statement">Treść zadania</label>
 	</div>
 </form>
 
 <button type=submit" form="problem_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-	Edytuj treść
+	Zapisz treść
 </button>
 
 &nbsp;
 
 <a href="{% url 'problems:details' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do zadania</a>
 
+<div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+  <div class="mdl-snackbar__text"></div>
+  <button class="mdl-snackbar__action" type="button"></button>
+</div>
+
+
 {% if messages %}
 	{% for message in messages %}
-	<br>{{ message }}
+		<script>
+		r(function(){
+			var notification = document.querySelector('.mdl-js-snackbar');
+			notification.MaterialSnackbar.showSnackbar({message: '{{ message }}'})
+		});
+		function r(f){/in/.test(document.readyState)?setTimeout('r('+f+')',9):f()}
+		</script>
 	{% endfor %}
 {% endif %}
 
