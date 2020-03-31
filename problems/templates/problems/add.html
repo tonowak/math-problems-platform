@@ -1,19 +1,27 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Dodaj zadanko</h1>
+<h2>Dodaj zadanko</h2>
 
-<form action="{% url 'problems:add' %}" method="post">
+<form action="{% url 'problems:add' %}" method="post" id="problem_form">
 {% csrf_token %}
-	<textarea name="statement" cols="30" rows="10"></textarea><br><br>
-	<input type="submit" value="Dodaj zadanko">
+	<div class="mdl-textfield mdl-js-textfield">
+		<textarea class="mdl-textfield__input" type="text" rows= "5" name="statement" id="text_statement"></textarea>
+		<label class="mdl-textfield__label" for="text_statement">Treść zadania</label>
+	</div>
 </form>
+
+<button type=submit" form="problem_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+	Dodaj Zadanie
+</button>
+
+&nbsp;
+<a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do zbioru zadań</a>
 
 {% if messages %}
 	{% for message in messages %}
-		{{ message }}<br>
+	<br>{{ message }}
 	{% endfor %}
 {% endif %}
 
-<a href="{% url 'problems:index' %}">Powrót do zbioru zadań</a>
 {% endblock %}
