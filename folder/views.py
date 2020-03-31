@@ -45,6 +45,18 @@ def get_folder(folder_path):
         folder = folder[0]
     return folder
 
+def get_parent_paths(path):
+    ret_list = []
+    path = path.split('/')
+    prefix = ''
+    for s in path:
+        if prefix != '':
+            prefix += '/'
+        prefix += s
+        f = get_folder(prefix)
+        ret_list.append((prefix, f.pretty_name))
+    return ret_list
+
 def get_context(path):
     path = fix_path(path)
     folder = get_folder(path)
@@ -59,7 +71,8 @@ def get_context(path):
         'folder': folder,
         'sons': Folder.objects.filter(parent=folder),
         'son_path_prefix': path + '/' if path != 'all' else '',
-        'parent_path': parent_path
+        # 'parent_path': parent_path,
+        'parent_paths': get_parent_paths(path),
     }
 
 class IndexView(generic.View):

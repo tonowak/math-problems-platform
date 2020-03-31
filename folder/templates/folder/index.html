@@ -1,19 +1,26 @@
-<p>Aktualna ścieżka: {{ folder_path }}</p>
-<p>Synowie:</p>
-{% if sons %}
-<ul>
-	{% for son in sons %}
-	{% with son_path_prefix|add:son.folder_name as son_path %}
-	<li><a href="{% url 'folder:index' son_path %}">{{ son.pretty_name }}</a></li>
-	{% endwith %}
+{% extends "base.html" %}
+{% block content %}
+
+<div class="math-cell">
+	<p>Aktualna ścieżka: {{ folder_path }}</p>
+	{% for p in parent_paths %}
+	<p>{{ p }}</p>
 	{% endfor %}
-</ul>
-{% else %}
-<p>Brak synów</p>
-{% endif %}
+</div>
+
+{% for son in sons %}
+{% with son_path_prefix|add:son.folder_name as son_path %}
+<div class="math-cell-button mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='{% url 'folder:index' son_path %}';" type="button">
+	<i class="material-icons">arrow_forward_ios</i>
+	{{ son.pretty_name }}
+</div>
+{% endwith %}
+{% endfor %}
 
 <a href="{% url 'folder:add' folder_path %}">Dodaj synów</a>
 <br>
 {% if parent_path %}
 <a href="{% url 'folder:index' parent_path %}">Cofnij</a>
 {% endif %}
+
+{% endblock %}
