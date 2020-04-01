@@ -1,9 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="math-cell-button">
+<div class="cloud">
+	<button class="mdl-button mdl-js-button mdl-button--icon right-action-button mdl-button--colored" onclick="location.href='{% url 'folder:index' folder_path %}'" type="button">
+		<i class="material-icons right-action-button">edit</i>
+	</button>
+
 	<div class="center-vert">
-		<a class="center-vert" href="{% url 'folder:index' 'all' %}"><i class="material-icons center-vert">first_page</i></a>
+		<a class="center-vert" href="{% url 'folder:index' 'all' %}">
+			<i class="material-icons center-vert">first_page</i>
+		</a>
 		{% for p in parent_paths %}
 		{% if p.0 != 'all' %}
 		<p>/</p> <a href="{% url 'folder:index' p.0 %}">{{ p.1 }}</a>
@@ -12,19 +18,35 @@
 	</div>
 </div>
 
+<div class="cloud">
+	<form action="{% url 'folder:add_folder' 'test' %}" method="post">
+	{% csrf_token %}
+		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+			<input class="mdl-textfield__input" type="text" name="pretty_name" id="txt" value="{{ folder.pretty_name }}">
+			<label class="mdl-textfield__label" for="txt">Edytuj nazwę aktualnego folderu</label>
+		</div>
+	</form>
+</div>
+
 {% for son in sons %}
 {% with son_path_prefix|add:son.folder_name as son_path %}
-<div class="math-cell-button center-vert mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='{% url 'folder:index' son_path %}';" type="button">
-	<i class="material-icons">arrow_forward_ios</i>
-	{{ son.pretty_name }}
+<div class="cloud folder-nonclick-cloud">
+	<button class="mdl-button mdl-js-button mdl-button--icon right-action-button" onclick="location.href='{% url 'folder:add_folder' son.pretty_name %}'" type="button">
+		<i class="material-icons right-action-button">delete_outline</i>
+	</button>
+
+	<div class="center-vert">
+		<i class="material-icons">arrow_forward_ios</i>
+		{{ son.pretty_name }}
+	</div>
 </div>
 {% endwith %}
 {% endfor %}
 
-<div class="math-cell">
+<div class="cloud">
 	<form action="{% url 'folder:add_folder' folder_path %}" method="post">
 	{% csrf_token %}
-		<div class="mdl-textfield mdl-js-textfield">
+		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 			<input class="mdl-textfield__input" type="text" name="pretty_name" id="txt">
 			<label class="mdl-textfield__label" for="txt">Nazwa nowego podfolderu</label>
 		</div>
@@ -32,18 +54,22 @@
 </div>
 
 {% for problem in problems %}
-<div class="math-cell">
-	<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--mini-fab"
+<div class="problem-cloud">
+	<button class="mdl-button mdl-js-button mdl-button--icon right-action-button" onclick="location.href='{% url 'folder:add_folder' 'test' %}'" type="button">
+		<i class="material-icons right-action-button">delete_outline</i>
+	</button>
+
+	<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--mini-fab problem-cloud-button"
 			onclick="location.href='{% url 'problems:details' problem.id %}'" type="button">
 		{{ forloop.counter }}</button>
 	<p>{{ problem.content }}</p>
 </div>
 {% endfor %}
 
-<div class="math-cell">
+<div class="cloud">
 	<form action="{% url 'folder:add_problem' folder_path %}" method="post">
 	{% csrf_token %}
-		<div class="mdl-textfield mdl-js-textfield">
+		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 			<input class="mdl-textfield__input" type="text" name="p_id" id="txt">
 			<label class="mdl-textfield__label" for="txt">Dodanie zadania (ID)</label>
 		</div>
@@ -51,5 +77,3 @@
 </div>
 
 {% endblock %}
-
-

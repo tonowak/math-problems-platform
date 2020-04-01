@@ -1,20 +1,26 @@
 {% extends "base.html" %}
-
 {% block content %}
-<h2>Dodaj zadanko</h2>
 
-<form action="{% url 'problems:add' %}" method="post" id="problem_form">
-{% csrf_token %}
-	<div class="mdl-textfield mdl-js-textfield">
-		<textarea class="mdl-textfield__input" type="text" rows= "5" name="statement" id="text_statement"></textarea>
-		<label class="mdl-textfield__label" for="text_statement">Treść zadania</label>
-	</div>
-</form>
+<div class="cloud">
+	<h3>Dodaj zadanko</h2>
+</div>
 
-<button type="submit" form="problem_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-	Dodaj Zadanie
-</button>
-&nbsp;
-<a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do zbioru zadań</a>
+<div class="cloud">
+	<form action="{% url 'problems:add' %}" method="post" id="problem_form">
+	{% csrf_token %}
+		<div class="mdl-textfield mdl-js-textfield">
+			<textarea class="mdl-textfield__input" type="text" rows= "5" name="statement" id="text_statement"></textarea>
+			<label class="mdl-textfield__label" for="text_statement">Treść zadania</label>
+		</div>
+	</form>
+</div>
+
+<div class="button-cloud">
+	<button type="submit" form="problem_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+		Dodaj Zadanie
+	</button>
+
+	<a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do zbioru zadań</a>
+</div>
 
 {% endblock %}

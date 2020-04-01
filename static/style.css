@@ -1,18 +1,73 @@
 .main-container {
 }
 
-.math-cell, .math-cell-button {
+/* cloud */
+/* problem-cloud */
+/* folder-nonclick-cloud */
+
+.cloud, .problem-cloud, .button-cloud {
 	box-sizing: border-box;
 	border-radius: 5px;
 	background-color: #fff !important;
 	box-shadow:0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12),0 2px 4px -1px rgba(0,0,0,.2);
 	margin-bottom: 1em;
 	width: 100%;
+	padding: 0;
 	/*min-height: 3.4em;*/
 }
+.cloud * { /* i, p, a */
+	text-decoration: none;
+	align-self: center;
+	margin: 0.1em;
+	text-align: left;
+}
+.cloud a {
+	color: rgb(139,195,74)
+}
+.cloud p {
+	color: #000
+}
+.button-cloud h3, .cloud h3 {
+	padding: 0.5em;
+}
+.problem-cloud i {
+	color: #000
+}
+.problem-cloud-button {
+	font-size: 1em;
+	float: left;
+	margin: 0.2em;
+	margin-right: 1.5em;
+}
+.problem-cloud p {
+	padding: 0.8em;
+}
+.cloud input, .cloud label, .cloud textarea {
+	margin-left: 1em;
+}
+.folder-nonclick-cloud {
+	color: #000;
+	height: 36px;
+	font-size: 14px;
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0;
+	line-height: 36px;
+}
+.button-cloud button, .button-cloud a {
+	margin-left: 1em;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
 
-.right-action-button {
+/* alignment config */
+
+.right-action-button, .right-action-button * {
+	align-self: right;
+	text-align: center;
+	margin: 0;
 	float: right;
+	font-size: 1.2em;
 	/*text-align: right;*/
 }
 
@@ -21,28 +76,3 @@
 	align-self: center;
 }
 
-.math-cell-button i, p, a {
-	text-decoration: none;
-	align-self: center;
-	margin: 0.1em;
-	text-align: left;
-}
-.math-cell-button a {
-	color: rgb(139,195,74)
-}
-.math-cell-button p {
-	color: #000
-}
-
-.math-cell button {
-	font-size: 1em;
-	float: left;
-	margin: 0.2em;
-	margin-right: 1.5em;
-}
-.math-cell p {
-	padding: 0.8em;
-}
-.math-cell input, label {
-	margin-left: 1em;
-}

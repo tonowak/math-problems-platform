@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="math-cell-button">
-	<button class="right-action-button mdl-button mdl-js-button mdl-button--icon" onclick="location.href='{% url 'folder:edit' folder_path %}'" type="button">
-		<i class="material-icons"><small>edit</small></i>
+<div class="cloud">
+	<button class="mdl-button mdl-js-button mdl-button--icon right-action-button" onclick="location.href='{% url 'folder:edit' folder_path %}'" type="button">
+		<i class="material-icons right-action-button">edit</i>
 	</button>
 
 	<div class="center-vert">
-		<a class="center-vert" href="{% url 'folder:index' 'all' %}"><i class="material-icons center-vert">first_page</i></a>
+		<a class="center-vert" href="{% url 'folder:index' 'all' %}">
+			<i class="material-icons center-vert">first_page</i>
+		</a>
 		{% for p in parent_paths %}
 		{% if p.0 != 'all' %}
 		<p>/</p> <a href="{% url 'folder:index' p.0 %}">{{ p.1 }}</a>
@@ -18,7 +20,8 @@
 
 {% for son in sons %}
 {% with son_path_prefix|add:son.folder_name as son_path %}
-<div class="math-cell-button center-vert mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='{% url 'folder:index' son_path %}';" type="button">
+<div class="center-vert mdl-button mdl-js-button mdl-js-ripple-effect cloud"
+		onclick="location.href='{% url 'folder:index' son_path %}';" type="button">
 	<i class="material-icons">arrow_forward_ios</i>
 	{{ son.pretty_name }}
 </div>
@@ -26,8 +29,8 @@
 {% endfor %}
 
 {% for problem in problems %}
-<div class="math-cell">
-	<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--mini-fab"
+<div class="problem-cloud">
+	<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--mini-fab problem-cloud-button"
 			onclick="location.href='{% url 'problems:details' problem.id %}'" type="button">
 		{{ forloop.counter }}</button>
 	<p>{{ problem.content }}</p>

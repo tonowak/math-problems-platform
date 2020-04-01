@@ -2,20 +2,19 @@
 
 {% block content %}
 
-<div class="math-cell">
-	<h2>Zadanie {{ problem.id }}</h2>
-	<p>{{ problem.content }}</p>
+<div class="button-cloud">
+	<h3>Zadanie {{ problem.id }}.</h3>
+
+	<a href="{% url 'problems:edit' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Edytuj</a>
+
+	<button id="show-delete" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Usuń</button>
+
+	<a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do zbioru zadań</a>
 </div>
 
-<a href="{% url 'problems:edit' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Edytuj</a>
-
-&nbsp;
-
-<button id="show-delete" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Usuń</button>
-
-&nbsp;
-
-<a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do zbioru zadań</a>
+<div class="problem-cloud">
+	<p><big>Treść: </big>{{ problem.content }}</p>
+</div>
 
 <form action="{% url 'problems:delete' problem.id %}" method="post" id="delete_form">
 {% csrf_token %}
