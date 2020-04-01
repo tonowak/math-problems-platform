@@ -7,13 +7,13 @@ from django.contrib import messages
 from .models import Tag
 
 tag_types = [
-    "geometria",
-    "atl",
-    "kombinatoryka",
-    "analiza",
-    "źródło",
-    "trudność",
-    "inne",
+    "Geometria",
+    "ATL",
+    "Kombinatoryka",
+    "Analiza",
+    "Źródło",
+    "Trudność",
+    "Inne",
 ]
 
 class IndexView(generic.View):
