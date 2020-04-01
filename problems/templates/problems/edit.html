@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="cloud">
+<div class="button-cloud">
 	<h3>Edycja zadania {{ problem.id }}</h3>
+
+	<button type="submit" form="statement_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+		Zapisz zmiany
+	</button>
+
+	<a href="{% url 'problems:details' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do zadania</a>
 </div>
 
 <div class="cloud">
@@ -13,14 +19,6 @@
 			<label class="mdl-textfield__label" for="text_statement">Treść zadania</label>
 		</div>
 	</form>
-</div>
-
-<div class="button-cloud">
-	<button type="submit" form="statement_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-		Zapisz zmiany
-	</button>
-
-	<a href="{% url 'problems:details' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do zadania</a>
 </div>
 
 {% endblock %}

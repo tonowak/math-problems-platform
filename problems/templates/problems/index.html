@@ -13,7 +13,7 @@
 
 {% for problem in problemset %}
 <div class="problem-cloud">
-	<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--mini-fab problem-cloud-button"
+	<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab problem-cloud-button"
 			onclick="location.href='{% url 'problems:details' problem.id %}'" type="button">
 		{{ problem.id }}</button>	
 	<p>{{ problem.content }}</p>
