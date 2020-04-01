@@ -6,19 +6,31 @@ from django.contrib import messages
 
 from .models import Tag
 
-class IndexView(generic.ListView):
-    template_name = 'tags/index.html'
-    context_object_name = 'tags'
+tag_types = [
+    "geometria",
+    "atl",
+    "kombinatoryka",
+    "analiza",
+    "źródło",
+    "trudność",
+    "inne",
+]
 
-    def get_queryset(self):
-        return Tag.objects.all()
+class IndexView(generic.View):
+    def get(self, request):
+        tag_data = [[] for i in range(len(tag_types))]
+        for tag in Tag.objects.all():
+            tag_data[tag.type_id].append(tag)
+
+        tag_data = list(zip(tag_types, tag_data))
+        return render(request, 'tags/index.html', {'tag_data': tag_data})
 
 class AddView(generic.View):
     def get(self, request):
-        return render(request, 'tags/add.html')
+        return render(request, 'tags/add.html', {'tag_types': tag_types})
 
     def post(self, request):
-        tag = Tag(name=request.POST['name'])
+        tag = Tag(name=request.POST['name'], type_id=request.POST['category'])
         tag.save()
         messages.success(request, "Dodano tag!")
         return HttpResponseRedirect(reverse('tags:add'))
