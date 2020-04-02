@@ -80,7 +80,7 @@ def get_context(path):
         'folder': folder,
         'sons': Folder.objects.filter(parent=folder),
         'son_path_prefix': path + '/' if path != 'all' else '',
-        # 'parent_path': get_parent_path(path),
+        'parent_path': get_parent_path(path),
         'parent_paths': get_parent_paths(path),
         'problems': folder.problem_set.all(),
     }
