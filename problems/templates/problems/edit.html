@@ -21,25 +21,36 @@
 	</form>
 </div>
 
-<select form="problem_form" id="select-tags" name="tags[]" multiple placeholder="Dodaj Tagi">
-{% for tag, selected in tag_data %}
-	<option value="{{ tag.id }}" {% if selected %}selected{% endif %}>{{ tag.name }}</option>
-{% endfor %}
+<select form="problem_form" id="select-tags" name="tags[]" multiple placeholder="Dodaj tagi">
 </select>
 
 <script>
 $(function() {
-	$('#select-tags').selectize({
+	var $select = $('#select-tags').selectize({
 		plugins: ['remove_button'],
 		persist: false,
+		options: [
+			{% for tag, selected in tag_data %}
+				{id: {{ tag.id }}, value: '{{ tag.id }}', text: '{{ tag.name }}', category: '{{ tag.type_id }}'},
+			{% endfor %}
+		],
 		render: {
 			item: function(data, escape) {
-				return '<span class="mdl-chip mdl-chip--deletable">' +
+				return '<span class="mdl-chip mdl-chip--contact mdl-chip--deletable">' +
+							'<span class="mdl-chip__contact mdl-color--teal"></span>' +
 							'<span class="mdl-chip__text">' + escape(data.text) + '</span>' +
 						'</span>';
 			}
 		}
 	});
+
+	var selectize = $select[0].selectize;
+	{% for tag, selected in tag_data %}
+		{% if selected %}
+			selectize.addItem({{ tag.id }})
+		{% endif %}
+	{% endfor %}
+
 });
 </script>
 
