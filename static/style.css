@@ -22,7 +22,7 @@
 	text-align: left;
 }
 .cloud a {
-	color: rgb(139,195,74)
+	color: rgb(139, 195, 74);
 }
 .cloud p {
 	color: #000
@@ -76,3 +76,19 @@
 	align-self: center;
 }
 
+/* navbar */
+
+.nav-bar {
+	background-color: rgb(139, 195, 74);
+	height: 32px;
+	line-height: 32px;
+	/* vertical-align: middle;*/ 
+	/* overflow: hidden; */
+}
+.nav-bar p, .nav-bar a {
+	margin-left: 1.5em;	
+}
+.nav-bar p {
+	display: inline;
+	margin-left: 1em;
+}
