@@ -14,21 +14,21 @@
 	{% load static %}
 	<link rel="stylesheet" href="{% static "vendored/getmdl/style.css" %}">
 	<link rel="stylesheet" href="{% static "vendored/getmdl/icons.css" %}">
-	<link rel="stylesheet" href="{% static "style.css" %}">
 	<link rel="stylesheet" href="{% static "vendored/getmdl-select/style.css" %}">
 	<link rel="stylesheet" href="{% static "vendored/selectize/style.css" %}">
 	<link rel="stylesheet" href="{% static "vendored/dialog-polyfill/style.css" %}">
 	<script src="{% static "vendored/jquery/script.js" %}"></script>
-	<script src="{% static "scripts.js" %}"></script>
 	<script src="{% static "vendored/getmdl/script.js" %}"></script>
 	<script src="{% static "vendored/getmdl-select/script.js" %}"></script>
 	<script src="{% static "vendored/selectize/script.js" %}"></script>
 	<script src="{% static "vendored/dialog-polyfill/script.js" %}"></script>
+	<link rel="stylesheet" href="{% static "style.css" %}">
+	<script src="{% static "scripts.js" %}"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
-	<div class="mdl-layout mdl-js-layout mdl-color--grey-100 mdl-layout--fixed-header">
+	<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 		<main class="mdl-layout__content">
 			<div class="nav-bar mdl-shadow--2dp">
 				<p>ViM</p>
@@ -70,3 +70,5 @@
 	{% endif %}
 </body>
 </html>
+
+
