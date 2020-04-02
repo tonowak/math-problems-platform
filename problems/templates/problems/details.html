@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="button-cloud">
+<div class="cloud">
 	<h3>Zadanie {{ problem.id }}.</h3>
 
 	<a href="{% url 'problems:edit' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Edytuj</a>
@@ -21,7 +21,7 @@
 </form>
 
 <dialog class="mdl-dialog" width=100>
-	<h5 class = "mdl-dialog__title">Czy chcesz usunąć zadanie?</h5>
+	<h5 class>Czy chcesz usunąć zadanie?</h5>
 	<div class="mdl-dialog__content">
 	</div>
 	<div class="mdl-dialog__actions">

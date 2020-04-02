@@ -11,9 +11,9 @@ tag_types = [
     "ATL",
     "Kombinatoryka",
     "Analiza",
+    "Inne",
     "Źródło",
     "Trudność",
-    "Inne",
 ]
 
 class IndexView(generic.View):

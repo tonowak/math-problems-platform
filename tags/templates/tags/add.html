@@ -1,36 +1,38 @@
-
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Dodaj tag</h2>
+<div class="cloud">
+	<h3>Dodaj tag</h3>
 
-<form action="{% url 'tags:add' %}" method="post" id="tag_form">
-{% csrf_token %}
-	<div class="mdl-textfield mdl-js-textfield getmdl-select">
-		<input type="text" value="" class="mdl-textfield__input" id="category" readonly>
-		<input type="hidden" value="" name="category">
-		<i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
-		<label for="category" class="mdl-textfield__label">Kategoria tagu</label>
-		<ul for="category" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
-			{% for type in tag_types %}
-				<li class="mdl-menu__item" data-val="{{ forloop.counter0}}">{{ type }}</li>
-			{% endfor %}
-        </ul>
-    </div>
-	<br>
-	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		<input class="mdl-textfield__input" type="text" name="name" id="name">
-		<label class="mdl-textfield__label" for="name">Nazwa tagu</label>
-	</div>
-</form>
+	<form action="{% url 'tags:add' %}" method="post" id="tag_form">
+	{% csrf_token %}
+		<div class="mdl-textfield mdl-js-textfield getmdl-select">
+			<input type="text" value="" class="mdl-textfield__input" id="category" readonly>
+			<input type="hidden" value="" name="category">
+			<i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+			<label for="category" class="mdl-textfield__label">Kategoria tagu</label>
+			<ul for="category" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+				{% for type in tag_types %}
+					<li class="mdl-menu__item" data-val="{{ forloop.counter0}}">{{ type }}</li>
+				{% endfor %}
+			</ul>
+		</div>
+		<br>
+		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+			<input class="mdl-textfield__input" type="text" name="name" id="name">
+			<label class="mdl-textfield__label" for="name">Nazwa tagu</label>
+		</div>
+	</form>
 
 
-<button type=submit" form="tag_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-	Dodaj tag
-</button>
+	<button type=submit" form="tag_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+		Dodaj tag
+	</button>
 
-&nbsp;
+	<a href="{% url 'tags:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do listy tagów</a>
+</div>
 
-<a href="{% url 'tags:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do listy tagów</a>
+<!-- Fixing combined MDL stupidity and height: auto of document -->
+<div style="height: 200px"></div>
 
 {% endblock %}
