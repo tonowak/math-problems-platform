@@ -4,7 +4,7 @@
 <div class="button-cloud">
 	<h3>Edycja zadania {{ problem.id }}</h3>
 
-	<button type="submit" form="statement_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+	<button type="submit" form="problem_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
 		Zapisz zmiany
 	</button>
 
@@ -12,7 +12,7 @@
 </div>
 
 <div class="cloud">
-	<form action="{% url 'problems:edit' problem.id %}" method="post" id="statement_form">
+	<form action="{% url 'problems:edit' problem.id %}" method="post" id="problem_form">
 	{% csrf_token %}
 		<div class="mdl-textfield mdl-js-textfield">
 			<textarea class="mdl-textfield__input" type="text" rows= "5" name="statement" id="text_statement">{{ problem.content }}</textarea>
@@ -20,5 +20,27 @@
 		</div>
 	</form>
 </div>
+
+<select form="problem_form" id="select-tags" name="tags[]" multiple placeholder="Dodaj Tagi">
+{% for tag, selected in tag_data %}
+	<option value="{{ tag.id }}" {% if selected %}selected{% endif %}>{{ tag.name }}</option>
+{% endfor %}
+</select>
+
+<script>
+$(function() {
+	$('#select-tags').selectize({
+		plugins: ['remove_button'],
+		persist: false,
+		render: {
+			item: function(data, escape) {
+				return '<span class="mdl-chip mdl-chip--deletable">' +
+							'<span class="mdl-chip__text">' + escape(data.text) + '</span>' +
+						'</span>';
+			}
+		}
+	});
+});
+</script>
 
 {% endblock %}

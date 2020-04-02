@@ -32,15 +32,23 @@ class DetailsView(generic.View):
 class EditView(generic.View):
     def get(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
+
+        tag_data = []
+        for tag in Tag.objects.all():
+            tag_data.append((tag, bool(problem.tag_set.filter(pk=tag.pk))))
+
         return render(request, 'problems/edit.html', {
             'problem': problem,
-            'problems_tags': problem.tag_set.all(),
-            'tag_set': Tag.objects.all()
+            'tag_data': tag_data,
         })
 
     def post(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
         problem.content=request.POST['statement']
+        tags = request.POST.getlist('tags[]')
+        problem.tag_set.clear()
+        for tag_id in tags:
+            problem.tag_set.add(Tag.objects.get(pk=tag_id))
         problem.save()
         messages.success(request, "Zapisano zmiany!")
         return HttpResponseRedirect(reverse('problems:edit', args=[pk]))
