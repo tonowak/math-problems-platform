@@ -136,19 +136,11 @@ class EditFolderName(generic.View):
         new_path = get_son_path(get_parent_path(folder_path), folder_name)
         return redirect('edit', new_path)
 
-class DeleteFolder(generic.View):
+class DeleteProblem(generic.View):
     def post(self, request, folder_path):
         f = get_folder(folder_path)
         pretty_name = request.POST['pretty_name']
-        matches = Folder.objects.filter(parent=f, pretty_name=pretty_name)
-        if len(matches) != 1:
-            messages.error(request, 'Nastąpił błąd krytyczny.')
-            return redirect('edit', folder_path)
-        son = matches[0]
-
-        son.delete()
-        messages.success(request, 'Usunięto!')
-        return redirect('edit', folder_path)
+        matches = Folder.objects.filter(parent=f, 
 
 class AddProblem(generic.View):
     def post(self, request, folder_path):
@@ -162,11 +154,3 @@ class AddProblem(generic.View):
         messages.success(request, 'Dodano zadanie!')
         return redirect('edit', folder_path)
 
-class DeleteProblem(generic.View):
-    def post(self, request, folder_path):
-        f = get_folder(folder_path)
-        p_id = request.POST['p_id']
-        problem = get_object_or_404(Problem, pk=p_id)
-        f.problem_set.remove(problem)
-        messages.success(request, 'Usunięto zadanie!')
-        return redirect('edit', folder_path)

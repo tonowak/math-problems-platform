@@ -19,7 +19,7 @@
 </div>
 
 <div class="cloud">
-	<form action="{% url 'folder:add_folder' 'test' %}" method="post">
+	<form action="{% url 'folder:edit_folder_name' folder_path %}" method="post">
 	{% csrf_token %}
 		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 			<input class="mdl-textfield__input" type="text" name="pretty_name" id="txt" value="{{ folder.pretty_name }}">
@@ -31,7 +31,7 @@
 {% for son in sons %}
 {% with son_path_prefix|add:son.folder_name as son_path %}
 <div class="cloud folder-nonclick-cloud">
-	<button class="mdl-button mdl-js-button mdl-button--icon right-action-button" onclick="location.href='{% url 'folder:add_folder' son.pretty_name %}'" type="button">
+	<button id="show-delete-son-{{ forloop.counter }}" class="mdl-button mdl-js-button mdl-button--icon right-action-button" type="button">
 		<i class="material-icons right-action-button">delete_outline</i>
 	</button>
 
@@ -40,6 +40,39 @@
 		{{ son.pretty_name }}
 	</div>
 </div>
+
+<form action="{% url 'folder:delete_folder' folder_path %}" method="post" id="delete_form-son-{{ forloop.counter }}">
+	{% csrf_token %}
+	<input type="hidden" name="pretty_name" value="{{ son.pretty_name }}" />
+</form>
+
+<dialog class="mdl-dialog" width=100 id='dialog-son-{{ forloop.counter }}'>
+	<h5 class = "mdl-dialog__title">Czy chcesz usunąć folder "{{ son.pretty_name }}"?</h5>
+	<div class="mdl-dialog__content">
+	</div>
+	<div class="mdl-dialog__actions">
+		<button form="delete_form-son-{{ forloop.counter }}" type="submit" class="mdl-button">Usuń</button>
+		<button type="button" class="mdl-button close">Anuluj</button>
+	</div>
+</dialog>
+
+<script>
+	function runfolder{{ forloop.counter }}() {
+		var dialog = document.querySelector('#dialog-son-{{ forloop.counter }}');
+		dialogPolyfill.registerDialog(dialog)
+		var showDialogButton = document.querySelector('#show-delete-son-{{ forloop.counter }}');
+		if(!dialog.showModal) {
+			dialogPolyfill.registerDialog(dialog);
+		}
+		showDialogButton.addEventListener('click', function() {
+			dialog.showModal();
+		});
+		dialog.querySelector('.close').addEventListener('click', function() {
+			dialog.close();
+		});
+	}
+	runfolder{{ forloop.counter }}();
+</script>
 {% endwith %}
 {% endfor %}
 
@@ -55,7 +88,8 @@
 
 {% for problem in problems %}
 <div class="problem-cloud">
-	<button class="mdl-button mdl-js-button mdl-button--icon right-action-button" onclick="location.href='{% url 'folder:add_folder' 'test' %}'" type="button">
+	<button class="mdl-button mdl-js-button mdl-button--icon right-action-button" type="button"
+		id="show-delete-problem-{{ forloop.counter }}">
 		<i class="material-icons right-action-button">delete_outline</i>
 	</button>
 
@@ -64,6 +98,39 @@
 		{{ forloop.counter }}</button>
 	<p>{{ problem.content }}</p>
 </div>
+
+<form action="{% url 'folder:delete_problem' folder_path %}" method="post" id="delete_form-problem-{{ forloop.counter }}">
+	{% csrf_token %}
+	<input type="hidden" name="p_id" value="{{ problem.id }}" />
+</form>
+
+<dialog class="mdl-dialog" width=100 id='dialog-problem-{{ forloop.counter }}'>
+	<h5 class = "mdl-dialog__title">Czy chcesz usunąć zadanie?</h5>
+	<div class="mdl-dialog__content">
+	</div>
+	<div class="mdl-dialog__actions">
+		<button form="delete_form-problem-{{ forloop.counter }}" type="submit" class="mdl-button">Usuń</button>
+		<button type="button" class="mdl-button close">Anuluj</button>
+	</div>
+</dialog>
+
+<script>
+	function runproblem{{ forloop.counter }}() {
+		var dialog = document.querySelector('#dialog-problem-{{ forloop.counter }}');
+		dialogPolyfill.registerDialog(dialog)
+		var showDialogButton = document.querySelector('#show-delete-problem-{{ forloop.counter }}');
+		if(!dialog.showModal) {
+			dialogPolyfill.registerDialog(dialog);
+		}
+		showDialogButton.addEventListener('click', function() {
+			dialog.showModal();
+		});
+		dialog.querySelector('.close').addEventListener('click', function() {
+			dialog.close();
+		});
+	}
+	runproblem{{ forloop.counter }}();
+</script>
 {% endfor %}
 
 <div class="cloud">
