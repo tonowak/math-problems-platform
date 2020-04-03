@@ -36,8 +36,8 @@ $(function() {
 		],
 		render: {
 			item: function(data, escape) {
-				return '<span class="mdl-chip mdl-chip--contact mdl-chip--deletable">' +
-							'<span class="mdl-chip__contact category-color-' + escape(data.category) + '"></span>' +
+				return '<span class="mdl-chip mdl-chip--deletable">' +
+							'<span class="category-chip category-color-' + escape(data.category) + '"></span>' +
 							'<span class="mdl-chip__text">' + escape(data.text) + '</span>' +
 						'</span>';
 			}

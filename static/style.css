@@ -12,6 +12,7 @@ body {
 	box-sizing: border-box;
 	border-radius: 5px;
 	background-color: #fff !important;
+	/* 4dp */
 	box-shadow:0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12),0 2px 4px -1px rgba(0,0,0,.2);
 	margin-bottom: 1em;
 	width: 100%;
@@ -41,6 +42,8 @@ body {
 	color: #000
 }
 .problem-cloud-button {
+	/* 2dp */
+	box-shadow:0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
 	font-size: 1em;
 	float: left;
 	margin: 0.2em;
@@ -48,6 +51,7 @@ body {
 }
 .problem-cloud p {
 	padding: 0.8em;
+	margin-bottom: 0;
 }
 .cloud input, .cloud label, .cloud textarea, .mdl-textfield {
 	margin-left: 1em;
@@ -104,15 +108,38 @@ body {
 	padding-left: 2em;
 }
 
-/* colors */
+/* colors / chips */
 
-.category-color-0 { background-color: #66bb6a }
-.category-color-1 { background-color: #ffee58 }
-.category-color-2 { background-color: #ef5350 }
-.category-color-3 { background-color: #42a5f5 }
-.category-color-4 { background-color: #ab47bc }
-.category-color-5 { background-color: #9e9e9e }
-.category-color-6 { background-color: #ffa726 }
+.category-color-0 { background-color: #66bb6a } /* geo */
+.category-color-1 { background-color: #ffeb3b } /* atl */
+.category-color-2 { background-color: #ef5350 } /* kombi */
+.category-color-3 { background-color: #42a5f5 } /* anal */
+.category-color-4 { background-color: #8d6e63 } /* inne */
+.category-color-5 { background-color: #ab47bc } /* źródło */
+.category-color-6 { background-color: #ff9800 } /* trudność */
+.category-color-7 { background-color: #9e9e9e } /* user grupa */
+
+.mdl-chip {
+	background: rgba(158, 158, 158, .2);
+	/* 2dp */
+	box-shadow:0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+	padding-left: 0;
+}
+.category-chip {
+	display: inline-block;
+	vertical-align: middle;
+	overflow: hidden;
+	height: 16px;
+	width: 16px;
+	border-radius: 8px;
+	margin-right: 4px;
+	margin-left: 8px;
+}
+.chip-container {
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+	padding-bottom: 0.5em;
+}
 
 /* fixing vendor stuff */
 

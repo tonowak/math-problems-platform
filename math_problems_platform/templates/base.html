@@ -61,6 +61,9 @@
 					{% block content %}{% endblock %}
 				</div>
 			</div>
+
+			<!-- Fixing combined MDL stupidity and height: auto of document -->
+			<div style="height: 200px"></div>
 		</main>
 	</div>
 	<div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
@@ -77,10 +80,6 @@
 			</script>
 		{% endfor %}
 	{% endif %}
-
-	<!-- Fixing combined MDL stupidity and height: auto of document -->
-	<div style="height: 200px"></div>
-	<p></p>
 </body>
 </html>
 

@@ -14,6 +14,7 @@ tag_types = [
     "Inne",
     "Źródło",
     "Trudność",
+    "Grupa",
 ]
 
 class IndexView(generic.View):

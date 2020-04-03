@@ -18,12 +18,14 @@
 		{{ problem.id }}</button>	
 	<p>{{ problem.content }}</p>
 	<div>
-	{% for tag in tags %}
-		<span class="mdl-chip mdl-chip--contact">
-			<span class="mdl-chip__contact category-color-{{ tag.type_id }}"></span>
+	<div class="chip-container">
+		{% for tag in tags %}
+		<span class="mdl-chip">
+			<span class="category-chip category-color-{{ tag.type_id }}"></span>
 			<span class="mdl-chip__text">{{ tag.name }}</span>
 		</span>
-	{% endfor %}
+		{% endfor %}
+	</div>
 	</div>
 </div>
 {% endfor %}
