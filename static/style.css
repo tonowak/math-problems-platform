@@ -73,7 +73,7 @@ body {
 .right-action-button, .right-action-button * {
 	align-self: right;
 	text-align: center;
-	margin: 0;
+	margin: 0 !important;
 	float: right;
 	font-size: 1.2em;
 	/*text-align: right;*/
@@ -118,6 +118,8 @@ body {
 
 .selectize-input {
 	margin-bottom: 0;
+	min-height: 50px;
+	line-height: 35px;
 }
 .mdl-chip {
 	font-size: 13px;
@@ -125,4 +127,7 @@ body {
 }
 .mdl-layout__container {
 	position: relative;
+}
+::placeholder {
+	transform:translate3d(5px,5px,0)
 }
