@@ -12,8 +12,17 @@
 	<a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do zbioru zadań</a>
 </div>
 
+
 <div class="problem-cloud">
 	<p><big>Treść: </big>{{ problem.content }}</p>
+	<div>
+	{% for tag in tags %}
+		<span class="mdl-chip mdl-chip--contact">
+			<span class="mdl-chip__contact category-color-{{ tag.type_id }}"></span>
+			<span class="mdl-chip__text">{{ tag.name }}</span>
+		</span>
+	{% endfor %}
+	</div>
 </div>
 
 <form action="{% url 'problems:delete' problem.id %}" method="post" id="delete_form">

@@ -7,12 +7,12 @@ from django.contrib import messages
 from .models import Problem
 from tags.models import Tag
 
-class IndexView(generic.ListView):
-    template_name = 'problems/index.html'
-    context_object_name = 'problemset'
-
-    def get_queryset(self):
-        return Problem.objects.all()
+class IndexView(generic.View):
+    def get(self, request):
+        problems_data = []
+        for problem in Problem.objects.all():
+            problems_data.append((problem, problem.tag_set.all()))
+        return render(request, 'problems/index.html', {'problems_data': problems_data})
 
 class AddView(generic.View):
     def get(self, request):
@@ -27,16 +27,17 @@ class AddView(generic.View):
 class DetailsView(generic.View):
     def get(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
-        return render(request, 'problems/details.html', {'problem': problem})
+        return render(request, 'problems/details.html', {
+            'problem': problem,
+            'tags': problem.tag_set.order_by('type_id', 'id'),
+        })
 
 class EditView(generic.View):
     def get(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
-
         tag_data = []
-        for tag in Tag.objects.all():
+        for tag in Tag.objects.order_by('type_id', 'id'):
             tag_data.append((tag, bool(problem.tag_set.filter(pk=tag.pk))))
-
         return render(request, 'problems/edit.html', {
             'problem': problem,
             'tag_data': tag_data,

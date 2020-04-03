@@ -6,17 +6,25 @@
 
 	<a href="{% url 'problems:add' %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Dodaj zadanka</a>
 
-	{% if not problemset %}
+	{% if not problems_data %}
 	<p>Nie ma dostępnych zadań</p>
 	{% endif %}
 </div>
 
-{% for problem in problemset %}
+{% for problem, tags in problems_data %}
 <div class="problem-cloud">
 	<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab problem-cloud-button"
 			onclick="location.href='{% url 'problems:details' problem.id %}'" type="button">
 		{{ problem.id }}</button>	
 	<p>{{ problem.content }}</p>
+	<div>
+	{% for tag in tags %}
+		<span class="mdl-chip mdl-chip--contact">
+			<span class="mdl-chip__contact category-color-{{ tag.type_id }}"></span>
+			<span class="mdl-chip__text">{{ tag.name }}</span>
+		</span>
+	{% endfor %}
+	</div>
 </div>
 {% endfor %}
 
