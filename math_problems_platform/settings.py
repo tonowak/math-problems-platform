@@ -20,7 +20,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'a+awu5aofnv6zfx%*5@xb6r_xabehqu=0@j5+uueb1!qf4)^2v'
+from decouple import config
+SECRET_KEY = config('DB_SECRET_KEY')
+
+# Google OAuth
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('OAUTH_GOOGLE_ID')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('OAUTH_GOOGLE_SECRET_KEY')
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+LOGIN_URL = '/auth/login/google-oauth2/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -35,6 +44,7 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS = [
     'problems.apps.ProblemsConfig',
     'folder.apps.FolderConfig',
+    'users.apps.UsersConfig',
     'tags.apps.TagsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,7 +52,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'social_django',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

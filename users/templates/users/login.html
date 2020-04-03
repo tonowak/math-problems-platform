@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="cloud">
+	<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+			href="{% url 'social:begin' 'google-oauth2' %}">
+		<img class="google-icon-svg" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" style="height: 24px;"/>
+		Sign in with Google
+	</a>
+</div>
+
+{% endblock %}

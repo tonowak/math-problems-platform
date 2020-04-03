@@ -1,3 +1,7 @@
+# ViM Project stuff
+.env
+.env.asc
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

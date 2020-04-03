@@ -32,17 +32,26 @@
 		<main class="mdl-layout__content">
 			<div class="nav-bar mdl-shadow--2dp">
 				<p>ViM</p>
+				{% if user.is_authenticated %}
 				<a class="mdl-navigation__link" href="{% url 'folder:index' 'all' %}">Contesty</a>
 				<a class="mdl-navigation__link" href="{% url 'problems:index' %}">Zbiór zadań</a>
 				<a class="mdl-navigation__link" href="{% url 'tags:index' %}">Tagi</a>
+				{% endif %}
 
 				<button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon right-action-button" id="hdrbtn">
 					<i class="material-icons">more_vert</i>
 				</button>
 				<ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
-					<li class="mdl-menu__item">About</li>
-					<li class="mdl-menu__item">Contact</li>
-					<li class="mdl-menu__item">Legal information</li>
+					{% if user.is_authenticated %}
+					<li class="mdl-menu__item">{{ user.username }}</li>
+					<li class="mdl-menu__item"><a href="{% url 'users:logout' %}">Wyloguj</a></li>
+					{% else %}
+					<li class="mdl-menu__item">
+						<a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">
+							Zaloguj
+						</a>
+					</li>
+					{% endif %}
 				</ul>
 			</div>
 
@@ -68,6 +77,10 @@
 			</script>
 		{% endfor %}
 	{% endif %}
+
+	<!-- Fixing combined MDL stupidity and height: auto of document -->
+	<div style="height: 200px"></div>
+	<p></p>
 </body>
 </html>
 
