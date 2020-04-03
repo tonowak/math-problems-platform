@@ -7,6 +7,8 @@ from django.contrib import messages
 
 from .models import Folder
 from problems.models import Problem
+from tags.models import Tag
+from tags.views import tag_types
 
 import unicodedata, re
 def convert_pretty_to_folder_name(pretty):
@@ -74,6 +76,10 @@ def get_parent_paths(path):
 def get_context(path):
     path = fix_path(path)
     folder = get_folder(path)
+    tag_data = []
+    group_type = tag_types.index("Grupa")
+    for tag in Tag.objects.filter(type_id=group_type).order_by('type_id', 'id'):
+        tag_data.append((tag, bool(folder.tag_set.filter(pk=tag.pk))))
 
     return {
         'folder_path': path,
@@ -83,6 +89,7 @@ def get_context(path):
         'parent_path': get_parent_path(path),
         'parent_paths': get_parent_paths(path),
         'problems': folder.problem_set.all(),
+        'tag_data': tag_data,
     }
 
 class IndexView(generic.View):
@@ -169,4 +176,15 @@ class DeleteProblem(generic.View):
         problem = get_object_or_404(Problem, pk=p_id)
         f.problem_set.remove(problem)
         messages.success(request, 'Usunięto zadanie!')
+        return redirect('edit', folder_path)
+
+class EditTags(generic.View):
+    def post(self, request, folder_path):
+        f = get_folder(folder_path)
+        tags = request.POST.getlist('tags[]')
+        f.tag_set.clear()
+        for tag_id in tags:
+            f.tag_set.add(Tag.objects.get(id=tag_id))
+        f.save()
+        messages.success(request, 'Zmieniono tagi!')
         return redirect('edit', folder_path)

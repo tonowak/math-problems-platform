@@ -138,13 +138,14 @@ body {
 .chip-container {
 	margin-left: 0.5em;
 	margin-right: 0.5em;
+	padding-top: 0.5em;
 	padding-bottom: 0.5em;
 }
 
 /* fixing vendor stuff */
 
 .selectize-input {
-	margin-bottom: 0;
+	margin-bottom: 0.5em;
 	min-height: 50px;
 	line-height: 35px;
 }

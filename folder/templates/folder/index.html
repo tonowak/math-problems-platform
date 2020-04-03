@@ -23,6 +23,21 @@
 	</div>
 </div>
 
+{% if folder.tag_set.all %}
+<div class="cloud">
+	<div class="chip-container">
+		{% for tag, selected in tag_data %}
+		{% if selected %}
+		<span class="mdl-chip">
+			<span class="category-chip category-color-{{ tag.type_id }}"></span>
+			<span class="mdl-chip__text">{{ tag.name }}</span>
+		</span>
+		{% endif %}
+		{% endfor %}
+	</div>
+</div>
+{% endif %}
+
 {% for son in sons %}
 {% with son_path_prefix|add:son.folder_name as son_path %}
 <div class="center-vert mdl-button mdl-js-button mdl-js-ripple-effect cloud"

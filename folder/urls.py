@@ -10,5 +10,6 @@ urlpatterns = [
     path('<path:folder_path>/delete_folder', views.DeleteFolder.as_view(), name='delete_folder'),
     path('<path:folder_path>/add_problem', views.AddProblem.as_view(), name='add_problem'),
     path('<path:folder_path>/delete_problem', views.DeleteProblem.as_view(), name='delete_problem'),
+    path('<path:folder_path>/edit_tags', views.EditTags.as_view(), name='edit_tags'),
     path('<path:folder_path>', views.IndexView.as_view(), name='index'),
 ]
