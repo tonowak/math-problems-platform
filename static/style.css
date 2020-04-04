@@ -49,7 +49,7 @@ body {
 	margin: 0.2em;
 	margin-right: 1.5em;
 }
-.problem-cloud p {
+.cloud p, .problem-cloud p {
 	padding: 0.8em;
 	margin-bottom: 0;
 }

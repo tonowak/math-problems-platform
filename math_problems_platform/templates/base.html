@@ -34,8 +34,11 @@
 				<p>ViM</p>
 				{% if user.is_authenticated %}
 				<a class="mdl-navigation__link" href="{% url 'folder:index' 'all' %}">Contesty</a>
+				{% endif %}
+				{% if user.is_staff %}
 				<a class="mdl-navigation__link" href="{% url 'problems:index' %}">Zbiór zadań</a>
 				<a class="mdl-navigation__link" href="{% url 'tags:index' %}">Tagi</a>
+				<a class="mdl-navigation__link" href="{% url 'users:index' %}">Użytkownicy</a>
 				{% endif %}
 
 				<button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon right-action-button" id="hdrbtn">
@@ -43,7 +46,7 @@
 				</button>
 				<ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
 					{% if user.is_authenticated %}
-					<li class="mdl-menu__item">{{ user.username }}</li>
+					<li class="mdl-menu__item"><a href="{% url 'users:edit' user.id %}">{{ user.username }}</a></li>
 					<li class="mdl-menu__item"><a href="{% url 'users:logout' %}">Wyloguj</a></li>
 					{% else %}
 					<li class="mdl-menu__item">

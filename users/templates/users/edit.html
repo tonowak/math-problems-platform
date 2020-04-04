@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="cloud">
+	<form action="{% url 'users:edit' user.id %}" method="post" id="edit-form">
+	{% csrf_token %}
+		<p><big>Login: </big>{{ user.username }}</p>
+		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+			<input class="mdl-textfield__input" type="text" name="first_name" id="first_name-form" value="{{ user.first_name }}">
+			<label class="mdl-textfield__label" for="first_name-form">Imię</label>
+
+		</div>
+		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+			<input class="mdl-textfield__input" type="text" name="last_name" id="last_name-form" value="{{ user.last_name }}">
+			<label class="mdl-textfield__label" for="last_name-form">Nazwisko</label>
+		</div>
+	</form>
+
+	{% if not request.user.is_staff %}
+	<div class="chip-container">
+		{% for tag in user.tag_set.objects %}
+		<span class="mdl-chip">
+			<span class="category-chip category-color-{{ tag.type_id }}"></span>
+			<span class="mdl-chip__text">{{ tag.name }}</span>
+		</span>
+		{% endfor %}
+	</div>
+	{% endif %}
+
+	<button type="submit" form="edit-form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+		Zapisz
+	</button>
+</div>
+
+{% if request.user.is_staff %}
+<select form="edit-form" id="select-tags" name="tags[]" multiple placeholder="Dodaj tagi"></select>
+<script>
+$(function() {
+	var $select = $('#select-tags').selectize({
+		plugins: ['remove_button'],
+		persist: false,
+		options: [
+			{% for tag, selected in tag_data %}
+				{id: {{ tag.id }}, value: '{{ tag.id }}', text: '{{ tag.name }}', category: '{{ tag.type_id }}'},
+			{% endfor %}
+		],
+		render: {
+			item: function(data, escape) {
+				return '<span class="mdl-chip mdl-chip--deletable">' +
+							'<span class="category-chip category-color-' + escape(data.category) + '"></span>' +
+							'<span class="mdl-chip__text">' + escape(data.text) + '</span>' +
+						'</span>';
+			}
+		}
+	});
+
+	var selectize = $select[0].selectize;
+	{% for tag, selected in tag_data %}
+		{% if selected %}
+			selectize.addItem({{ tag.id }})
+		{% endif %}
+	{% endfor %}
+
+});
+</script>
+{% endif %}
+
+{% endblock %}
+

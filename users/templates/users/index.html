@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% for user in users %}
+<div class="cloud">
+	<button class="mdl-button mdl-js-button mdl-button--icon right-action-button" onclick="location.href='{% url 'users:edit' user.id %}'" type="button">
+		<i class="material-icons right-action-button">edit</i>
+	</button>
+	<p>{{ user.first_name }} {{ user.last_name }} ({{ user.username }})</p>
+
+	<div class="chip-container">
+		{% for tag in user.tag_set.all %}
+		<span class="mdl-chip">
+			<span class="category-chip category-color-{{ tag.type_id }}"></span>
+			<span class="mdl-chip__text">{{ tag.name }}</span>
+		</span>
+		{% endfor %}
+	</div>
+</div>
+{% endfor %}
+
+{% endblock %}
