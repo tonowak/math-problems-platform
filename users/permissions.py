@@ -27,6 +27,8 @@ def has_access_in_subtree(user, folder):
 def has_access_to_folder(user, folder):
     if user.is_staff:
         return True
+    if not user.is_authenticated:
+        return False
     f = folder
     while f.parent:
         if has_direct_access_to_folder(user, f):

@@ -11,7 +11,7 @@ body {
 .cloud, .problem-cloud, .path-cloud, .selectize-input {
 	box-sizing: border-box;
 	border-radius: 5px;
-	background-color: #fff !important;
+	background-color: #fff;
 	/* 4dp */
 	box-shadow:0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12),0 2px 4px -1px rgba(0,0,0,.2);
 	margin-bottom: 1em;
@@ -48,6 +48,7 @@ body {
 	float: left;
 	margin: 0.2em;
 	margin-right: 1.5em;
+	background-color: rgb(236, 236, 236);
 }
 .cloud p, .problem-cloud p {
 	padding: 0.8em;
@@ -118,6 +119,10 @@ body {
 .category-color-5 { background-color: #ab47bc } /* źródło */
 .category-color-6 { background-color: #ff9800 } /* trudność */
 .category-color-7 { background-color: #9e9e9e } /* user grupa */
+
+.green-background {
+	background-color: #c8e6c9
+}
 
 .mdl-chip {
 	background: rgba(158, 158, 158, .2);

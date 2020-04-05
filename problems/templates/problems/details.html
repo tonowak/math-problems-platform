@@ -5,18 +5,16 @@
 <div class="cloud">
 	<h3>Zadanie {{ problem.id }}.</h3>
 
+	<a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
+
 	{% if user.is_staff %}
 	<a href="{% url 'problems:edit' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Edytuj</a>
 
 	<button id="show-delete-delete" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Usuń</button>
 	{% endif %}
 
-	<a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
-
 	{% if problem.answer and not show_answer %}
-	<a href="{% url 'problems:details' problem.id %}?show_answer=True" class="mdl-button mdl-js-button mdl-button--raised">
-		Odpowiedź
-	</a>
+	<button id="show-delete-answer" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Odpowiedź</button>
 	{% endif %}
 
 	{% if problem.hints and not show_hints %}
@@ -26,9 +24,16 @@
 	{% if problem.solution and not show_solution %}
 	<button id="show-delete-solution" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Rozwiązanie</button>
 	{% endif %}
+
+	<form action="{% url 'problems:claim' problem.id %}", method="post", style="display: inline;">
+		{% csrf_token %}
+		<button type="submit" class="mdl-button mdl-js-button mdl-button--raised">
+			{% if solved_task %}Zmień na niezrobione{% else %}Zmień na zrobione{% endif %}
+		</a>
+	</form>
 </div>
 
-<div class="problem-cloud">
+<div class="problem-cloud {% if solved_task %}green-background{% endif %}">
 	<p><big>Treść: </big>{{ problem.statement }}</p>
 	{% if user.is_staff %}
 	<div class="chip-container">
@@ -59,6 +64,19 @@
 <div class="problem-cloud">
 	<p><big>Rozwiązanie: </big>{{ problem.solution }}</p>
 </div>
+{% endif %}
+
+{% if problem.answer and not show_answer %}
+<dialog class="mdl-dialog" id="dialog-answer" width=100>
+	<h5 class>Czy na pewno chcesz zobaczyć odpowiedź?</h5>
+	<div class="mdl-dialog__content">
+	</div>
+	<div class="mdl-dialog__actions">
+		<a href="{% url 'problems:details' problem.id %}?show_answer=True" class="mdl-button">Tak :(</a>
+		<button type="button" class="mdl-button close">Anuluj</button>
+	</div>
+</dialog>
+<script>activate_dialog('answer');</script>
 {% endif %}
 
 {% if problem.hints and not show_hints %}

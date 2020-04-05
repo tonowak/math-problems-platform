@@ -46,11 +46,9 @@ class DetailsView(generic.View):
         problem = get_object_or_404(Problem, pk=pk)
         if not has_access_to_problem(request.user, problem):
             return redirect(url_404)
-        print(request.GET)
 
         def inside_get(s):
             ret = request.user.is_staff or s in request.GET
-            print(s, ret)
             return ret
 
         return render(request, 'problems/details.html', {
@@ -59,7 +57,20 @@ class DetailsView(generic.View):
             'show_hints': inside_get('show_hints') or inside_get('show_solution'),
             'show_answer': inside_get('show_answer') or inside_get('show_solution'),
             'show_solution': inside_get('show_solution'),
+            'solved_task': request.user.problem_set.filter(id=problem.id).exists(),
         })
+
+class ClaimView(generic.View):
+    def post(self, request, pk):
+        problem = get_object_or_404(Problem, pk=pk)
+        if not has_access_to_problem(request.user, problem):
+            return redirect(url_404)
+
+        if request.user.problem_set.filter(id=problem.id).exists():
+            request.user.problem_set.remove(problem)
+        else:
+            request.user.problem_set.add(problem)
+        return redirect('problems:details', pk)
 
 @method_decorator(staff_only, name='dispatch')
 class EditView(generic.View):
@@ -93,4 +104,4 @@ class DeleteView(generic.View):
         problem = get_object_or_404(Problem, pk=pk)
         problem.delete();
         messages.success(request, "Zadanie usunięte!")
-        return HttpResponseRedirect(reverse('problems:index'))
+        return redirect('problems:index')
