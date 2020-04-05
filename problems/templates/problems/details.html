@@ -5,9 +5,11 @@
 <div class="cloud">
 	<h3>Zadanie {{ problem.id }}.</h3>
 
+	{% if user.is_staff %}
 	<a href="{% url 'problems:edit' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Edytuj</a>
 
 	<button id="show-delete" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Usuń</button>
+	{% endif %}
 
 	<a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do zbioru zadań</a>
 </div>
@@ -25,6 +27,7 @@
 	</div>
 </div>
 
+{% if user.is_staff %}
 <form action="{% url 'problems:delete' problem.id %}" method="post" id="delete_form">
 {% csrf_token %}
 </form>
@@ -53,5 +56,6 @@
 		dialog.close();
 	});
 </script>
+{% endif %}
 
 {% endblock %}

@@ -3,8 +3,10 @@ from django.views import generic
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
+from django.utils.decorators import method_decorator
 
 from .models import Tag
+from users.permissions import staff_only
 
 tag_types = [
     "Geometria",
@@ -17,6 +19,7 @@ tag_types = [
     "Grupa",
 ]
 
+@method_decorator(staff_only, name='dispatch')
 class IndexView(generic.View):
     def get(self, request):
         tag_data = [[] for i in range(len(tag_types))]
@@ -26,6 +29,7 @@ class IndexView(generic.View):
         tag_data = list(zip(tag_types, tag_data))
         return render(request, 'tags/index.html', {'tag_data': tag_data})
 
+@method_decorator(staff_only, name='dispatch')
 class AddView(generic.View):
     def get(self, request):
         return render(request, 'tags/add.html', {'tag_types': tag_types})

@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
 
-from .permissions import staff_only
+from .permissions import staff_only, url_404
 from tags.models import Tag
 
 def login_view(request):
@@ -31,16 +31,18 @@ class EditUser(generic.View):
 
     def get(self, request, u_id):
         if not self.has_permission(request, u_id):
-            return redirect('users:login')
+            return redirect(url_404)
         user = get_object_or_404(User, id=u_id)
-        context = {
-            'user': user
-        }
-        if request.user.is_staff:
-            tag_data = []
-            for tag in Tag.objects.filter(type_id=7).order_by('type_id', 'id'):
+        tag_data = []
+        for tag in Tag.objects.filter(type_id=7).order_by('type_id', 'id'):
+            if request.user.is_staff:
                 tag_data.append((tag, bool(user.tag_set.filter(pk=tag.pk))))
-            context['tag_data'] = tag_data
+            elif user.tag_set.filter(pk=tag.pk):
+                tag_data.append((tag, True))
+        context = {
+            'user': user,
+            'tag_data': tag_data,
+        }
         return render(request, 'users/edit.html', context)
     
     def post(self, request, u_id):

@@ -18,7 +18,7 @@
 
 	{% if not request.user.is_staff %}
 	<div class="chip-container">
-		{% for tag in user.tag_set.objects %}
+		{% for tag, true in tag_data %}
 		<span class="mdl-chip">
 			<span class="category-chip category-color-{{ tag.type_id }}"></span>
 			<span class="mdl-chip__text">{{ tag.name }}</span>

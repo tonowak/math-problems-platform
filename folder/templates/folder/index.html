@@ -2,9 +2,11 @@
 {% block content %}
 
 <div class="path-cloud">
+	{% if user.is_staff %}
 	<button class="mdl-button mdl-js-button mdl-button--icon right-action-button" onclick="location.href='{% url 'folder:edit' folder_path %}'" type="button">
 		<i class="material-icons right-action-button">edit</i>
 	</button>
+	{% endif %}
 
 	<div class="center-vert">
 		<a class="center-vert" href="{% url 'folder:index' 'all' %}">
@@ -23,7 +25,7 @@
 	</div>
 </div>
 
-{% if folder.tag_set.all %}
+{% if folder.tag_set.all and user.is_staff %}
 <div class="cloud">
 	<div class="chip-container">
 		{% for tag, selected in tag_data %}
