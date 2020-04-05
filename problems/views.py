@@ -23,7 +23,7 @@ class AddView(generic.View):
         return render(request, 'problems/add.html')
 
     def post(self, request):
-        problem = Problem(content=request.POST['statement'])
+        problem = Problem(statement=request.POST['statement'])
         problem.save()
         messages.success(request, "Dodano zadanie!")
         return HttpResponseRedirect(reverse('problems:add'))
@@ -33,9 +33,19 @@ class DetailsView(generic.View):
         problem = get_object_or_404(Problem, pk=pk)
         if not has_access_to_problem(request.user, problem):
             return redirect(url_404)
+        print(request.GET)
+
+        def inside_get(s):
+            ret = request.user.is_staff or s in request.GET
+            print(s, ret)
+            return ret
+
         return render(request, 'problems/details.html', {
             'problem': problem,
             'tags': problem.tag_set.order_by('type_id', 'id'),
+            'show_hints': inside_get('show_hints') or inside_get('show_solution'),
+            'show_answer': inside_get('show_answer') or inside_get('show_solution'),
+            'show_solution': inside_get('show_solution'),
         })
 
 @method_decorator(staff_only, name='dispatch')
@@ -52,7 +62,10 @@ class EditView(generic.View):
 
     def post(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
-        problem.content=request.POST['statement']
+        problem.statement = request.POST['statement']
+        problem.hints = request.POST['hints']
+        problem.answer = request.POST['answer']
+        problem.solution = request.POST['solution']
         tags = request.POST.getlist('tags[]')
         problem.tag_set.clear()
         for tag_id in tags:

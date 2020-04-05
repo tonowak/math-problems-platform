@@ -8,15 +8,29 @@
 	{% if user.is_staff %}
 	<a href="{% url 'problems:edit' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Edytuj</a>
 
-	<button id="show-delete" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Usuń</button>
+	<button id="show-delete-delete" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Usuń</button>
 	{% endif %}
 
-	<a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do zbioru zadań</a>
+	<a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
+
+	{% if problem.answer and not show_answer %}
+	<a href="{% url 'problems:details' problem.id %}?show_answer=True" class="mdl-button mdl-js-button mdl-button--raised">
+		Odpowiedź
+	</a>
+	{% endif %}
+
+	{% if problem.hints and not show_hints %}
+	<button id="show-delete-hints" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Wskazówka</button>
+	{% endif %}
+
+	{% if problem.solution and not show_solution %}
+	<button id="show-delete-solution" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Rozwiązanie</button>
+	{% endif %}
 </div>
 
-
 <div class="problem-cloud">
-	<p><big>Treść: </big>{{ problem.content }}</p>
+	<p><big>Treść: </big>{{ problem.statement }}</p>
+	{% if user.is_staff %}
 	<div class="chip-container">
 	{% for tag in tags %}
 		<span class="mdl-chip">
@@ -25,14 +39,60 @@
 		</span>
 	{% endfor %}
 	</div>
+	{% endif %}
 </div>
+
+{% if show_answer %}
+<div class="problem-cloud">
+	<p><big>Odpowiedź: </big>{{ problem.answer }}</p>
+</div>
+{% endif %}
+
+{% if show_hints %}
+<div class="problem-cloud">
+	<p><big>Wskazówka: </big>{{ problem.hints }}</p>
+</div>
+
+{% endif %}
+
+{% if show_solution %}
+<div class="problem-cloud">
+	<p><big>Rozwiązanie: </big>{{ problem.solution }}</p>
+</div>
+{% endif %}
+
+{% if problem.hints and not show_hints %}
+<dialog class="mdl-dialog" id="dialog-hints" width=100>
+	<h5 class>Czy na pewno chcesz zobaczyć wskazówkę?</h5>
+	<div class="mdl-dialog__content">
+	</div>
+	<div class="mdl-dialog__actions">
+		<a href="{% url 'problems:details' problem.id %}?show_hints=True" class="mdl-button">Tak :(</a>
+		<button type="button" class="mdl-button close">Anuluj</button>
+	</div>
+</dialog>
+<script>activate_dialog('hints');</script>
+{% endif %}
+
+{% if problem.solution and not show_solution %}
+<dialog class="mdl-dialog" id="dialog-solution" width=100>
+	<h5 class>Czy na pewno chcesz zobaczyć rozwiązanie?</h5>
+	<div class="mdl-dialog__content">
+	</div>
+	<div class="mdl-dialog__actions">
+		<a href="{% url 'problems:details' problem.id %}?show_solution=True" class="mdl-button">Tak :(</a>
+		<button type="button" class="mdl-button close">Anuluj</button>
+	</div>
+</dialog>
+<script>activate_dialog('solution');</script>
+{% endif %}
 
 {% if user.is_staff %}
 <form action="{% url 'problems:delete' problem.id %}" method="post" id="delete_form">
 {% csrf_token %}
 </form>
 
-<dialog class="mdl-dialog" width=100>
+<dialog class="mdl-dialog" id="dialog-delete" width=100>
 	<h5 class>Czy chcesz usunąć zadanie?</h5>
 	<div class="mdl-dialog__content">
 	</div>
@@ -42,20 +102,7 @@
 	</div>
 </dialog>
 
-<script>
-	var dialog = document.querySelector('dialog');
-	dialogPolyfill.registerDialog(dialog)
-	var showDialogButton = document.querySelector('#show-delete');
-	if(!dialog.showModal) {
-		dialogPolyfill.registerDialog(dialog);
-	}
-	showDialogButton.addEventListener('click', function() {
-		dialog.showModal();
-	});
-	dialog.querySelector('.close').addEventListener('click', function() {
-		dialog.close();
-	});
-</script>
+<script>activate_dialog('delete');</script>
 {% endif %}
 
 {% endblock %}

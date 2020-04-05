@@ -27,8 +27,8 @@
 	<form action="{% url 'folder:edit_folder_name' folder_path %}" method="post">
 	{% csrf_token %}
 		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-			<input class="mdl-textfield__input" type="text" name="pretty_name" id="txt" value="{{ folder.pretty_name }}">
-			<label class="mdl-textfield__label" for="txt">Edytuj nazwę aktualnego folderu</label>
+			<input class="mdl-textfield__input" type="text" name="pretty_name" id="txt-{{ folder.folder_name }}" value="{{ folder.pretty_name }}">
+			<label class="mdl-textfield__label" for="txt-{{ folder.folder_name }}">Edytuj nazwę aktualnego folderu</label>
 		</div>
 	</form>
 
@@ -102,21 +102,7 @@ $(function() {
 </dialog>
 
 <script>
-	function runfolder{{ forloop.counter }}() {
-		var dialog = document.querySelector('#dialog-son-{{ forloop.counter }}');
-		dialogPolyfill.registerDialog(dialog)
-		var showDialogButton = document.querySelector('#show-delete-son-{{ forloop.counter }}');
-		if(!dialog.showModal) {
-			dialogPolyfill.registerDialog(dialog);
-		}
-		showDialogButton.addEventListener('click', function() {
-			dialog.showModal();
-		});
-		dialog.querySelector('.close').addEventListener('click', function() {
-			dialog.close();
-		});
-	}
-	runfolder{{ forloop.counter }}();
+	activate_dialog('son-{{ forloop.counter }}');
 </script>
 {% endwith %}
 {% endfor %}
@@ -141,7 +127,7 @@ $(function() {
 	<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--mini-fab problem-cloud-button"
 			onclick="location.href='{% url 'problems:details' problem.id %}'" type="button">
 		{{ forloop.counter }}</button>
-	<p>{{ problem.content }}</p>
+	<p>{{ problem.statement }}</p>
 </div>
 
 <form action="{% url 'folder:delete_problem' folder_path %}" method="post" id="delete_form-problem-{{ forloop.counter }}">
@@ -160,21 +146,7 @@ $(function() {
 </dialog>
 
 <script>
-	function runproblem{{ forloop.counter }}() {
-		var dialog = document.querySelector('#dialog-problem-{{ forloop.counter }}');
-		dialogPolyfill.registerDialog(dialog)
-		var showDialogButton = document.querySelector('#show-delete-problem-{{ forloop.counter }}');
-		if(!dialog.showModal) {
-			dialogPolyfill.registerDialog(dialog);
-		}
-		showDialogButton.addEventListener('click', function() {
-			dialog.showModal();
-		});
-		dialog.querySelector('.close').addEventListener('click', function() {
-			dialog.close();
-		});
-	}
-	runproblem{{ forloop.counter }}();
+	activate_dialog('problem-{{ forloop.counter }}');
 </script>
 {% endfor %}
 
@@ -182,8 +154,8 @@ $(function() {
 	<form action="{% url 'folder:add_problem' folder_path %}" method="post">
 	{% csrf_token %}
 		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-			<input class="mdl-textfield__input" type="text" name="p_id" id="txt">
-			<label class="mdl-textfield__label" for="txt">Dodanie zadania (ID)</label>
+			<input class="mdl-textfield__input" type="text" name="p_id" id="add-txt">
+			<label class="mdl-textfield__label" for="add-txt">Dodanie zadania (ID)</label>
 		</div>
 	</form>
 </div>
