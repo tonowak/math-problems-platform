@@ -6,10 +6,54 @@
 
 	<a href="{% url 'problems:add' %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Dodaj zadanka</a>
 
-	{% if not problems_data %}
-	<p>Nie ma dostępnych zadań</p>
-	{% endif %}
+	<button type="submit" form="filter_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+		Wyszukaj
+	</button>
+
+	<a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Wyczyść filtry</a>
 </div>
+
+<form action="{% url 'problems:index' %}" method="get" id="filter_form">
+{% csrf_token %}
+	<select id="select-tags" name="tags[]" multiple placeholder="Dodaj filtr">
+	</select>
+</form>
+
+<script>
+$(function() {
+	var $select = $('#select-tags').selectize({
+		plugins: ['remove_button'],
+		persist: false,
+		options: [
+			{% for tag, selected in tag_data %}
+				{id: {{ tag.id }}, value: '{{ tag.id }}', text: '{{ tag.name }}', category: '{{ tag.type_id }}'},
+			{% endfor %}
+		],
+		render: {
+			item: function(data, escape) {
+				return '<span class="mdl-chip mdl-chip--deletable">' +
+							'<span class="category-chip category-color-' + escape(data.category) + '"></span>' +
+							'<span class="mdl-chip__text">' + escape(data.text) + '</span>' +
+						'</span>';
+			}
+		}
+	});
+
+	var selectize = $select[0].selectize;
+	{% for tag, selected in tag_data %}
+		{% if selected %}
+			selectize.addItem({{ tag.id }});
+		{% endif %}
+	{% endfor %}
+
+});
+</script>
+
+{% if not problems_data %}
+<div class="problem-cloud">
+	<p>Nie znaleziono zadań</p>
+</div>
+{% endif %}
 
 {% for problem, tags in problems_data %}
 <div class="problem-cloud">
@@ -20,7 +64,7 @@
 	<div>
 	<div class="chip-container">
 		{% for tag in tags %}
-		<span class="mdl-chip">
+		<span onclick="location.href='{% url 'problems:index' %}?tags%5B%5D={{ tag.id }}'" class="mdl-chip">
 			<span class="category-chip category-color-{{ tag.type_id }}"></span>
 			<span class="mdl-chip__text">{{ tag.name }}</span>
 		</span>
