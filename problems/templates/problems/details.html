@@ -33,7 +33,7 @@
 	{% if user.is_staff %}
 	<div class="chip-container">
 	{% for tag in tags %}
-		<span class="mdl-chip">
+		<span onclick="location.href='{% url 'problems:index' %}?tags%5B%5D={{ tag.id }}'" class="mdl-chip">
 			<span class="category-chip category-color-{{ tag.type_id }}"></span>
 			<span class="mdl-chip__text">{{ tag.name }}</span>
 		</span>
