@@ -81,7 +81,7 @@ def get_context(path):
     tag_data = []
     group_type = tag_types.index("Grupa")
     for tag in Tag.objects.filter(type_id=group_type).order_by('type_id', 'id'):
-        tag_data.append((tag, bool(folder.tag_set.filter(pk=tag.pk))))
+        tag_data.append((tag, folder.tag_set.filter(pk=tag.pk).exists()))
 
     return {
         'folder_path': path,
@@ -104,6 +104,10 @@ class IndexView(generic.View):
             for son in Folder.objects.filter(parent=context['folder']).all():
                 if has_access_to_folder(request.user, son):
                     context['sons'].append(son)
+        context['problems'] = []
+        for problem in context['folder'].problem_set.all():
+            context['problems'].append(
+                    (problem, problem.claiming_user_set.filter(id=request.user.id).exists()))
         return render(request, 'folder/index.html', context)
 
 @method_decorator(staff_only, name='dispatch')
