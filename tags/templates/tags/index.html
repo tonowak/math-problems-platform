@@ -7,23 +7,38 @@
 </div>
 
 <div class="cloud">
-	<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
-		<div class="mdl-tabs__tab-bar">
-			{% for name, tags in tag_data %}
-			<a href="#cat{{ forloop.counter }}" class="mdl-tabs__tab {% if forloop.first %}is-active{% endif %}">{{ name }}</a>
+	<div class="mdl-textfield mdl-js-textfield getmdl-select">
+		<input type="text" value="" class="mdl-textfield__input" id="category" readonly>
+		<input type="hidden" value="" name="category">
+		<i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+		<label for="category" class="mdl-textfield__label">Kategoria tagu</label>
+		<ul for="category" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+			{% for type, tags in tag_data %}
+				<li class="mdl-menu__item" data-val="{{ forloop.counter }}">{{ type }}</li>
 			{% endfor %}
-		</div>
-
-		{% for name, tags in tag_data %}
-		<div class="mdl-tabs__panel {% if forloop.first %}is-active{% endif %}" id="cat{{ forloop.counter }}">
-			<ul>
-				{% for tag in tags %}
-					<li>{{ tag.name }}</li>
-				{% endfor %}
-			</ul>
-		</div>
-		{% endfor %}
+		</ul>
 	</div>
+
+	{% for type, tags in tag_data %}
+	<ul class="mdl-list hidden" id="cat{{ forloop.counter }}">
+		{% for tag in tags %}
+		<li class="mdl-list__item">
+			<span class="mdl-list__item-primary-content">{{ tag.name }}</span>
+			<a class="mdl-list__item-secondary-action mdl-button mdl-js-button mdl-button--raised">Edytuj</a>
+		</li>
+		{% endfor %}
+	</ul>
+	{% endfor %}
 </div>
+
+<script>
+$(function() {
+	$("#category").change(function(event) {
+		{% for type, tags in tag_data %} 
+			$("#cat{{ forloop.counter }}").toggleClass("hidden", !(this.value === "{{ type }}"));
+		{% endfor %}
+	});
+});
+</script>
 
 {% endblock %}

@@ -19,7 +19,7 @@ class IndexView(generic.View):
 
         problems_data = []
         for problem in problems:
-            problems_data.append((problem, problem.tag_set.all()))
+            problems_data.append((problem, problem.tag_set.order_by('type_id', 'id')))
 
         tag_data = []
         for tag in Tag.objects.order_by('type_id', 'id'):

@@ -25,9 +25,9 @@ class IndexView(generic.View):
         tag_data = [[] for i in range(len(tag_types))]
         for tag in Tag.objects.all():
             tag_data[tag.type_id].append(tag)
-
         tag_data = list(zip(tag_types, tag_data))
-        return render(request, 'tags/index.html', {'tag_data': tag_data})
+
+        return render(request, 'tags/index.html', {'tag_data': tag_data});
 
 @method_decorator(staff_only, name='dispatch')
 class AddView(generic.View):
