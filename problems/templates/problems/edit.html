@@ -2,9 +2,13 @@
 {% block content %}
 
 <div class="cloud">
-	<h3>Edycja zadania {{ problem.id }}</h3>
+	<h3>Edycja zadania {{ problem.id }}.</h3>
 
-	<button type="submit" form="problem_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+	<form action="{% url 'problems:edit' problem.id %}" method="post" id="problem_form">
+	{% csrf_token %}
+	</form>
+
+	<button form="problem_form" type="submit" form="problem_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
 		Zapisz zmiany
 	</button>
 
@@ -12,13 +16,31 @@
 </div>
 
 <div class="cloud">
-	<form action="{% url 'problems:edit' problem.id %}" method="post" id="problem_form">
-	{% csrf_token %}
-		<div class="mdl-textfield mdl-js-textfield">
-			<textarea class="mdl-textfield__input" type="text" rows= "5" name="statement" id="text_statement">{{ problem.content }}</textarea>
-			<label class="mdl-textfield__label" for="text_statement">Treść zadania</label>
-		</div>
-	</form>
+	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "5" name="statement" id="text_statement">{{ problem.statement }}</textarea>
+		<label class="mdl-textfield__label" for="text_statement">Treść zadania</label>
+	</div>
+</div>
+
+<div class="cloud">
+	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="hints" id="text_statement">{{ problem.hints }}</textarea>
+		<label class="mdl-textfield__label" for="text_statement">Hinty</label>
+	</div>
+</div>
+
+<div class="cloud">
+	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="answer" id="text_statement">{{ problem.answer }}</textarea>
+		<label class="mdl-textfield__label" for="text_statement">Odpowiedź</label>
+	</div>
+</div>
+
+<div class="cloud">
+	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "5" name="solution" id="text_statement">{{ problem.solution }}</textarea>
+		<label class="mdl-textfield__label" for="text_statement">Rozwiązanie</label>
+	</div>
 </div>
 
 <select form="problem_form" id="select-tags" name="tags[]" multiple placeholder="Dodaj tagi">

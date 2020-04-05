@@ -60,7 +60,7 @@ $(function() {
 	<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab problem-cloud-button"
 			onclick="location.href='{% url 'problems:details' problem.id %}'" type="button">
 		{{ problem.id }}</button>	
-	<p>{{ problem.content }}</p>
+	<p>{{ problem.statement }}</p>
 	<div>
 	<div class="chip-container">
 		{% for tag in tags %}
