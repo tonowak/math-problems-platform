@@ -12,10 +12,23 @@ from users.permissions import staff_only, url_404, has_access_to_problem
 @method_decorator(staff_only, name='dispatch')
 class IndexView(generic.View):
     def get(self, request):
+        tag_filter = request.GET.getlist('tags[]', [])
+        problems = Problem.objects.all()
+        for tag_id in tag_filter:
+            problems = problems.filter(tag__id=tag_id)
+
         problems_data = []
-        for problem in Problem.objects.all():
+        for problem in problems:
             problems_data.append((problem, problem.tag_set.all()))
-        return render(request, 'problems/index.html', {'problems_data': problems_data})
+
+        tag_data = []
+        for tag in Tag.objects.order_by('type_id', 'id'):
+            tag_data.append((tag, str(tag.id) in tag_filter))
+
+        return render(request, 'problems/index.html', {
+            'problems_data': problems_data,
+            'tag_data': tag_data,
+        })
 
 @method_decorator(staff_only, name='dispatch')
 class AddView(generic.View):
