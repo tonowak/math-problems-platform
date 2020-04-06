@@ -22,9 +22,24 @@
 	{% for type, tags in tag_data %}
 	<ul class="mdl-list hidden" id="cat{{ forloop.counter }}">
 		{% for tag in tags %}
-		<li class="mdl-list__item">
+		<li id="reg{{ tag.id }}" class="mdl-list__item">
 			<span class="mdl-list__item-primary-content">{{ tag.name }}</span>
-			<a class="mdl-list__item-secondary-action mdl-button mdl-js-button mdl-button--raised">Edytuj</a>
+			<button id="to_edit{{ tag.id }}" class="mdl-button mdl-js-button mdl-button--icon right-action-button">
+				<i class="material-icons right-action-button">edit</i>
+			</button>
+		</li>
+
+		<li id="edit{{ tag.id }}" class="mdl-list__item" style="display: none;">
+			<form action="{% url 'tags:edit' tag.id %}" method="post" id="tag_form">
+			{% csrf_token %}
+				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+					<input class="mdl-textfield__input" type="text" name="name" id="name{{ tag.id }}" value="{{ tag.name }}">
+					<label class="mdl-textfield__label" for="name{{ tag.id }}">Nazwa tagu</label>
+				</div>
+			</form>
+			<button id="to_reg{{ tag.id }}" class="mdl-button mdl-js-button mdl-button--icon right-action-button">
+				<i class="material-icons right-action-button">edit</i>
+			</button>
 		</li>
 		{% endfor %}
 	</ul>
@@ -35,9 +50,22 @@
 $(function() {
 	$("#category").change(function(event) {
 		{% for type, tags in tag_data %} 
-			$("#cat{{ forloop.counter }}").toggleClass("hidden", !(this.value === "{{ type }}"));
+		$("#cat{{ forloop.counter }}").toggleClass("hidden", !(this.value === "{{ type }}"));
 		{% endfor %}
 	});
+
+	{% for type, tags in tag_data %}
+		{% for tag in tags %}
+		$("#to_edit{{ tag.id }}").click(function() {
+			$("#reg{{ tag.id }}").hide();
+			$("#edit{{ tag.id }}").show();
+		});
+		$("#to_reg{{ tag.id }}").click(function() {
+			$("#reg{{ tag.id }}").show();
+			$("#edit{{ tag.id }}").hide();
+		});
+		{% endfor %}
+	{% endfor %}
 });
 </script>
 

@@ -39,3 +39,13 @@ class AddView(generic.View):
         tag.save()
         messages.success(request, "Dodano tag!")
         return HttpResponseRedirect(reverse('tags:add'))
+
+
+@method_decorator(staff_only, name='dispatch')
+class EditView(generic.View):
+    def post(self, request, pk):
+        tag = get_object_or_404(Tag, pk=pk)
+        tag.name = request.POST['name']
+        tag.save()
+        messages.success(request, "Zapisano zmiany!")
+        return HttpResponseRedirect(reverse('tags:index'))
