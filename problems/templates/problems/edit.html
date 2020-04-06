@@ -15,6 +15,9 @@
 	</button>
 </div>
 
+<select form="problem_form" id="select-tags" name="tags[]" multiple placeholder="Dodaj tagi">
+</select>
+
 <div class="cloud">
 	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "5" name="statement" id="text_statement">{{ problem.statement }}</textarea>
@@ -42,9 +45,6 @@
 		<label class="mdl-textfield__label" for="text_statement">Rozwiązanie</label>
 	</div>
 </div>
-
-<select form="problem_form" id="select-tags" name="tags[]" multiple placeholder="Dodaj tagi">
-</select>
 
 <script>
 $(function() {
