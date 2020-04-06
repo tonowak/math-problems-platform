@@ -126,7 +126,10 @@ body {
 .category-color-7 { background-color: #9e9e9e } /* user grupa */
 
 .green-background {
-	background-color: #c8e6c9
+	background-color: #c8e6c9;
+}
+.red-text {
+	color: #ef5350 !important;
 }
 
 .mdl-chip {
