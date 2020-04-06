@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
 
-from .permissions import staff_only, url_404
+from .permissions import staff_only, url_403
 from tags.models import Tag
 
 def login_view(request):
@@ -34,7 +34,7 @@ class EditUser(generic.View):
 
     def get(self, request, u_id):
         if not self.has_permission(request, u_id):
-            return redirect(url_404)
+            return redirect(url_403)
         user = get_object_or_404(User, id=u_id)
         tag_data = []
         for tag in Tag.objects.filter(type_id=7).order_by('type_id', 'id'):

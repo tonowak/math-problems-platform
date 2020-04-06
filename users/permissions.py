@@ -2,9 +2,9 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
 
-url_404 = 'users:login'
+url_403 = 'users:login'
 
-staff_only = user_passes_test(lambda u: u.is_staff, login_url=url_404)
+staff_only = user_passes_test(lambda u: u.is_staff, login_url=url_403)
 
 from folder.models import Folder
 

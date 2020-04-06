@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 
 from .models import Problem
 from tags.models import Tag
-from users.permissions import staff_only, url_404, has_access_to_problem
+from users.permissions import staff_only, url_403, has_access_to_problem
 
 @method_decorator(staff_only, name='dispatch')
 class IndexView(generic.View):
@@ -41,6 +41,7 @@ class AddView(generic.View):
             hints = request.POST['hints'],
             answer = request.POST['answer'],
             solution = request.POST['solution'],
+            created_by = request.user,
         )
         problem.save()
         messages.success(request, "Dodano zadanie!")
@@ -50,7 +51,7 @@ class DetailsView(generic.View):
     def get(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
         if not has_access_to_problem(request.user, problem):
-            return redirect(url_404)
+            return redirect(url_403)
 
         def inside_get(s):
             ret = request.user.is_staff or s in request.GET
@@ -69,7 +70,7 @@ class ClaimView(generic.View):
     def post(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
         if not has_access_to_problem(request.user, problem):
-            return redirect(url_404)
+            return redirect(url_403)
 
         if request.user.problem_set.filter(id=problem.id).exists():
             request.user.problem_set.remove(problem)

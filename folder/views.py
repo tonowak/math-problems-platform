@@ -10,7 +10,7 @@ from .models import Folder, ProblemPlace
 from problems.models import Problem
 from tags.models import Tag
 from tags.views import tag_types
-from users.permissions import has_access_to_folder, url_404, staff_only
+from users.permissions import has_access_to_folder, url_403, staff_only
 
 import unicodedata, re
 def convert_pretty_to_folder_name(pretty):
@@ -101,7 +101,7 @@ def get_context(path):
 class IndexView(generic.View):
     def get(self, request, folder_path):
         if not has_access_to_folder(request.user, get_folder(folder_path)):
-            return redirect(url_404)
+            return redirect(url_403)
         context = get_context(folder_path)
         if not request.user.is_staff:
             context['sons'] = []
@@ -131,7 +131,7 @@ class AddFolder(generic.View):
             return redirect('folder:edit', folder_path)
 
         if not Folder.objects.filter(parent=folder, folder_name=folder_name):
-            son = Folder(parent=folder, pretty_name=pretty_name, folder_name=folder_name)
+            son = Folder(parent=folder, pretty_name=pretty_name, folder_name=folder_name, created_by=request.user)
             son.save()
             messages.success(request, 'Dodano folder!')
         else:
