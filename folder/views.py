@@ -6,7 +6,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 
-from .models import Folder
+from .models import Folder, ProblemPlace
 from problems.models import Problem
 from tags.models import Tag
 from tags.views import tag_types
@@ -82,6 +82,10 @@ def get_context(path):
     group_type = tag_types.index("Grupa")
     for tag in Tag.objects.filter(type_id=group_type).order_by('type_id', 'id'):
         tag_data.append((tag, folder.tag_set.filter(pk=tag.pk).exists()))
+    problems = []
+    for fp in ProblemPlace.objects.filter(folder=folder).order_by('place').all():
+        problems.append(fp.problem)
+    print(problems)
 
     return {
         'folder_path': path,
@@ -90,7 +94,7 @@ def get_context(path):
         'son_path_prefix': path + '/' if path != 'all' else '',
         'parent_path': get_parent_path(path),
         'parent_paths': get_parent_paths(path),
-        'problems': folder.problem_set.all(),
+        'problems': problems,
         'tag_data': tag_data,
     }
 
@@ -105,7 +109,8 @@ class IndexView(generic.View):
                 if has_access_to_folder(request.user, son):
                     context['sons'].append(son)
         context['problems'] = []
-        for problem in context['folder'].problem_set.all():
+        for fp in ProblemPlace.objects.filter(folder=context['folder']).order_by('place').all():
+            problem = fp.problem
             context['problems'].append(
                     (problem, problem.claiming_user_set.filter(id=request.user.id).exists()))
         return render(request, 'folder/index.html', context)
@@ -180,7 +185,16 @@ class AddProblem(generic.View):
             return redirect('folder:edit', folder_path)
 
         problem = get_object_or_404(Problem, pk=p_id)
-        f.problem_set.add(problem)
+        if f.problem_set.filter(id=problem.id).exists():
+            messages.error(request, 'To zadanie jest już dodane.')
+            return redirect('folder:edit', folder_path)
+
+        cnt_p_inside_f = f.problem_set.count()
+        ProblemPlace.objects.create(
+            folder = f,
+            problem = problem,
+            place = cnt_p_inside_f
+        )
         messages.success(request, 'Dodano zadanie!')
         return redirect('folder:edit', folder_path)
 
@@ -204,4 +218,18 @@ class EditTags(generic.View):
             f.tag_set.add(Tag.objects.get(id=tag_id))
         f.save()
         messages.success(request, 'Zmieniono tagi!')
+        return redirect('folder:edit', folder_path)
+
+@method_decorator(staff_only, name='dispatch')
+class MoveProblemUp(generic.View):
+    def post(self, request, folder_path):
+        f = get_folder(folder_path)
+        p_id = request.POST['p_id']
+        p_down = get_object_or_404(ProblemPlace, folder=f, problem=get_object_or_404(Problem, id=p_id))
+        p_up   = get_object_or_404(ProblemPlace, folder=f, place=p_down.place - 1)
+        p_down.place -= 1
+        p_down.save()
+        p_up.place += 1
+        p_up.save()
+        messages.success(request, 'Przesunięto zadanie!')
         return redirect('folder:edit', folder_path)

@@ -30,6 +30,9 @@
 		</li>
 
 		<li id="edit{{ tag.id }}" class="mdl-list__item" style="display: none;">
+			<button id="to_reg{{ tag.id }}" class="mdl-button mdl-js-button mdl-button--icon right-action-button">
+				<i class="material-icons right-action-button">edit</i>
+			</button>
 			<form action="{% url 'tags:edit' tag.id %}" method="post" id="tag_form">
 			{% csrf_token %}
 				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -37,9 +40,6 @@
 					<label class="mdl-textfield__label" for="name{{ tag.id }}">Nazwa tagu</label>
 				</div>
 			</form>
-			<button id="to_reg{{ tag.id }}" class="mdl-button mdl-js-button mdl-button--icon right-action-button">
-				<i class="material-icons right-action-button">edit</i>
-			</button>
 		</li>
 		{% endfor %}
 	</ul>
