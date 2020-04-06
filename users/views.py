@@ -23,6 +23,9 @@ def index_view(request):
         'users': User.objects.all(),
     })
 
+def back_from_problem(request):
+    return render(request, 'users/back_from_problem.html')
+
 class EditUser(generic.View):
     def has_permission(self, request, u_id):
         if request.user.is_staff or request.user.id == u_id:

@@ -5,7 +5,7 @@
 <div class="cloud">
 	<h3>Zadanie {{ problem.id }}.</h3>
 
-	<a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
+	<a href="{% url 'users:back_from_problem' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
 
 	{% if user.is_staff %}
 	<a href="{% url 'problems:edit' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Edytuj</a>

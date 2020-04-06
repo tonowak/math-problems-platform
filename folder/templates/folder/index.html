@@ -52,11 +52,12 @@
 
 {% for problem, solved in problems %}
 <div class="problem-cloud {% if solved %}green-background{% endif %}">
-	<form action="{% url 'problems:claim' problem.id %}?show_answer=True" method="post">
+	<form action="{% url 'problems:claim' problem.id %}" method="post">
 		{% csrf_token %}
 		<button class="mdl-button mdl-js-button mdl-button--icon right-action-button" type="submit">
 			<i class="material-icons right-action-button">done</i>
 		</button>
+		<input type="hidden" name="stay" value="True">
 	</form>
 
 	<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--mini-fab problem-cloud-button"

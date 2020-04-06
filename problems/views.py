@@ -36,7 +36,12 @@ class AddView(generic.View):
         return render(request, 'problems/add.html')
 
     def post(self, request):
-        problem = Problem(statement=request.POST['statement'])
+        problem = Problem(
+            statement = request.POST['statement'],
+            hints = request.POST['hints'],
+            answer = request.POST['answer'],
+            solution = request.POST['solution'],
+        )
         problem.save()
         messages.success(request, "Dodano zadanie!")
         return HttpResponseRedirect(reverse('problems:add'))
@@ -70,7 +75,12 @@ class ClaimView(generic.View):
             request.user.problem_set.remove(problem)
         else:
             request.user.problem_set.add(problem)
-        return redirect('problems:details', pk)
+
+        print(request.POST)
+        if 'stay' in request.POST:
+            return redirect('users:back_from_problem')
+        else:
+            return redirect('problems:details', pk)
 
 @method_decorator(staff_only, name='dispatch')
 class EditView(generic.View):

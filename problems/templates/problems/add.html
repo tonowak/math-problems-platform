@@ -5,14 +5,36 @@
 	<h3>Dodaj zadanko</h2>
 </div>
 
+<form action="{% url 'problems:add' %}" method="post" id="problem_form">
+{% csrf_token %}
+</form>
+
 <div class="cloud">
-	<form action="{% url 'problems:add' %}" method="post" id="problem_form">
-	{% csrf_token %}
 		<div class="mdl-textfield mdl-js-textfield">
-			<textarea class="mdl-textfield__input" type="text" rows= "5" name="statement" id="text_statement"></textarea>
+			<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "5" name="statement" id="text_statement"></textarea>
 			<label class="mdl-textfield__label" for="text_statement">Treść zadania</label>
 		</div>
-	</form>
+</div>
+
+<div class="cloud">
+		<div class="mdl-textfield mdl-js-textfield">
+			<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "2" name="hints" id="text_hints"></textarea>
+			<label class="mdl-textfield__label" for="text_hints">Hinty</label>
+		</div>
+</div>
+
+<div class="cloud">
+		<div class="mdl-textfield mdl-js-textfield">
+			<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="answer" id="text_answer"></textarea>
+			<label class="mdl-textfield__label" for="text_answer">Odpowiedź</label>
+		</div>
+</div>
+
+<div class="cloud">
+		<div class="mdl-textfield mdl-js-textfield">
+			<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "5" name="solution" id="text_solution"></textarea>
+			<label class="mdl-textfield__label" for="text_solution">Rozwiązanie</label>
+		</div>
 </div>
 
 <div class="cloud">
@@ -20,7 +42,7 @@
 		Dodaj Zadanie
 	</button>
 
-	<a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót do zbioru zadań</a>
+	<a href="{% url 'users:back_from_problem' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
 </div>
 
 {% endblock %}
