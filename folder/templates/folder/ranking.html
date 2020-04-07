@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="path-cloud">
+	<button class="mdl-button mdl-js-button mdl-button--icon right-action-button mdl-button--colored" onclick="location.href='{% url 'folder:index' folder_path %}'" type="button">
+		<i class="material-icons right-action-button">list</i>
+	</button>
+
+	<div class="center-vert">
+		<a class="center-vert" href="{% url 'folder:index' 'all' %}">
+			<i class="material-icons center-vert">first_page</i>
+		</a>
+		{% for p in parent_paths %}
+		{% if p.0 != 'all' %}
+		<p>/</p> <a href="{% url 'folder:index' p.0 %}">{{ p.1 }}</a>
+		{% endif %}
+		{% endfor %}
+		{% ifnotequal folder_path 'all' %}
+		<a class="center-vert" href="{% url 'folder:index' parent_path %}">
+			<i class="material-icons center-vert">chevron_left</i>
+		</a>
+		{% endifnotequal %}
+	</div>
+</div>
+
+<div class="cloud">
+	<form action="{% url 'folder:ranking' folder_path %}" method="get" id="tags_form">
+		<button type="submit" form="tags_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+			Stwórz ranking
+		</button>
+	</form>
+</div>
+
+<select form="tags_form" id="select-tags" name="tags[]" multiple placeholder="Dodaj tagi">
+</select>
+
+<script>
+$(function() {
+	var $select = $('#select-tags').selectize({
+		plugins: ['remove_button'],
+		persist: false,
+		options: [
+			{% for tag, selected in tag_data %}
+				{id: {{ tag.id }}, value: '{{ tag.id }}', text: '{{ tag.name }}', category: '{{ tag.type_id }}'},
+			{% endfor %}
+		],
+		render: {
+			item: function(data, escape) {
+				return '<span class="mdl-chip mdl-chip--deletable">' +
+							'<span class="category-chip category-color-' + escape(data.category) + '"></span>' +
+							'<span class="mdl-chip__text">' + escape(data.text) + '</span>' +
+						'</span>';
+			}
+		}
+	});
+
+	var selectize = $select[0].selectize;
+	{% for tag, selected in tag_data %}
+		{% if selected %}
+			selectize.addItem({{ tag.id }})
+		{% endif %}
+	{% endfor %}
+
+});
+</script>
+
+<div style="overflow-x:auto;">
+	<table class="mdl-data-table mdl-js-data-table">
+	<thead>
+		<tr>
+			<th></th>
+			<th></th>
+			{% for prefix, p in problem_list %}
+			<th class="mdl-data-table__cell--non-numeric border-left"
+				colspan={{ p|length }}>{{ prefix }}</td>
+			{% endfor %}
+		</tr>
+		<tr>
+			<th>Imię i nazwisko</th>
+			<th class="small-table-item">Σ</th>
+			{% for prefix, pl in problem_list %}
+			{% for p in pl %}
+			<th class="small-table-item {% ifequal forloop.counter0 0 %}border-left{% endifequal %}">
+				{{ forloop.counter }}
+			</th>
+			{% endfor %}
+			{% endfor %}
+		</tr>
+	</thead>
+	<tbody>
+		{% for row in table %}
+		<tr>
+			{% for val, add_border_left in row %}
+			<th class="small-table-item {% if add_border_left %}border-left{% endif %}">
+				{% if forloop.counter0 <= 1 %}
+				{{ val }}
+				{% else %}
+				{% ifequal val True %}
+				<i class="material-icons green-text">done</i>
+				{% else %}
+				<i class="material-icons red-text">clear</i>
+				{% endifequal %}
+				{% endif %}
+			</th>
+			{% endfor %}
+		</tr>
+		{% endfor %}
+	</tbody>
+	</table>
+</div>
+
+{% endblock %}
+

@@ -12,5 +12,6 @@ urlpatterns = [
     path('<path:folder_path>/delete_problem', views.DeleteProblem.as_view(), name='delete_problem'),
     path('<path:folder_path>/edit_tags', views.EditTags.as_view(), name='edit_tags'),
     path('<path:folder_path>/move_up', views.MoveProblemUp.as_view(), name='move_up'),
+    path('<path:folder_path>/ranking', views.Ranking.as_view(), name='ranking'),
     path('<path:folder_path>', views.IndexView.as_view(), name='index'),
 ]

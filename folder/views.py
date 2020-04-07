@@ -85,7 +85,6 @@ def get_context(path):
     problems = []
     for fp in ProblemPlace.objects.filter(folder=folder).order_by('place').all():
         problems.append(fp.problem)
-    print(problems)
 
     return {
         'folder_path': path,
@@ -233,3 +232,77 @@ class MoveProblemUp(generic.View):
         p_up.save()
         messages.success(request, 'Przesunięto zadanie!')
         return redirect('folder:edit', folder_path)
+
+@method_decorator(staff_only, name='dispatch')
+class Ranking(generic.View):
+    problem_list = []
+
+    def dfs(self, prefix, f):
+        prefix += '/' + f.pretty_name
+        problems = []
+        for fp in ProblemPlace.objects.filter(folder=f).order_by('place').all():
+            problems.append(fp.problem)
+        if len(problems) != 0:
+            self.problem_list.append((prefix, problems))
+        for son in Folder.objects.filter(parent=f).all():
+            self.dfs(prefix, son)
+
+    def get(self, request, folder_path):
+        f = get_folder(folder_path)
+        self.problem_list = []
+        self.dfs('', f)
+        print(self.problem_list)
+        userlist = set()
+        for prefix, problems in self.problem_list:
+            for problem in problems:
+                for user in problem.claiming_user_set.all():
+                    if user not in userlist:
+                        userlist.add(user)
+        tags = []
+        if 'tags[]' in request.GET:
+            tags = request.GET.getlist('tags[]')
+        if tags:
+            new_userlist = []
+            for user in userlist:
+                found = False
+                for tag in tags:
+                    if user.tag_set.filter(id=tag).exists():
+                        found = True
+                        break
+                if found:
+                    new_userlist.append(user)
+            userlist = new_userlist
+
+        table = []
+        for user in userlist:
+            did = []
+            sum = 0
+            for prefix, problems in self.problem_list:
+                for problem in problems:
+                    did.append((
+                        bool(problem.claiming_user_set.filter(id=user.id).exists()),
+                        bool(problem == problems[0]),
+                    ))
+                    if did[-1][0]:
+                        sum += 1
+
+            row = [(-sum, False), (user.last_name, False), (user.first_name, False)]
+            row += did
+            table.append(row)
+        table.sort()
+        for row in table:
+            name = row[2][0] + ' ' + row[1][0]
+            row[2] = (-row[0][0], False)
+            row.pop(0)
+            row[0] = (name, False)
+
+        context = get_context(folder_path)
+        context['problem_list'] = self.problem_list
+        context['table'] = table
+        for i in range(len(context['tag_data'])):
+            tag_id = context['tag_data'][i][0].id
+            inside = bool(str(tag_id) in tags)
+            context['tag_data'][i] = (context['tag_data'][i][0], inside)
+        print(context['tag_data'])
+        return render(request, 'folder/ranking.html', context)
+
