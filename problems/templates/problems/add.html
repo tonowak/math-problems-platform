@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% block title %}Dodaj zadanie{% endblock %}
 {% block content %}
 
 <div class="cloud">
-	<h3>Dodaj zadanko</h2>
+	<h3>Dodaj zadanie</h2>
 </div>
 
 <form action="{% url 'problems:add' %}" method="post" id="problem_form">
