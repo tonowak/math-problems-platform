@@ -190,7 +190,11 @@ class AddProblem(generic.View):
         if p_id == '':
             return redirect('folder:edit', folder_path)
 
-        problem = get_object_or_404(Problem, pk=p_id)
+        try:
+            problem = Problem.objects.get(pk=p_id)
+        except Problem.DoesNotExist:
+            messages.error(request, 'To zadanie nie istnieje.')
+            return redirect('folder:edit', folder_path)
         if f.problem_set.filter(id=problem.id).exists():
             messages.error(request, 'To zadanie jest już dodane.')
             return redirect('folder:edit', folder_path)

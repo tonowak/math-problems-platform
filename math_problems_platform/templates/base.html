@@ -30,10 +30,10 @@
 </head>
 
 <body>
-	<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+	<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" style="min-height: 200px">
 		<main class="mdl-layout__content">
 			<div class="nav-bar mdl-shadow--2dp">
-				<p>TiledMath</p>
+				<p>TiM</p>
 				{% if user.is_authenticated %}
 				<a class="mdl-navigation__link" href="{% url 'folder:index' 'all' %}">Contesty</a>
 				{% endif %}

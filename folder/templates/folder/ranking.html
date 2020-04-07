@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block title %}{% if folder.pretty_name != "/" %}{{ folder.pretty_name }}{% else %}Contesty{% endif %} - ranking{% endblock %}
 {% block content %}
 
 <div class="path-cloud">

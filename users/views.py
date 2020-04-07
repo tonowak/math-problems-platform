@@ -43,7 +43,7 @@ class EditUser(generic.View):
             elif user.tag_set.filter(pk=tag.pk):
                 tag_data.append((tag, True))
         context = {
-            'user': user,
+            'editing_user': user,
             'tag_data': tag_data,
         }
         return render(request, 'users/edit.html', context)
