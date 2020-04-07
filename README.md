@@ -1,6 +1,13 @@
 # math-problems-platform
 Written in Python using Django. Tomasz Nowak, Michał Staniewski.
 
+## Dependencies
+
+Can be installed with pip
+``` sh
+pip install -r requirements.txt
+```
+
 ## Example setup
 
 Start off by creating the database, initializing the example setup

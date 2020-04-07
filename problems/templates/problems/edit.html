@@ -8,11 +8,11 @@
 	{% csrf_token %}
 	</form>
 
-	<a href="{% url 'problems:details' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
-
 	<button form="problem_form" type="submit" form="problem_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
 		Zapisz zmiany
 	</button>
+
+	<a href="{% url 'problems:details' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
 </div>
 
 <select form="problem_form" id="select-tags" name="tags[]" multiple placeholder="Dodaj tagi">

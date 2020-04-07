@@ -5,8 +5,6 @@
 <div class="cloud">
 	<h3>Zadanie {{ problem.id }}.</h3>
 
-	<a href="{% url 'users:back_from_problem' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
-
 	{% if user.is_staff %}
 	<a href="{% url 'problems:edit' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Edytuj</a>
 
@@ -29,8 +27,10 @@
 		{% csrf_token %}
 		<button type="submit" class="mdl-button mdl-js-button mdl-button--raised">
 			{% if solved_task %}Zmień na niezrobione{% else %}Zmień na zrobione{% endif %}
-		</a>
+		</button>
 	</form>
+
+	<a href="{% url 'users:back_from_problem' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
 </div>
 
 <div class="problem-cloud {% if solved_task %}green-background{% endif %}">
