@@ -30,6 +30,10 @@
 	<button type="submit" form="edit-form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
 		Zapisz
 	</button>
+
+	{% if request.user.is_staff %}
+	<a href="{% url 'users:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
+	{% endif %}
 </div>
 
 {% if request.user.is_staff %}
