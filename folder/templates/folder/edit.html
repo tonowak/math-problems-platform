@@ -33,10 +33,24 @@
 		</div>
 	</form>
 
-	<form action="{% url 'folder:edit_tags' folder_path %}" method="post" id="tags_form">
+	<form action="{% url 'folder:edit_tags' folder_path %}" method="post" id="tags_form" style="display: inline">
 	{% csrf_token %}
 		<button type="submit" form="tags_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
 			Zapisz tagi
+		</button>
+	</form>
+
+	<form action="{% url 'folder:show_solution' folder_path %}" method="post" id="solution_form" style="display: inline">
+	{% csrf_token %}
+		<button type="submit" form="solution_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+			{% if folder.show_solution %}Wyłącz{% else %}Włącz{% endif %} rozwiązania
+		</button>
+	</form>
+
+	<form action="{% url 'folder:show_stats' folder_path %}" method="post" id="stats_form" style="display: inline">
+	{% csrf_token %}
+		<button type="submit" form="stats_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+			{% if folder.show_stats %}Wyłącz{% else %}Włącz{% endif %} statystyki
 		</button>
 	</form>
 </div>
