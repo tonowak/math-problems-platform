@@ -28,7 +28,7 @@ def add_problem(statement):
 
 def get_statements():
     ret = []
-    with open('file.tex') as input_file:
+    with open('statements.tex') as input_file:
         for line in input_file:
             line = line.replace('\n', '')
             ret.append(line)

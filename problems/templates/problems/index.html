@@ -1,10 +1,11 @@
 {% extends "base.html" %}
+{% block title %}Zbiór zadań{% endblock %}
 {% block content %}
 
 <div class="cloud">
 	<h3> Zbiór zadań </h3>
 
-	<a href="{% url 'problems:add' %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Dodaj zadanka</a>
+	<a href="{% url 'problems:add' %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Dodaj zadania</a>
 
 	<button type="submit" form="filter_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
 		Wyszukaj

@@ -2,6 +2,9 @@
 <html lang="pl">
 <head>
 	<meta charset="utf-8">
+	<title>{% block title %}TiM{% endblock %}</title>
+	{% load static %}
+	<link rel="shortcut icon" type="image/png" href="{% static 'icons/favicon.ico' %}"/>
 	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 	<script>
@@ -11,7 +14,6 @@
 			}
 		}
 	</script>
-	{% load static %}
 	<link rel="stylesheet" href="{% static "vendored/getmdl/style.css" %}">
 	<link rel="stylesheet" href="{% static "vendored/getmdl/icons.css" %}">
 	<link rel="stylesheet" href="{% static "vendored/getmdl-select/style.css" %}">
@@ -31,7 +33,7 @@
 	<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 		<main class="mdl-layout__content">
 			<div class="nav-bar mdl-shadow--2dp">
-				<p>ViM</p>
+				<p>TiledMath</p>
 				{% if user.is_authenticated %}
 				<a class="mdl-navigation__link" href="{% url 'folder:index' 'all' %}">Contesty</a>
 				{% endif %}
@@ -46,14 +48,10 @@
 				</button>
 				<ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
 					{% if user.is_authenticated %}
-					<li class="mdl-menu__item"><a href="{% url 'users:edit' user.id %}">{{ user.username }}</a></li>
-					<li class="mdl-menu__item"><a href="{% url 'users:logout' %}">Wyloguj</a></li>
+					<li class="mdl-menu__item" onclick="location.href='{% url 'users:edit' user.id %}';">{{ user.username }}</a></li>
+					<li class="mdl-menu__item" onclick="location.href='{% url 'users:logout' %}';">Wyloguj</a></li>
 					{% else %}
-					<li class="mdl-menu__item">
-						<a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">
-							Zaloguj
-						</a>
-					</li>
+					<li class="mdl-menu__item" onclick="location.href='{% url 'social:begin' 'google-oauth2' %}';">Zaloguj</li>
 					{% endif %}
 				</ul>
 			</div>

@@ -1,0 +1,31 @@
+#Geo
+Zespo
+Trygo
+Bary
+#ATL
+Liczby pierwsze
+Funkcja Totient Eulera
+Reszty kwadratowe
+Lemat o zwiększaniu wykładnika
+Największ wspólny dzielnik
+#Kombi
+Liczby Catalana
+Twierdzenie o płatach na kapocie
+Zasada Szufladkowa Diricheta
+#Analiza
+Nierówność Jensena
+Wielomian
+Równanie funkcyjne
+#Inne
+Ulubione
+#Źródło
+Sarbinowo 2019
+Drugi etap OM
+Finał OM
+#Trudność
+Łatwe
+Średnie
+Trudne
+#Grupa
+Podstawówka
+Liceum

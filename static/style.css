@@ -37,6 +37,9 @@ body {
 	color: rgb(66,66,66);
 	text-align: center;
 }
+.cloud button {
+	color: rgb(66,66,66);
+}
 .cloud p {
 	color: #000
 }

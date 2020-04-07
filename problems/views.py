@@ -33,7 +33,7 @@ class IndexView(generic.View):
 @method_decorator(staff_only, name='dispatch')
 class AddView(generic.View):
     def get(self, request):
-        return render(request, 'problems/add.html')
+        return render(request, 'problems/add.html', {'tag_data': Tag.objects.order_by('type_id', 'id')})
 
     def post(self, request):
         problem = Problem(
@@ -43,6 +43,9 @@ class AddView(generic.View):
             solution = request.POST['solution'],
             created_by = request.user,
         )
+        problem.save()
+        for tag_id in request.POST.getlist('tags[]'):
+            problem.tag_set.add(Tag.objects.get(pk=tag_id))
         problem.save()
         messages.success(request, "Dodano zadanie!")
         return HttpResponseRedirect(reverse('problems:add'))
