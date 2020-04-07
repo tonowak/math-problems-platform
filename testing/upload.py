@@ -6,9 +6,9 @@ global ses
 ses = Session()
 # first two lines were taken by capturing Set-Cookie response header to login in
 # third cookie was taken by copying a form csrf_token
-csrftoken = 'rzf0NH2Qw4ilZcwm13ovc1yUsO2IkGbGPSHaMT28g7PW3k3gfQKFLkl1q23F1Ufd'
-sessionid = 'oir7qgn8vinvxl6ol4speo6vzj1g2tg7'
-csrfmiddlewaretoken = 'tDUZfLZW1LiJsjuSh2LpsdVh0YjolzwRRWm9eXZeLOPkwr1MvP7z1wIoYckl2NAo'
+csrftoken = 'YcRDFxCPjHDNnoLYksFMt8RsfVAQ7H9H7SwiyfSqjEGe7BzkqjB8x2xd9uBqs3JZ'
+sessionid = 'kb5x1miq3rmje844w848trfqkx3nlbj6'
+csrfmiddlewaretoken = 'IBaYKpoXNdvGLwIFU4vair3axctZP1svRhPDD7EyNay7vJw10VrwmlJVrLuzan2N'
 host = "http://127.0.0.1:8000"
 
 def add_problem(statement):

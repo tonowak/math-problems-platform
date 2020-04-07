@@ -20,7 +20,7 @@
 	</div>
 
 	{% for type, tags in tag_data %}
-	<ul class="mdl-list hidden" id="cat{{ forloop.counter }}">
+	<ul class="mdl-list" id="cat{{ forloop.counter }}" style="display: none;">
 		{% for tag in tags %}
 		<li id="reg{{ tag.id }}" class="mdl-list__item">
 			<span class="mdl-list__item-primary-content">{{ tag.name }}</span>
@@ -30,7 +30,7 @@
 		</li>
 
 		<li id="edit{{ tag.id }}" class="mdl-list__item" style="display: none;">
-			<form action="{% url 'tags:edit' tag.id %}" method="post" id="tag_form">
+			<form onSubmit="this.action='{% url 'tags:edit' tag.id %}' + location.hash" action="{% url 'tags:edit' tag.id %}" method="post" id="tag_form">
 			{% csrf_token %}
 				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 					<input class="mdl-textfield__input" type="text" name="name" id="name{{ tag.id }}" value="{{ tag.name }}">
@@ -45,11 +45,26 @@
 
 <script>
 $(function() {
+	function setActive() {
+		current_hash = decodeURIComponent(location.hash);
+		{% for type, tags in tag_data %} 
+		if(current_hash === "#{{ type }}") 
+			$("#cat{{ forloop.counter }}").show();
+		else
+			$("#cat{{ forloop.counter }}").hide();
+
+		{% endfor %}
+	}	
+
 	$("#category").change(function(event) {
 		{% for type, tags in tag_data %} 
-		$("#cat{{ forloop.counter }}").toggleClass("hidden", !(this.value === "{{ type }}"));
+		if(this.value === "{{ type }}")
+			location.hash="{{ type }}";
 		{% endfor %}
+		setActive();
 	});
+
+	setActive();
 
 	{% for type, tags in tag_data %}
 		{% for tag in tags %}
