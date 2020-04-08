@@ -5,7 +5,7 @@ from tags.views import tag_types
 
 def create_base_tags(apps, schema_editor):
     Tag = apps.get_model('tags', 'Tag')
-    for i in range(len(4)):
+    for i in range(4):
         Tag.objects.create(name=tag_types[i], type_id=i, attachable=False)
 
 class Migration(migrations.Migration):

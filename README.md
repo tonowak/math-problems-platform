@@ -1,4 +1,4 @@
-# math-problems-platform
+# tiled-math
 Written in Python using Django. Tomasz Nowak, Michał Staniewski.
 
 ## Dependencies
