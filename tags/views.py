@@ -10,7 +10,7 @@ from users.permissions import staff_only
 
 tag_types = [
     "Geometria",
-    "ATL",
+    "Algebra i Teoria Liczb",
     "Kombinatoryka",
     "Analiza",
     "Inne",
@@ -23,7 +23,7 @@ tag_types = [
 class IndexView(generic.View):
     def get(self, request):
         tag_data = [[] for i in range(len(tag_types))]
-        for tag in Tag.objects.all():
+        for tag in Tag.objects.filter(attachable=True):
             tag_data[tag.type_id].append(tag)
         tag_data = list(zip(tag_types, tag_data))
 

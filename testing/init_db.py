@@ -1,4 +1,5 @@
 def add_problems():
+    print("Creating problems")
     from problems.models import Problem
     with open('testing/statements.tex') as input_file:
         for line in input_file:
@@ -7,6 +8,7 @@ def add_problems():
             problem.save()
 
 def add_tags():
+    print("Creating tags")
     from tags.models import Tag
     with open('testing/tags.txt') as input_file:
         cur_category = -1
@@ -19,20 +21,24 @@ def add_tags():
                 tag.save()
 
 def add_tags_to_problems():
+    print("Adding tags to problems")
     from problems.models import Problem
+    from problems.views import process_tags
     from tags.models import Tag
     from random import seed
     from random import randint
     seed(2137)
     
-    tags = Tag.objects.all()
+    tags = Tag.objects.exclude(type_id=7).filter(attachable=True)
     for problem in Problem.objects.all():
+        tag_list = []
         for i in range(3):
             index = randint(0, tags.count() - 1)
-            problem.tag_set.add(tags[index])
-        problem.save()
+            tag_list.append(tags[index].id)
+        process_tags(problem, tag_list).save()
 
 def add_folders():
+    print("Creating contests")
     from folder.models import Folder
     from folder.views import convert_pretty_to_folder_name
 
@@ -54,6 +60,7 @@ def add_folders():
             folder_stack.append(folder)
 
 def add_problems_to_folders():
+    print("Adding problems to contests")
     from problems.models import Problem
     from folder.models import Folder, ProblemPlace
     from random import seed

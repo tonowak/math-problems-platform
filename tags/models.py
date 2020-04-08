@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 class Tag(models.Model):
     name = models.CharField(max_length=100)
     type_id = models.IntegerField(default=0)
+    attachable = models.BooleanField(default=True)
     problems = models.ManyToManyField(Problem)
     user_set = models.ManyToManyField(User)
 

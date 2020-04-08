@@ -9,6 +9,21 @@ from .models import Problem
 from tags.models import Tag
 from users.permissions import staff_only, url_403, has_access_to_problem
 
+def problem_tags():
+    return Tag.objects.exclude(type_id=7).order_by('type_id', 'id')
+
+def attachable_tags():
+    return problem_tags().filter(attachable=True)
+
+def process_tags(problem, tag_list):
+    problem.tag_set.clear()
+    for tag_id in tag_list:
+        problem.tag_set.add(Tag.objects.get(pk=tag_id))
+    for i in range(4):
+        if problem.tag_set.filter(type_id=i):
+            problem.tag_set.add(Tag.objects.get(type_id=i, attachable=False))
+    return problem
+
 @method_decorator(staff_only, name='dispatch')
 class IndexView(generic.View):
     def get(self, request):
@@ -19,10 +34,10 @@ class IndexView(generic.View):
 
         problems_data = []
         for problem in problems:
-            problems_data.append((problem, problem.tag_set.order_by('type_id', 'id')))
+            problems_data.append((problem, problem.tag_set.order_by('type_id', 'id').filter(attachable=True)))
 
         tag_data = []
-        for tag in Tag.objects.order_by('type_id', 'id'):
+        for tag in problem_tags():
             tag_data.append((tag, str(tag.id) in tag_filter))
 
         return render(request, 'problems/index.html', {
@@ -33,7 +48,7 @@ class IndexView(generic.View):
 @method_decorator(staff_only, name='dispatch')
 class AddView(generic.View):
     def get(self, request):
-        return render(request, 'problems/add.html', {'tag_data': Tag.objects.order_by('type_id', 'id')})
+        return render(request, 'problems/add.html', {'tag_data': attachable_tags()})
 
     def post(self, request):
         problem = Problem(
@@ -44,9 +59,7 @@ class AddView(generic.View):
             created_by = request.user,
         )
         problem.save()
-        for tag_id in request.POST.getlist('tags[]'):
-            problem.tag_set.add(Tag.objects.get(pk=tag_id))
-        problem.save()
+        process_tags(problem, request.POST.getlist('tags[]')).save()
         messages.success(request, "Dodano zadanie!")
         return HttpResponseRedirect(reverse('problems:add'))
 
@@ -62,7 +75,7 @@ class DetailsView(generic.View):
 
         return render(request, 'problems/details.html', {
             'problem': problem,
-            'tags': problem.tag_set.order_by('type_id', 'id'),
+            'tags': problem.tag_set.order_by('type_id', 'id').filter(attachable=True),
             'show_hints': inside_get('show_hints') or inside_get('show_solution'),
             'show_answer': inside_get('show_answer') or inside_get('show_solution'),
             'show_solution': inside_get('show_solution'),
@@ -91,7 +104,7 @@ class EditView(generic.View):
     def get(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
         tag_data = []
-        for tag in Tag.objects.order_by('type_id', 'id'):
+        for tag in attachable_tags():
             tag_data.append((tag, bool(problem.tag_set.filter(pk=tag.pk))))
         return render(request, 'problems/edit.html', {
             'problem': problem,
@@ -105,9 +118,7 @@ class EditView(generic.View):
         problem.answer = request.POST['answer']
         problem.solution = request.POST['solution']
         tags = request.POST.getlist('tags[]')
-        problem.tag_set.clear()
-        for tag_id in tags:
-            problem.tag_set.add(Tag.objects.get(pk=tag_id))
+        problem = process_tags(problem, request.POST.getlist('tags[]'))
         problem.save()
         messages.success(request, "Zapisano zmiany!")
         return HttpResponseRedirect(reverse('problems:edit', args=[pk]))
