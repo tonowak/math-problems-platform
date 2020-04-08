@@ -5,14 +5,14 @@
 <div class="cloud">
 	<form action="{% url 'users:edit' user.id %}" method="post" id="edit-form">
 	{% csrf_token %}
-		<p><big>Login: </big>{{ user.username }}</p>
+		<p><big>Login: </big>{{ editing_user.username }}</p>
 		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-			<input class="mdl-textfield__input" type="text" name="first_name" id="first_name-form" value="{{ user.first_name }}">
+			<input class="mdl-textfield__input" type="text" name="first_name" id="first_name-form" value="{{ editing_user.first_name }}">
 			<label class="mdl-textfield__label" for="first_name-form">Imię</label>
 
 		</div>
 		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-			<input class="mdl-textfield__input" type="text" name="last_name" id="last_name-form" value="{{ user.last_name }}">
+			<input class="mdl-textfield__input" type="text" name="last_name" id="last_name-form" value="{{ editing_user.last_name }}">
 			<label class="mdl-textfield__label" for="last_name-form">Nazwisko</label>
 		</div>
 	</form>

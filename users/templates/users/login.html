@@ -4,15 +4,15 @@
 
 {% load static %}
 <center>
-	<div>
-		<img src="{% static 'icons/logo.png' %}">
-	</div>
-	</br>
 	<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
 			href="{% url 'social:begin' 'google-oauth2' %}">
 		<img class="google-icon-svg" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" style="height: 24px;"/>
 		Sign in with Google
 	</a>
+	<br><br>
+	<div>
+		<img src="{% static 'icons/logo.png' %}" style="width: 220px; height=auto;">
+	</div>
 </center>
 
 {% endblock %}

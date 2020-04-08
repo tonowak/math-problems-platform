@@ -5,21 +5,25 @@
 <div class="cloud">
 	<h3>Zadanie {{ problem.id }}.</h3>
 
+	{% if access_to_stats %}
+	<p>Liczba osób, które zrobiły to zadanie: {{ solved_cnt }}</p>
+	{% endif %}
+
 	{% if user.is_staff %}
 	<a href="{% url 'problems:edit' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Edytuj</a>
 
 	<button id="show-delete-delete" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Usuń</button>
 	{% endif %}
 
-	{% if problem.answer and not show_answer %}
+	{% if access_to_solution and problem.answer and not show_answer %}
 	<button id="show-delete-answer" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Odpowiedź</button>
 	{% endif %}
 
-	{% if problem.hints and not show_hints %}
+	{% if access_to_solution and problem.hints and not show_hints %}
 	<button id="show-delete-hints" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Wskazówka</button>
 	{% endif %}
 
-	{% if problem.solution and not show_solution %}
+	{% if access_to_solution and problem.solution and not show_solution %}
 	<button id="show-delete-solution" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Rozwiązanie</button>
 	{% endif %}
 
@@ -47,6 +51,7 @@
 	{% endif %}
 </div>
 
+{% if access_to_solution %}
 {% if show_answer %}
 <div class="problem-cloud">
 	<p><big>Odpowiedź: </big>{{ problem.answer }}</p>
@@ -103,6 +108,7 @@
 	</div>
 </dialog>
 <script>activate_dialog('solution');</script>
+{% endif %}
 {% endif %}
 
 {% if user.is_staff %}

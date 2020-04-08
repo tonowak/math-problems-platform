@@ -130,7 +130,14 @@ class AddFolder(generic.View):
             return redirect('folder:edit', folder_path)
 
         if not Folder.objects.filter(parent=folder, folder_name=folder_name):
-            son = Folder(parent=folder, pretty_name=pretty_name, folder_name=folder_name, created_by=request.user)
+            son = Folder(
+                parent=folder,
+                pretty_name=pretty_name,
+                folder_name=folder_name,
+                created_by=request.user,
+                show_solution=folder.show_solution,
+                show_stats=folder.show_stats,
+            )
             son.save()
             messages.success(request, 'Dodano folder!')
         else:
@@ -183,7 +190,11 @@ class AddProblem(generic.View):
         if p_id == '':
             return redirect('folder:edit', folder_path)
 
-        problem = get_object_or_404(Problem, pk=p_id)
+        try:
+            problem = Problem.objects.get(pk=p_id)
+        except Problem.DoesNotExist:
+            messages.error(request, 'To zadanie nie istnieje.')
+            return redirect('folder:edit', folder_path)
         if f.problem_set.filter(id=problem.id).exists():
             messages.error(request, 'To zadanie jest już dodane.')
             return redirect('folder:edit', folder_path)
@@ -306,3 +317,22 @@ class Ranking(generic.View):
         print(context['tag_data'])
         return render(request, 'folder/ranking.html', context)
 
+@method_decorator(staff_only, name='dispatch')
+class ShowSolution(generic.View):
+    def post(self, request, folder_path):
+        f = get_folder(folder_path)
+        f.show_solution ^= 1
+        f.save()
+        messages.success(request,
+                ('Włączono' if f.show_solution else 'Wyłączono') + ' rozwiązania/hinty/odpowiedzi!')
+        return redirect('folder:edit', folder_path)
+
+@method_decorator(staff_only, name='dispatch')
+class ShowStats(generic.View):
+    def post(self, request, folder_path):
+        f = get_folder(folder_path)
+        f.show_stats ^= 1
+        f.save()
+        messages.success(request,
+                ('Włączono' if f.show_stats else 'Wyłączono') + ' statystyki!')
+        return redirect('folder:edit', folder_path)

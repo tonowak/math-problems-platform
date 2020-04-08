@@ -8,6 +8,7 @@ from django.utils.decorators import method_decorator
 from .models import Problem
 from tags.models import Tag
 from users.permissions import staff_only, url_403, has_access_to_problem
+from users.permissions import has_access_to_solution, has_access_to_stats
 
 def problem_tags():
     return Tag.objects.exclude(type_id=7).order_by('type_id', 'id')
@@ -79,7 +80,10 @@ class DetailsView(generic.View):
             'show_hints': inside_get('show_hints') or inside_get('show_solution'),
             'show_answer': inside_get('show_answer') or inside_get('show_solution'),
             'show_solution': inside_get('show_solution'),
+            'access_to_solution': has_access_to_solution(request.user, problem),
+            'access_to_stats': has_access_to_stats(request.user, problem),
             'solved_task': request.user.problem_set.filter(id=problem.id).exists(),
+            'solved_cnt': problem.claiming_user_set.count(),
         })
 
 class ClaimView(generic.View):
