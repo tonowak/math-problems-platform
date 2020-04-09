@@ -28,10 +28,11 @@
 			<button id="to_edit{{ tag.id }}" class="mdl-button mdl-js-button mdl-button--icon right-action-button">
 				<i class="material-icons right-action-button">edit</i>
 			</button>
+			<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="to_edit{{ tag.id }}">Edytuj</div>
 		</li>
 
 		<li id="edit{{ tag.id }}" class="mdl-list__item" style="display: none;">
-			<form onSubmit="this.action='{% url 'tags:edit' tag.id %}' + location.hash" action="{% url 'tags:edit' tag.id %}" method="post" id="tag_form">
+			<form onSubmit="this.action='{% url 'tags:edit' tag.id %}' + location.hash" action="{% url 'tags:edit' tag.id %}" method="post" id="tag_form" style="width: 100%;">
 			{% csrf_token %}
 				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 					<input class="mdl-textfield__input" type="text" name="name" id="name{{ tag.id }}" value="{{ tag.name }}">

@@ -4,28 +4,32 @@
 
 <div class="path-cloud">
 	{% if user.is_staff %}
-	<button class="mdl-button mdl-js-button mdl-button--icon right-action-button" onclick="location.href='{% url 'folder:edit' folder_path %}'" type="button">
+	<button id="edit_button" class="mdl-button mdl-js-button mdl-button--icon right-action-button" onclick="location.href='{% url 'folder:edit' folder_path %}'" type="button">
 		<i class="material-icons right-action-button">edit</i>
 	</button>
+	<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="edit_button">Edytuj</div>
 
-	<button class="mdl-button mdl-js-button mdl-button--icon right-action-button" onclick="location.href='{% url 'folder:ranking' folder_path %}'" type="button">
+	<button id="ranking_button" class="mdl-button mdl-js-button mdl-button--icon right-action-button" onclick="location.href='{% url 'folder:ranking' folder_path %}'" type="button">
 		<i class="material-icons right-action-button">list</i>
 	</button>
+	<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="ranking_button">Ranking</div>
 	{% endif %}
 
 	<div class="center-vert">
-		<a class="center-vert" href="{% url 'folder:index' 'all' %}">
+		<a id="first_page" class="center-vert" href="{% url 'folder:index' 'all' %}">
 			<i class="material-icons center-vert">first_page</i>
 		</a>
+		<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="first_page">Strona główna</div>
 		{% for p in parent_paths %}
 		{% if p.0 != 'all' %}
 		<p>/</p> <a href="{% url 'folder:index' p.0 %}">{{ p.1 }}</a>
 		{% endif %}
 		{% endfor %}
 		{% ifnotequal folder_path 'all' %}
-		<a class="center-vert" href="{% url 'folder:index' parent_path %}">
+		<a id="back_button" class="center-vert" href="{% url 'folder:index' parent_path %}">
 			<i class="material-icons center-vert">chevron_left</i>
 		</a>
+		<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="back_button">Cofnij</div>
 		{% endifnotequal %}
 	</div>
 </div>
@@ -59,15 +63,17 @@
 <div class="problem-cloud {% if solved %}green-background{% endif %}">
 	<form action="{% url 'problems:claim' problem.id %}" method="post">
 		{% csrf_token %}
-		<button class="mdl-button mdl-js-button mdl-button--icon right-action-button" type="submit">
+		<button id="done_{{ problem.id }}" class="mdl-button mdl-js-button mdl-button--icon right-action-button" type="submit">
 			<i class="material-icons right-action-button">done</i>
 		</button>
+		<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="done_{{ problem.id }}">Zaznacz jako {% if solved %}nie{% endif %}zrobione</div>
 		<input type="hidden" name="stay" value="True">
 	</form>
 
-	<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--mini-fab problem-cloud-button"
+	<button id="problem_{{ problem.id }}" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--mini-fab problem-cloud-button"
 			onclick="location.href='{% url 'problems:details' problem.id %}'" type="button">
 		{{ forloop.counter }}</button>
+	<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="problem_{{ problem.id }}">Strona zadania</div>
 	<p>{{ problem.statement }}</p>
 </div>
 {% endfor %}

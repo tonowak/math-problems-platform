@@ -89,7 +89,7 @@ def get_context(path):
     return {
         'folder_path': path,
         'folder': folder,
-        'sons': Folder.objects.filter(parent=folder),
+        'sons': Folder.objects.filter(parent=folder).order_by('pretty_name'),
         'son_path_prefix': path + '/' if path != 'all' else '',
         'parent_path': get_parent_path(path),
         'parent_paths': get_parent_paths(path),
@@ -249,7 +249,12 @@ class Ranking(generic.View):
     problem_list = []
 
     def dfs(self, prefix, f):
-        prefix += '/' + f.pretty_name
+        if f.parent == None:
+            prefix = '~'
+        elif prefix:
+            prefix += ' / ' + f.pretty_name
+        else:
+            prefix = f.pretty_name
         problems = []
         for fp in ProblemPlace.objects.filter(folder=f).order_by('place').all():
             problems.append(fp.problem)
@@ -262,7 +267,6 @@ class Ranking(generic.View):
         f = get_folder(folder_path)
         self.problem_list = []
         self.dfs('', f)
-        print(self.problem_list)
         userlist = set()
         for prefix, problems in self.problem_list:
             for problem in problems:

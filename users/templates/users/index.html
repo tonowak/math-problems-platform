@@ -4,9 +4,10 @@
 
 {% for user in users %}
 <div class="cloud">
-	<button class="mdl-button mdl-js-button mdl-button--icon right-action-button" onclick="location.href='{% url 'users:edit' user.id %}'" type="button">
+	<button id="to_edit{{ user.id }}" class="mdl-button mdl-js-button mdl-button--icon right-action-button" onclick="location.href='{% url 'users:edit' user.id %}'" type="button">
 		<i class="material-icons right-action-button">edit</i>
 	</button>
+	<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="to_edit{{ user.id }}">Edytuj</div>
 	<p {% if user.is_staff %}class="red-text"{% endif %}>{{ user.first_name }} {{ user.last_name }} ({{ user.username }})</p>
 
 	<div class="chip-container">

@@ -64,7 +64,7 @@ body {
 }
 .cloud input, .cloud label, .cloud textarea, .mdl-textfield {
 	margin-left: 1em;
-	width: 95%;
+	width: 95% !important;
 }
 .folder-nonclick-cloud {
 	color: #000;
@@ -136,6 +136,7 @@ body {
 }
 .red-text {
 	color: #ef5350 !important;
+	font-weight: bold !important;
 }
 
 .mdl-chip {

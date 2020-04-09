@@ -32,6 +32,7 @@ class IndexView(generic.View):
         problems = Problem.objects.all()
         for tag_id in tag_filter:
             problems = problems.filter(tag__id=tag_id)
+        problems = problems.order_by('-id')
 
         problems_data = []
         for problem in problems:

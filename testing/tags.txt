@@ -10,8 +10,8 @@ Lemat o zwiększaniu wykładnika
 Największ wspólny dzielnik
 #Kombi
 Liczby Catalana
-Twierdzenie o płatach na kapocie
-Zasada Szufladkowa Diricheta
+Twierdzenie o łatach na kapocie
+Zasada Szufladkowa Dirichleta
 #Analiza
 Nierówność Jensena
 Wielomian

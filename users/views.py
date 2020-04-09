@@ -54,8 +54,8 @@ class EditUser(generic.View):
         user = get_object_or_404(User, id=u_id)
         user.first_name = request.POST['first_name']
         user.last_name  = request.POST['last_name']
-        if request.user.is_staff and 'tags[]' in request.POST:
-            tags = request.POST.getlist('tags[]')
+        if request.user.is_staff:
+            tags = request.POST.getlist('tags[]') if 'tags[]' in request.POST else []
             user.tag_set.clear()
             for tag_id in tags:
                 user.tag_set.add(Tag.objects.get(id=tag_id))

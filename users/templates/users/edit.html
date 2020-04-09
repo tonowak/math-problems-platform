@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="cloud">
-	<form action="{% url 'users:edit' user.id %}" method="post" id="edit-form">
+	<form action="{% url 'users:edit' editing_user.id %}" method="post" id="edit-form">
 	{% csrf_token %}
 		<p><big>Login: </big>{{ editing_user.username }}</p>
 		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -69,6 +69,8 @@ $(function() {
 });
 </script>
 {% endif %}
+
+<div class="small-itemlist-space"/>
 
 {% endblock %}
 

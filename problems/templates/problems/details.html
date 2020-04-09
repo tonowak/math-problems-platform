@@ -15,15 +15,15 @@
 	<button id="show-delete-delete" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Usuń</button>
 	{% endif %}
 
-	{% if access_to_solution and problem.answer and not show_answer %}
+	{% if access_to_solution and problem.answer %}
 	<button id="show-delete-answer" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Odpowiedź</button>
 	{% endif %}
 
-	{% if access_to_solution and problem.hints and not show_hints %}
+	{% if access_to_solution and problem.hints %}
 	<button id="show-delete-hints" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Wskazówka</button>
 	{% endif %}
 
-	{% if access_to_solution and problem.solution and not show_solution %}
+	{% if access_to_solution and problem.solution %}
 	<button id="show-delete-solution" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Rozwiązanie</button>
 	{% endif %}
 
@@ -71,7 +71,7 @@
 </div>
 {% endif %}
 
-{% if problem.answer and not show_answer %}
+{% if problem.answer %}
 <dialog class="mdl-dialog" id="dialog-answer" width=100>
 	<h5 class>Czy na pewno chcesz zobaczyć odpowiedź?</h5>
 	<div class="mdl-dialog__content">
@@ -84,7 +84,7 @@
 <script>activate_dialog('answer');</script>
 {% endif %}
 
-{% if problem.hints and not show_hints %}
+{% if problem.hints %}
 <dialog class="mdl-dialog" id="dialog-hints" width=100>
 	<h5 class>Czy na pewno chcesz zobaczyć wskazówkę?</h5>
 	<div class="mdl-dialog__content">
@@ -97,7 +97,7 @@
 <script>activate_dialog('hints');</script>
 {% endif %}
 
-{% if problem.solution and not show_solution %}
+{% if problem.solution %}
 <dialog class="mdl-dialog" id="dialog-solution" width=100>
 	<h5 class>Czy na pewno chcesz zobaczyć rozwiązanie?</h5>
 	<div class="mdl-dialog__content">

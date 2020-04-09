@@ -6,7 +6,7 @@
 	{% load static %}
 	<link rel="shortcut icon" type="image/png" href="{% static 'icons/favicon.ico' %}"/>
 	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
 	<script>
 		window.MathJax = {
 			tex: {
@@ -33,13 +33,15 @@
 	<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" style="min-height: 200px">
 		<main class="mdl-layout__content">
 			<div class="nav-bar mdl-shadow--2dp">
-				<p>TiM</p>
+				<a class="mdl-navigation__link" 
+				   href="{% url 'index' %}"
+				   style="margin-left: 1em; color: #000">TiM</a>
 				{% if user.is_authenticated %}
 				<a class="mdl-navigation__link" href="{% url 'folder:index' 'all' %}">Contesty</a>
 				{% endif %}
 				{% if user.is_staff %}
 				<a class="mdl-navigation__link" href="{% url 'problems:index' %}">Zbiór zadań</a>
-				<a class="mdl-navigation__link" href="{% url 'tags:index' %}">Tagi</a>
+				<a class="mdl-navigation__link" href="{% url 'tags:index' %}#Źródło">Tagi</a>
 				<a class="mdl-navigation__link" href="{% url 'users:index' %}">Użytkownicy</a>
 				{% endif %}
 

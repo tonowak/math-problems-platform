@@ -49,15 +49,21 @@ def has_access_to_problem(user, problem):
 def has_access_to_solution(user, problem):
     if user.is_staff:
         return True
+    ret = False
     for folder in problem.folder_set.all():
-        if has_access_to_folder(user, folder) and folder.show_solution:
-            return True
-    return False
+        if has_access_to_folder(user, folder):
+            if not folder.show_solution:
+                return False
+            ret = True
+    return ret
 
 def has_access_to_stats(user, problem):
     if user.is_staff:
         return True
+    ret = False
     for folder in problem.folder_set.all():
-        if has_access_to_folder(user, folder) and folder.show_stats:
-            return True
-    return False
+        if has_access_to_folder(user, folder):
+            if not folder.show_stats:
+                return False
+            ret = True
+    return ret
