@@ -58,6 +58,8 @@ class AddView(generic.View):
             hints = request.POST['hints'],
             answer = request.POST['answer'],
             solution = request.POST['solution'],
+            staff_comment = request.POST['staff_comment'],
+            solution_comment = request.POST['solution_comment'],
             created_by = request.user,
         )
         problem.save()
@@ -122,6 +124,8 @@ class EditView(generic.View):
         problem.hints = request.POST['hints']
         problem.answer = request.POST['answer']
         problem.solution = request.POST['solution']
+        problem.staff_comment = request.POST['staff_comment']
+        problem.solution_comment = request.POST['solution_comment']
         tags = request.POST.getlist('tags[]')
         problem = process_tags(problem, request.POST.getlist('tags[]'))
         problem.save()

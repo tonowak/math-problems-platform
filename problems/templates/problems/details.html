@@ -20,7 +20,7 @@
 	{% endif %}
 
 	{% if access_to_solution and problem.hints %}
-	<button id="show-delete-hints" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Wskazówka</button>
+	<button id="show-delete-hints" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Wskazówki</button>
 	{% endif %}
 
 	{% if access_to_solution and problem.solution %}
@@ -60,7 +60,7 @@
 
 {% if show_hints %}
 <div class="problem-cloud">
-	<p><big>Wskazówka: </big>{{ problem.hints }}</p>
+	<p><big>Wskazówki: </big>{{ problem.hints }}</p>
 </div>
 
 {% endif %}
@@ -68,6 +68,16 @@
 {% if show_solution %}
 <div class="problem-cloud">
 	<p><big>Rozwiązanie: </big>{{ problem.solution }}</p>
+</div>
+
+<div class="problem-cloud">
+	<p><big>Komentarz do rozwiązania: </big>{{ problem.solution_comment }}</p>
+</div>
+{% endif %}
+
+{% if request.user.is_staff %}
+<div class="problem-cloud">
+	<p><big>Komentarz do nauczycieli: </big>{{ problem.staff_comment }}</p>
 </div>
 {% endif %}
 

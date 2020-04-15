@@ -28,22 +28,36 @@
 
 <div class="cloud">
 	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="hints" id="text_statement">{{ problem.hints }}</textarea>
-		<label class="mdl-textfield__label" for="text_statement">Hinty</label>
+		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="hints" id="text_hints">{{ problem.hints }}</textarea>
+		<label class="mdl-textfield__label" for="text_hints">Wskazówki</label>
 	</div>
 </div>
 
 <div class="cloud">
 	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="answer" id="text_statement">{{ problem.answer }}</textarea>
-		<label class="mdl-textfield__label" for="text_statement">Odpowiedź</label>
+		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="answer" id="text_answer">{{ problem.answer }}</textarea>
+		<label class="mdl-textfield__label" for="text_answer">Odpowiedź</label>
 	</div>
 </div>
 
 <div class="cloud">
 	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "5" name="solution" id="text_statement">{{ problem.solution }}</textarea>
-		<label class="mdl-textfield__label" for="text_statement">Rozwiązanie</label>
+		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "5" name="solution" id="text_solution">{{ problem.solution }}</textarea>
+		<label class="mdl-textfield__label" for="text_solution">Rozwiązanie</label>
+	</div>
+</div>
+
+<div class="cloud">
+	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "2" name="solution_comment" id="text_solution_comment">{{ problem.solution_comment }}</textarea>
+		<label class="mdl-textfield__label" for="text_solution_comment">Komentarz do rozwiązania</label>
+	</div>
+</div>
+
+<div class="cloud">
+	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="staff_comment" id="text_staff_comment">{{ problem.staff_comment }}</textarea>
+		<label class="mdl-textfield__label" for="text_staff_comment">Komentarz do nauczycieli</label>
 	</div>
 </div>
 
