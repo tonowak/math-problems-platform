@@ -199,6 +199,9 @@ body {
 .border-left {
 	border-left: 1px solid #ddd;
 }
+.cloud dialog {
+	margin: auto !important;
+}
 /*Fixing combined MDL stupidity and height: auto of document*/ 
 .small-itemlist-space {
 	height: 200px;

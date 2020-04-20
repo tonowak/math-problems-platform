@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load dialog %}
 {% block title %}{% if folder.pretty_name != "/" %}{{ folder.pretty_name }}{% else %}Contesty{% endif %} - edycja{% endblock %}
 {% block content %}
 
@@ -50,9 +51,9 @@
 		</button>
 	</form>
 
-	<form action="{% url 'folder:show_stats' folder_path %}" method="post" id="stats_form" style="display: inline">
+	<form action="{% url 'folder:show_stats' folder_path %}" method="post" style="display: inline">
 	{% csrf_token %}
-		<button type="submit" form="stats_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+		<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
 			{% if folder.show_stats %}Wyłącz{% else %}Włącz{% endif %} statystyki
 		</button>
 	</form>
@@ -64,7 +65,7 @@
 {% for son in sons %}
 {% with son_path_prefix|add:son.folder_name as son_path %}
 <div class="cloud folder-nonclick-cloud">
-	<button id="show-delete-son-{{ forloop.counter }}" class="mdl-button mdl-js-button mdl-button--icon right-action-button" type="button">
+	<button id="delete-son-{{ forloop.counter }}" class="mdl-button mdl-js-button mdl-button--icon right-action-button" type="button">
 		<i class="material-icons right-action-button">delete_outline</i>
 	</button>
 
@@ -73,25 +74,10 @@
 		{{ son.pretty_name }}
 	</div>
 </div>
-
-<form action="{% url 'folder:delete_folder' folder_path %}" method="post" id="delete_form-son-{{ forloop.counter }}">
-	{% csrf_token %}
-	<input type="hidden" name="pretty_name" value="{{ son.pretty_name }}" />
-</form>
-
-<dialog class="mdl-dialog" width=100 id='dialog-son-{{ forloop.counter }}'>
-	<h5>Czy chcesz usunąć folder "{{ son.pretty_name }}"?</h5>
-	<div class="mdl-dialog__content">
-	</div>
-	<div class="mdl-dialog__actions">
-		<button form="delete_form-son-{{ forloop.counter }}" type="submit" class="mdl-button">Usuń</button>
-		<button type="button" class="mdl-button close">Anuluj</button>
-	</div>
-</dialog>
-
-<script>
-	activate_dialog('son-{{ forloop.counter }}');
-</script>
+{% url 'folder:delete_folder' folder_path as delete_url %}
+{% with forloop.counter|stringformat:"i" as string_id %}
+{% dialog "Czy na pewno chcesz usunąć folder "|add:son.pretty_name|add:"?" delete_url "post" "{'pretty_name': '"|add:son.pretty_name|add:"'}" "USUŃ" "Anuluj" "delete-son-"|add:string_id %}
+{% endwith %}
 {% endwith %}
 {% endfor %}
 
@@ -108,7 +94,7 @@
 {% for problem in problems %}
 <div class="problem-cloud">
 	<button class="mdl-button mdl-js-button mdl-button--icon right-action-button" type="button"
-		id="show-delete-problem-{{ forloop.counter }}">
+		id="delete-problem-{{ forloop.counter }}">
 		<i class="material-icons right-action-button">delete_outline</i>
 	</button>
 
@@ -127,25 +113,12 @@
 		{{ forloop.counter }}</button>
 	<p>{{ problem.statement }}</p>
 </div>
-
-<form action="{% url 'folder:delete_problem' folder_path %}" method="post" id="delete_form-problem-{{ forloop.counter }}">
-	{% csrf_token %}
-	<input type="hidden" name="p_id" value="{{ problem.id }}" />
-</form>
-
-<dialog class="mdl-dialog" width=100 id='dialog-problem-{{ forloop.counter }}'>
-	<h5>Czy chcesz usunąć zadanie?</h5>
-	<div class="mdl-dialog__content">
-	</div>
-	<div class="mdl-dialog__actions">
-		<button form="delete_form-problem-{{ forloop.counter }}" type="submit" class="mdl-button">Usuń</button>
-		<button type="button" class="mdl-button close">Anuluj</button>
-	</div>
-</dialog>
-
-<script>
-	activate_dialog('problem-{{ forloop.counter }}');
-</script>
+{% url 'folder:delete_problem' folder_path as delete_url %}
+{% with forloop.counter|stringformat:"i" as string_id %}
+{% with problem.id|stringformat:"i" as problem_id %}
+{% dialog "Czy na pewno chcesz usunąć zadanie?" delete_url "post" "{'p_id': '"|add:problem_id|add:"'}" "USUŃ" "Anuluj" "delete-problem-"|add:string_id %}
+{% endwith %}
+{% endwith %}
 {% endfor %}
 
 <div class="cloud">

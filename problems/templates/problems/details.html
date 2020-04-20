@@ -2,6 +2,10 @@
 {% block title %}Zadanie {{ problem.id }}.{% endblock %}
 {% block content %}
 
+{% load dialog %}
+{% url 'problems:details' problem.id as details_url %}
+{% url 'problems:delete' problem.id as delete_url %}
+
 <div class="cloud">
 	<h3>Zadanie {{ problem.id }}.</h3>
 
@@ -12,19 +16,23 @@
 	{% if user.is_staff %}
 	<a href="{% url 'problems:edit' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Edytuj</a>
 
-	<button id="show-delete-delete" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Usuń</button>
+	<button id="show-delete" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Usuń</button>
+	{% dialog "Czy na pewno chcesz usunąć zadanie?" delete_url "post" "{}" "USUŃ" "Nie" "show-delete" %}
 	{% endif %}
 
 	{% if access_to_solution and problem.answer %}
-	<button id="show-delete-answer" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Odpowiedź</button>
+	<button id="show-answer" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Odpowiedź</button>
+	{% dialog "Czy na pewno chcesz zobaczyć odpowiedź?" details_url "get" "{'show_answer': 1}" "Tak :(" "Nie" "show-answer" %}
 	{% endif %}
 
 	{% if access_to_solution and problem.hints %}
-	<button id="show-delete-hints" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Wskazówki</button>
+	<button id="show-hints" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Wskazówki</button>
+	{% dialog "Czy na pewno chcesz zobaczyć wskazówki?" details_url "get" "{'show_hints': 1}" "Tak :(" "Nie" "show-hints" %}
 	{% endif %}
 
 	{% if access_to_solution and problem.solution %}
-	<button id="show-delete-solution" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Rozwiązanie</button>
+	<button id="show-solution" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Rozwiązanie</button>
+	{% dialog "Czy na pewno chcesz zobaczyć rozwiązanie?" details_url "get" "{'show_solution': 1}" "Tak :(" "Nie" "show-solution" %}
 	{% endif %}
 
 	<form action="{% url 'problems:claim' problem.id %}", method="post", style="display: inline;">
@@ -62,7 +70,6 @@
 <div class="problem-cloud">
 	<p><big>Wskazówki: </big>{{ problem.hints }}</p>
 </div>
-
 {% endif %}
 
 {% if show_solution %}
@@ -80,63 +87,6 @@
 	<p><big>Komentarz do nauczycieli: </big>{{ problem.staff_comment }}</p>
 </div>
 {% endif %}
-
-{% if problem.answer %}
-<dialog class="mdl-dialog" id="dialog-answer" width=100>
-	<h5 class>Czy na pewno chcesz zobaczyć odpowiedź?</h5>
-	<div class="mdl-dialog__content">
-	</div>
-	<div class="mdl-dialog__actions">
-		<a href="{% url 'problems:details' problem.id %}?show_answer=True" class="mdl-button">Tak :(</a>
-		<button type="button" class="mdl-button close">Anuluj</button>
-	</div>
-</dialog>
-<script>activate_dialog('answer');</script>
-{% endif %}
-
-{% if problem.hints %}
-<dialog class="mdl-dialog" id="dialog-hints" width=100>
-	<h5 class>Czy na pewno chcesz zobaczyć wskazówkę?</h5>
-	<div class="mdl-dialog__content">
-	</div>
-	<div class="mdl-dialog__actions">
-		<a href="{% url 'problems:details' problem.id %}?show_hints=True" class="mdl-button">Tak :(</a>
-		<button type="button" class="mdl-button close">Anuluj</button>
-	</div>
-</dialog>
-<script>activate_dialog('hints');</script>
-{% endif %}
-
-{% if problem.solution %}
-<dialog class="mdl-dialog" id="dialog-solution" width=100>
-	<h5 class>Czy na pewno chcesz zobaczyć rozwiązanie?</h5>
-	<div class="mdl-dialog__content">
-	</div>
-	<div class="mdl-dialog__actions">
-		<a href="{% url 'problems:details' problem.id %}?show_solution=True" class="mdl-button">Tak :(</a>
-		<button type="button" class="mdl-button close">Anuluj</button>
-	</div>
-</dialog>
-<script>activate_dialog('solution');</script>
-{% endif %}
-{% endif %}
-
-{% if user.is_staff %}
-<form action="{% url 'problems:delete' problem.id %}" method="post" id="delete_form">
-{% csrf_token %}
-</form>
-
-<dialog class="mdl-dialog" id="dialog-delete" width=100>
-	<h5 class>Czy chcesz usunąć zadanie?</h5>
-	<div class="mdl-dialog__content">
-	</div>
-	<div class="mdl-dialog__actions">
-		<button form="delete_form" type="submit" class="mdl-button">Usuń</button>
-		<button type="button" class="mdl-button close">Anuluj</button>
-	</div>
-</dialog>
-
-<script>activate_dialog('delete');</script>
 {% endif %}
 
 {% endblock %}
