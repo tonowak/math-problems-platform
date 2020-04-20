@@ -16,39 +16,10 @@
 
 <form action="{% url 'problems:index' %}" method="get" id="filter_form">
 {% csrf_token %}
-	<select id="select-tags" name="tags[]" multiple placeholder="Dodaj filtr">
-	</select>
 </form>
 
-<script>
-$(function() {
-	var $select = $('#select-tags').selectize({
-		plugins: ['remove_button'],
-		persist: false,
-		options: [
-			{% for tag, selected in tag_data %}
-				{id: {{ tag.id }}, value: '{{ tag.id }}', text: '{{ tag.name }}', category: '{{ tag.type_id }}'},
-			{% endfor %}
-		],
-		render: {
-			item: function(data, escape) {
-				return '<span class="mdl-chip mdl-chip--deletable">' +
-							'<span class="category-chip category-color-' + escape(data.category) + '"></span>' +
-							'<span class="mdl-chip__text">' + escape(data.text) + '</span>' +
-						'</span>';
-			}
-		}
-	});
-
-	var selectize = $select[0].selectize;
-	{% for tag, selected in tag_data %}
-		{% if selected %}
-			selectize.addItem({{ tag.id }});
-		{% endif %}
-	{% endfor %}
-
-});
-</script>
+{% load select_tags %}
+{% select_tags "filter_form" %}
 
 {% if not problems_data %}
 <div class="problem-cloud">
@@ -66,8 +37,7 @@ $(function() {
 	<div>
 	<div class="chip-container">
 		{% for tag in tags %}
-		<span onclick="location.href='{% url 'problems:index' %}?tags%5B%5D={{ tag.id }}'" class="mdl-chip">
-			<span class="category-chip category-color-{{ tag.type_id }}"></span>
+		<span onclick="location.href='{% url 'problems:index' %}?tags%5B%5D={{ tag.id }}'" class="mdl-chip"> <span class="category-chip category-color-{{ tag.type_id }}"></span>
 			<span class="mdl-chip__text">{{ tag.name }}</span>
 		</span>
 		{% endfor %}

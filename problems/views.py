@@ -30,27 +30,26 @@ class IndexView(generic.View):
     def get(self, request):
         tag_filter = request.GET.getlist('tags[]', [])
         problems = Problem.objects.all()
+        selected_tags = []
         for tag_id in tag_filter:
             problems = problems.filter(tag__id=tag_id)
+            selected_tags.append(Problem.objects.get(id=tag_id))
         problems = problems.order_by('-id')
 
         problems_data = []
         for problem in problems:
             problems_data.append((problem, problem.tag_set.order_by('type_id', 'id').filter(attachable=True)))
 
-        tag_data = []
-        for tag in problem_tags():
-            tag_data.append((tag, str(tag.id) in tag_filter))
-
         return render(request, 'problems/index.html', {
             'problems_data': problems_data,
-            'tag_data': tag_data,
+            'all_tags': problem_tags(),
+            'selected_tags': selected_tags,
         })
 
 @method_decorator(staff_only, name='dispatch')
 class AddView(generic.View):
     def get(self, request):
-        return render(request, 'problems/add.html', {'tag_data': attachable_tags()})
+        return render(request, 'problems/add.html', {'all_tags': attachable_tags()})
 
     def post(self, request):
         problem = Problem(
@@ -110,12 +109,15 @@ class ClaimView(generic.View):
 class EditView(generic.View):
     def get(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
-        tag_data = []
+        selected_tags = []
         for tag in attachable_tags():
-            tag_data.append((tag, bool(problem.tag_set.filter(pk=tag.pk))))
+            if problem.tag_set.filter(pk=tag.pk):
+                selected_tags.append(tag)
+
         return render(request, 'problems/edit.html', {
             'problem': problem,
-            'tag_data': tag_data,
+            'all_tags': attachable_tags(),
+            'selected_tags': selected_tags,
         })
 
     def post(self, request, pk):

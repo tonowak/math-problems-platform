@@ -78,10 +78,12 @@ def get_parent_paths(path):
 def get_context(path):
     path = fix_path(path)
     folder = get_folder(path)
-    tag_data = []
     group_type = tag_types.index("Grupa")
-    for tag in Tag.objects.filter(type_id=group_type).order_by('type_id', 'id'):
-        tag_data.append((tag, folder.tag_set.filter(pk=tag.pk).exists()))
+    all_tags = Tag.objects.filter(type_id=group_type).order_by('type_id', 'id')
+    selected_tags = []
+    for tag in all_tags:
+        if folder.tag_set.filter(pk=tag.pk).exists():
+            selected_tags.append(tag)
     problems = []
     for fp in ProblemPlace.objects.filter(folder=folder).order_by('place').all():
         problems.append(fp.problem)
@@ -94,7 +96,8 @@ def get_context(path):
         'parent_path': get_parent_path(path),
         'parent_paths': get_parent_paths(path),
         'problems': problems,
-        'tag_data': tag_data,
+        'all_tags': all_tags,
+        'selected_tags': selected_tags,
     }
 
 class IndexView(generic.View):
@@ -314,11 +317,7 @@ class Ranking(generic.View):
         context = get_context(folder_path)
         context['problem_list'] = self.problem_list
         context['table'] = table
-        for i in range(len(context['tag_data'])):
-            tag_id = context['tag_data'][i][0].id
-            inside = bool(str(tag_id) in tags)
-            context['tag_data'][i] = (context['tag_data'][i][0], inside)
-        print(context['tag_data'])
+        context['selected_tags'] = [Tag.objects.get(id=id) for id in tags]
         return render(request, 'folder/ranking.html', context)
 
 @method_decorator(staff_only, name='dispatch')

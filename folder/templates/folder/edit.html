@@ -58,38 +58,8 @@
 	</form>
 </div>
 
-<select form="tags_form" id="select-tags" name="tags[]" multiple placeholder="Dodaj tagi">
-</select>
-
-<script>
-$(function() {
-	var $select = $('#select-tags').selectize({
-		plugins: ['remove_button'],
-		persist: false,
-		options: [
-			{% for tag, selected in tag_data %}
-				{id: {{ tag.id }}, value: '{{ tag.id }}', text: '{{ tag.name }}', category: '{{ tag.type_id }}'},
-			{% endfor %}
-		],
-		render: {
-			item: function(data, escape) {
-				return '<span class="mdl-chip mdl-chip--deletable">' +
-							'<span class="category-chip category-color-' + escape(data.category) + '"></span>' +
-							'<span class="mdl-chip__text">' + escape(data.text) + '</span>' +
-						'</span>';
-			}
-		}
-	});
-
-	var selectize = $select[0].selectize;
-	{% for tag, selected in tag_data %}
-		{% if selected %}
-			selectize.addItem({{ tag.id }})
-		{% endif %}
-	{% endfor %}
-
-});
-</script>
+{% load select_tags %}
+{% select_tags "tags_form" %}
 
 {% for son in sons %}
 {% with son_path_prefix|add:son.folder_name as son_path %}

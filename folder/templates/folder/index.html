@@ -37,13 +37,11 @@
 {% if folder.tag_set.all and user.is_staff %}
 <div class="cloud">
 	<div class="chip-container">
-		{% for tag, selected in tag_data %}
-		{% if selected %}
+		{% for tag in selected_tags %}
 		<span class="mdl-chip">
 			<span class="category-chip category-color-{{ tag.type_id }}"></span>
 			<span class="mdl-chip__text">{{ tag.name }}</span>
 		</span>
-		{% endif %}
 		{% endfor %}
 	</div>
 </div>

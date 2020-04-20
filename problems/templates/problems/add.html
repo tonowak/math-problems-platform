@@ -10,8 +10,8 @@
 {% csrf_token %}
 </form>
 
-<select form="problem_form" id="select-tags" name="tags[]" multiple placeholder="Dodaj tagi">
-</select>
+{% load select_tags %}
+{% select_tags 'problem_form' %}
 
 <div class="cloud">
 		<div class="mdl-textfield mdl-js-textfield">
@@ -62,28 +62,4 @@
 
 	<a href="{% url 'users:back_from_problem' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
 </div>
-
-<script>
-$(function() {
-	var $select = $('#select-tags').selectize({
-		plugins: ['remove_button'],
-		persist: false,
-		options: [
-			{% for tag in tag_data %}
-				{id: {{ tag.id }}, value: '{{ tag.id }}', text: '{{ tag.name }}', category: '{{ tag.type_id }}'},
-			{% endfor %}
-		],
-		render: {
-			item: function(data, escape) {
-				return '<span class="mdl-chip mdl-chip--deletable">' +
-							'<span class="category-chip category-color-' + escape(data.category) + '"></span>' +
-							'<span class="mdl-chip__text">' + escape(data.text) + '</span>' +
-						'</span>';
-			}
-		}
-	});
-});
-</script>
-
-<div class="small-itemlist-space"/>
 {% endblock %}

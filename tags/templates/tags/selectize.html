@@ -1,0 +1,30 @@
+<select form="{{ form_id }}" id="select-tags" name="tags[]" multiple placeholder="Dodaj tagi">
+</select>
+
+<script>
+$(function() {
+	var $select = $('#select-tags').selectize({
+		plugins: ['remove_button'],
+		persist: false,
+		options: [
+			{% for tag in all_tags %}
+				{id: {{ tag.id }}, value: '{{ tag.id }}', text: '{{ tag.name }}', category: '{{ tag.type_id }}'},
+			{% endfor %}
+		],
+		render: {
+			item: function(data, escape) {
+				return '<span class="mdl-chip mdl-chip--deletable">' +
+							'<span class="category-chip category-color-' + escape(data.category) + '"></span>' +
+							'<span class="mdl-chip__text">' + escape(data.text) + '</span>' +
+						'</span>';
+			}
+		}
+	});
+
+	var selectize = $select[0].selectize;
+	{% for tag in selected_tags %}
+		selectize.addItem({{ tag.id }})
+	{% endfor %}
+
+});
+</script>
