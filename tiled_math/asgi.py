@@ -1,5 +1,5 @@
 """
-ASGI config for math_problems_platform project.
+ASGI config for tiled_math project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'math_problems_platform.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tiled_math.settings')
 
 application = get_asgi_application()

@@ -1,4 +1,4 @@
-"""math_problems_platform URL Configuration
+"""tiled_math URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
