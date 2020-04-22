@@ -1,65 +1,31 @@
 {% extends "base.html" %}
+{% load select_tags %}
+{% load forms %}
+{% load redirect_button %}
 {% block title %}Dodaj zadanie{% endblock %}
 {% block content %}
 
 <div class="cloud">
-	<h3>Dodaj zadanie</h2>
+	<h3>Dodaj zadanie</h3>
 </div>
 
 <form action="{% url 'problems:add' %}" method="post" id="problem_form">
 {% csrf_token %}
 </form>
 
-{% load select_tags %}
 {% select_tags 'problem_form' %}
 
-<div class="cloud">
-		<div class="mdl-textfield mdl-js-textfield">
-			<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "5" name="statement" id="text_statement"></textarea>
-			<label class="mdl-textfield__label" for="text_statement">Treść zadania</label>
-		</div>
-</div>
+{% textarea "Treść zadania" 5 "problem_form" "statement" %}
+{% textarea "Wskazówki" 2 "problem_form" "hints" %}
+{% textarea "Odpowiedź" 1 "problem_form" "answer" %}
+{% textarea "Rozwiązanie" 5 "problem_form" "solution" %}
+{% textarea "Komentarz do rozwiązania" 2 "problem_form" "solution_comment" %}
+{% textarea "Komentarz do nauczycieli" 1 "problem_form" "staff_comment" %}
 
 <div class="cloud">
-		<div class="mdl-textfield mdl-js-textfield">
-			<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "2" name="hints" id="text_hints"></textarea>
-			<label class="mdl-textfield__label" for="text_hints">Wskazówki</label>
-		</div>
-</div>
+	{% submit_button "Dodaj zadanie" "problem_form" %}
 
-<div class="cloud">
-		<div class="mdl-textfield mdl-js-textfield">
-			<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="answer" id="text_answer"></textarea>
-			<label class="mdl-textfield__label" for="text_answer">Odpowiedź</label>
-		</div>
-</div>
-
-<div class="cloud">
-		<div class="mdl-textfield mdl-js-textfield">
-			<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "5" name="solution" id="text_solution"></textarea>
-			<label class="mdl-textfield__label" for="text_solution">Rozwiązanie</label>
-		</div>
-</div>
-
-<div class="cloud">
-		<div class="mdl-textfield mdl-js-textfield">
-			<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "2" name="solution_comment" id="text_solution_comment"></textarea>
-			<label class="mdl-textfield__label" for="text_solution_comment">Komentarz do rozwiązania</label>
-		</div>
-</div>
-
-<div class="cloud">
-		<div class="mdl-textfield mdl-js-textfield">
-			<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="staff_comment" id="text_staff_comment"></textarea>
-			<label class="mdl-textfield__label" for="text_staff_comment">Komentarz do nauczycieli</label>
-		</div>
-</div>
-
-<div class="cloud">
-	<button type="submit" form="problem_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-		Dodaj Zadanie
-	</button>
-
-	<a href="{% url 'users:back_from_problem' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
+	{% url 'users:back_from_problem' as back_from_problem %}
+	{% redirect_button back_from_problem "Powrót" %}
 </div>
 {% endblock %}

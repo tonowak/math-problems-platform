@@ -42,7 +42,9 @@
 		</button>
 	</form>
 
-	<a href="{% url 'users:back_from_problem' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
+	{% load redirect_button %}
+	{% url 'users:back_from_problem' as back_from_problem %}
+	{% redirect_button back_from_problem "Powrót" %}
 </div>
 
 <div class="problem-cloud {% if solved_task %}green-background{% endif %}">

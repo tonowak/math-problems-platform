@@ -4,7 +4,9 @@
 
 <div class="cloud">
 	<h3>Tagi</h3>
-	<a href="{% url 'tags:add' %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Dodaj tagi</a>
+	{% load redirect_button %}
+	{% url 'tags:add' as tags_add_url %}
+	{% redirect_button tags_add_url "Dodaj tagi" color=True %}
 </div>
 
 <div class="cloud">
