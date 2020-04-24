@@ -1,32 +1,13 @@
-{% extends "base.html" %}
+{% extends "folder/base.html" %}
 {% load dialog %}
-{% block title %}{% if folder.pretty_name != "/" %}{{ folder.pretty_name }}{% else %}Contesty{% endif %} - edycja{% endblock %}
-{% block content %}
-
-<div class="path-cloud">
+{% block subtitle %}Edycja{% endblock %}
+{% block path-buttons %}
 	<button id="edit_button" class="mdl-button mdl-js-button mdl-button--icon right-action-button mdl-button--colored" onclick="location.href='{% url 'folder:index' folder_path %}'" type="button">
 		<i class="material-icons right-action-button">edit</i>
 	</button>
 	<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="edit_button">Zakończ edycję</div>
-
-	<div class="center-vert">
-		<a id="first_page" class="center-vert" href="{% url 'folder:index' 'all' %}">
-			<i class="material-icons center-vert">first_page</i>
-		</a>
-		<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="first_page">Strona główna</div>
-		{% for p in parent_paths %}
-		{% if p.0 != 'all' %}
-		<p>/</p> <a href="{% url 'folder:index' p.0 %}">{{ p.1 }}</a>
-		{% endif %}
-		{% endfor %}
-		{% ifnotequal folder_path 'all' %}
-		<a id="back_button" class="center-vert" href="{% url 'folder:index' parent_path %}">
-			<i class="material-icons center-vert">chevron_left</i>
-		</a>
-		<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="back_button">Cofnij</div>
-		{% endifnotequal %}
-	</div>
-</div>
+{% endblock %}
+{% block subcontent %}
 
 <div class="cloud">
 	<form action="{% url 'folder:edit_folder_name' folder_path %}" method="post">
@@ -65,9 +46,11 @@
 {% for son in sons %}
 {% with son_path_prefix|add:son.folder_name as son_path %}
 <div class="cloud folder-nonclick-cloud">
-	<button id="delete-son-{{ forloop.counter }}" class="mdl-button mdl-js-button mdl-button--icon right-action-button" type="button">
-		<i class="material-icons right-action-button">delete_outline</i>
-	</button>
+	<div class="fix-button-without-margin">
+		<button id="delete-son-{{ forloop.counter }}" class="mdl-button mdl-js-button mdl-button--icon right-action-button" type="button">
+			<i class="material-icons right-action-button">delete_outline</i>
+		</button>
+	</div>
 
 	<div class="center-vert">
 		<i class="material-icons">arrow_forward_ios</i>

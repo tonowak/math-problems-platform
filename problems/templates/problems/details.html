@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load markdown %}
 {% block title %}Zadanie {{ problem.id }}.{% endblock %}
 {% block content %}
 
@@ -47,8 +48,9 @@
 	{% redirect_button back_from_problem "Powrót" %}
 </div>
 
-<div class="problem-cloud {% if solved_task %}green-background{% endif %}">
-	<p><big>Treść: </big>{{ problem.statement }}</p>
+<div class="cloud {% if solved_task %}green-background{% endif %}">
+	<h6>Treść</h6>
+	{% markdown %}{{ problem.statement }}{% endmarkdown %}
 	{% if user.is_staff %}
 	<div class="chip-container">
 	{% for tag in tags %}
@@ -63,30 +65,35 @@
 
 {% if access_to_solution %}
 {% if show_answer %}
-<div class="problem-cloud">
-	<p><big>Odpowiedź: </big>{{ problem.answer }}</p>
+<div class="cloud">
+	<h6>Odpowiedź</h6>
+	{% markdown %}{{ problem.answer }}{% endmarkdown %}
 </div>
 {% endif %}
 
 {% if show_hints %}
-<div class="problem-cloud">
-	<p><big>Wskazówki: </big>{{ problem.hints }}</p>
+<div class="cloud">
+	<h6>Wskazówki</h6>
+	{% markdown %}{{ problem.hints }}{% endmarkdown %}
 </div>
 {% endif %}
 
 {% if show_solution %}
-<div class="problem-cloud">
-	<p><big>Rozwiązanie: </big>{{ problem.solution }}</p>
+<div class="cloud">
+	<h6>Rozwiązanie</h6>
+	{% markdown %}{{ problem.solution }}{% endmarkdown %}
 </div>
 
-<div class="problem-cloud">
-	<p><big>Komentarz do rozwiązania: </big>{{ problem.solution_comment }}</p>
+<div class="cloud">
+	<h6>Komentarz do rozwiązania</h6>
+	{% markdown %}{{ problem.solution_comment }}{% endmarkdown %}
 </div>
 {% endif %}
 
 {% if request.user.is_staff %}
-<div class="problem-cloud">
-	<p><big>Komentarz do nauczycieli: </big>{{ problem.staff_comment }}</p>
+<div class="cloud">
+	<h6>Komentarz do nauczycieli</h6>
+	{% markdown %}{{ problem.staff_comment }}{% endmarkdown %}
 </div>
 {% endif %}
 {% endif %}

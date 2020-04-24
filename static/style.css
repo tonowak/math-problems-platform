@@ -5,10 +5,8 @@ body {
 }
 
 /* cloud */
-/* problem-cloud */
-/* folder-nonclick-cloud */
 
-.cloud, .problem-cloud, .path-cloud, .selectize-input {
+.cloud, .path-cloud, .selectize-input {
 	box-sizing: border-box;
 	border-radius: 5px;
 	background-color: #fff;
@@ -16,14 +14,22 @@ body {
 	box-shadow:0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12),0 2px 4px -1px rgba(0,0,0,.2);
 	margin-bottom: 1em;
 	width: 100%;
-	padding: 0;
-	/*min-height: 3.4em;*/
+	/*min-height: 4.1em;*/
 }
-.cloud *, .path-cloud * { /* i, p, a */
-	text-decoration: none;
-	align-self: center;
+.cloud {
+	padding: 0.5em;
+}
+.path-cloud {
 	margin: 0.1em;
-	text-align: left;
+	margin-bottom: 1em;
+}
+.cloud i, .cloud p, {
+	align-self: center;
+	margin: 0.5em 1em;
+	/*text-align: left;*/
+}
+.cloud li {
+	margin-left: 2em;
 }
 .path-cloud a, .mdl-menu__item a {
 	text-decoration: none;
@@ -40,27 +46,30 @@ body {
 .cloud button {
 	color: rgb(66,66,66);
 }
-.cloud p {
-	color: #000
-}
 .cloud h3 {
 	padding: 0.5em;
 }
-.problem-cloud i {
-	color: #000
+.cloud h6 {
+	font-size: 1.5em;
+	margin: 0 5px 8px 5px !important;
+	letter-spacing: 0;
 }
-.problem-cloud-button {
+.problem-button {
 	/* 2dp */
 	box-shadow:0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
 	font-size: 1em;
 	float: left;
-	margin: 0.2em;
-	margin-right: 1.5em;
+	margin: 0 !important;
+	margin-right: 1em !important;
+	margin-top: 0.1em !important;
 	background-color: rgb(236, 236, 236);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 1em;
 }
-.cloud p, .problem-cloud p {
-	padding: 0.8em;
-	margin-bottom: 0;
+.problem-minheight {
+	min-height: 4.1em;
 }
 .cloud input, .cloud label, .cloud textarea, .mdl-textfield {
 	margin-left: 1em;
@@ -73,12 +82,60 @@ body {
 	font-weight: 500;
 	text-transform: uppercase;
 	letter-spacing: 0;
-	line-height: 36px;
+	line-height: 36;
+	padding: 0;
 }
 .cloud button, .cloud a {
 	margin-left: 1em;
 	margin-top: 1em;
 	margin-bottom: 1em;
+}
+
+/* markdown */
+
+.markdown {
+	margin: 0;
+}
+.markdown i, .markdown p {
+	margin-left: 1em;
+	margin-right: 1em;
+	margin-bottom: 8px;
+	margin-top: 0;
+	padding: 0 !important;
+	text-indent: 0;
+}
+.markdown i, .markdown p, .markdown li, .markdown h1, .markdown h2, .markdown h3 {
+	color: #424242 !important;
+}
+.markdown a {
+	margin: 0;
+	text-decoration: none;
+	color: rgb(139, 195, 74);
+}
+.markdown img {
+	max-width: 50%;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.markdown h1 {
+	font-size: 2em;
+	margin: 0.5em 5px 0.25em 5px;
+}
+
+.markdown h2 {
+	font-size: 1.5em;
+	margin: 0.5em 5px 0 5px;
+}
+
+.markdown h3, .markdown h4, .markdown h5, .markdown h6 {
+	font-size: 1em;
+	margin: 0.5em 5px 0.5em 5px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	padding: 0 !important;
 }
 
 /* alignment config */
@@ -90,11 +147,27 @@ body {
 	float: right;
 	font-size: 1.2em;
 	/*text-align: right;*/
+	position: relative;
+	top: -0.3em;
+	right: -0.3em;
+}
+.fix-button-without-margin {
+	position: relative;
+	top: 0.4em;
+	right: 0.4em;
 }
 
 .center-vert {
 	display: flex;
 	align-self: center;
+	height: 36px;
+	line-height: 36px;
+}
+.center-vert * {
+	text-decoration: none;
+	text-align: left;
+	margin-left: 0.1em;
+	line-height: 36px;
 }
 
 /* navbar */
@@ -157,10 +230,8 @@ body {
 	margin-left: 8px;
 }
 .chip-container {
-	margin-left: 0.5em;
-	margin-right: 0.5em;
-	padding-top: 0.5em;
-	padding-bottom: 0.5em;
+	margin-top: 1.5em;
+	min-height: 1.6em;
 }
 
 /* fixing vendor stuff */

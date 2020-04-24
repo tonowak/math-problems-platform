@@ -1,31 +1,12 @@
-{% extends "base.html" %}
-{% block title %}{% if folder.pretty_name != "/" %}{{ folder.pretty_name }}{% else %}Contesty{% endif %} - ranking{% endblock %}
-{% block content %}
-
-<div class="path-cloud">
+{% extends "folder/base.html" %}
+{% block subtitle %}Ranking{% endblock %}
+{% block path-buttons %}
 	<button id="ranking_button" class="mdl-button mdl-js-button mdl-button--icon right-action-button mdl-button--colored" onclick="location.href='{% url 'folder:index' folder_path %}'" type="button">
 		<i class="material-icons right-action-button">list</i>
 	</button>
 	<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="ranking_button">Wyjdź z rankingu</div>
-
-	<div class="center-vert">
-		<a id="first_page" class="center-vert" href="{% url 'folder:index' 'all' %}">
-			<i class="material-icons center-vert">first_page</i>
-		</a>
-		<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="first_page">Strona główna</div>
-		{% for p in parent_paths %}
-		{% if p.0 != 'all' %}
-		<p>/</p> <a href="{% url 'folder:index' p.0 %}">{{ p.1 }}</a>
-		{% endif %}
-		{% endfor %}
-		{% ifnotequal folder_path 'all' %}
-		<a id="back_button" class="center-vert" href="{% url 'folder:index' parent_path %}">
-			<i class="material-icons center-vert">chevron_left</i>
-		</a>
-		<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="back_button">Cofnij</div>
-		{% endifnotequal %}
-	</div>
-</div>
+{% endblock %}
+{% block subcontent %}
 
 <div class="cloud">
 	<form action="{% url 'folder:ranking' folder_path %}" method="get" id="tags_form">

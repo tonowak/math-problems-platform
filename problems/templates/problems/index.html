@@ -27,13 +27,14 @@
 </div>
 {% endif %}
 
+{% load markdown %}
 {% for problem, tags in problems_data %}
-<div class="problem-cloud">
-	<button id="problem_{{ problem.id }}" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab problem-cloud-button"
+<div class="cloud">
+	<button id="problem_{{ problem.id }}" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab problem-button"
 			onclick="location.href='{% url 'problems:details' problem.id %}'" type="button">
 		{{ problem.id }}</button>	
 	<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="problem_{{ problem.id }}">Strona zadania</div>
-	<p>{{ problem.statement }}</p>
+	{% markdown %}{{ problem.statement }}{% endmarkdown %}
 	<div>
 	<div class="chip-container">
 		{% for tag in tags %}
