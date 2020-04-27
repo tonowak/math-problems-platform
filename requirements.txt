@@ -2,3 +2,5 @@ django
 social-auth-app-django
 python-decouple
 markdown
+Pillow
+django-widget-tweaks

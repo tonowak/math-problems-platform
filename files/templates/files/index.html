@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Lista plików{% endblock %}
+{% block content %}
+
+<div class="cloud">
+	<h3>Lista plików</h3>
+	{% load redirect_button %}
+	{% url 'files:add' as add_url %}
+	{% redirect_button add_url "Dodaj" %}
+</div>
+
+{% for file in object_list %}
+<div class="cloud" style="min-height: 134px">
+	{% with "/media/images/" as prefix %}
+	<a href="{% url 'files:download' file.id %}" style="float: right; margin: 0">
+		<img src="{% url 'files:download' file.id %}" height="120px" style="float: right;">
+	</a>
+	{% endwith %}
+	<p class="no-margin">ID: {{ file.id }}</p>
+	<p class="no-margin">Data stworzenia: {{ file.created_at }}</p>
+	<p class="no-margin">Użytkownik: <a href="{% url 'users:edit' file.created_by.id %}" class="{% if file.created_by.is_staff %}red-text{% endif %}" style="text-decoration: none; margin: 0;">{{ file.created_by }}</a></p>
+	{% if file.description %}
+	<p class="no-margin">Opis: {{ file.description }}</p>
+	{% endif %}
+	<p class="no-margin">Rozmiar: {{ file.size_str }}</p>
+</div>
+{% endfor %}
+
+{% endblock %}

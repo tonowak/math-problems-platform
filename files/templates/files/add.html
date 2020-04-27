@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Dodaj plik{% endblock %}
+{% block content %}
+
+{% load forms %}
+{% load widget_tweaks %}
+<div class="cloud">
+	<h3>Dodaj zdjęcia</h3>
+	<p>W okienku wyboru plików można zaznaczyć wiele zdjęć.</p>
+	<form enctype="multipart/form-data" action="{% url 'files:add' %}" method="post">
+		{% csrf_token %}
+		{% render_field form.files %}
+
+		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+			{% render_field form.description class="mdl-textfield__input" %}
+			<label class="mdl-textfield__label" for="id_description">Opis</label>
+		</div>
+
+		{% submit_button "Dodaj" "" %}
+	</form>
+</div>
+
+{% endblock %}

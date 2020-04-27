@@ -16,8 +16,8 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
+from django.conf.urls.static import static
 #from django.contrib.auth import logout
-from django.urls import path
 
 from . import views
 
@@ -27,6 +27,11 @@ urlpatterns = [
     path('problems/', include('problems.urls')),
     path('contest/', include('folder.urls')),
     path('tags/', include('tags.urls')),
+    path('files/', include('files.urls')),
     path('admin/', admin.site.urls),
     path('', views.index, name='index')
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
