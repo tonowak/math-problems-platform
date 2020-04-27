@@ -15,6 +15,7 @@ class MarkdownNode(template.Node):
     
     def render(self, context):
         output = self.nodelist.render(context)
+        output = output.replace('\\', '\\\\')
         output = markdown(output)
         output = '<span class="markdown">' + output + '</span>'
         return output
