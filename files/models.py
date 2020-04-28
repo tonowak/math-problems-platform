@@ -29,7 +29,6 @@ def save_image(image, uploader=None, description=''):
     saved.created_by = uploader
     saved.description = description
     saved.save()
-    saved.image = image
-    saved.image.name = str(saved.id)
+    saved.image.save(str(saved.id), image)
     saved.save()
     return saved.id
