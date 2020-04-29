@@ -1,6 +1,8 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files.base import ContentFile
 from problems.models import Problem
+from tags.models import Tag
+from tags.views import tag_types
 from bs4 import BeautifulSoup
 from PIL import Image
 
@@ -69,7 +71,22 @@ def format_statement(statement):
     statement = statement.replace('\n\]', '\]')
     statement = statement.split('‹')[0]
     statement = statement.split('## Rozwiązanie')
+    if len(statement) == 1:
+        statement.append('')
     return statement
+
+def fetch_statement(soup, content_id):
+    content = soup.find(id=content_id)
+    statement = ""
+    for line in traverse_problem(content):
+        statement += str(line)
+    return format_statement(statement)
+
+def fetch_tags(soup):
+    title = str(soup.find('h1', {'class': 'title'}).text) 
+    # XLIII OM - III - Zadanie 4
+    s = title.split(' ')
+    return [s[0] + ' ' + s[1], s[3] + ' etap']
 
 def download_problem(id):
     url = archive_url + "/?q=node/" + id
@@ -77,14 +94,22 @@ def download_problem(id):
     r = requests.get(url, cookies=js_cookie)
     soup = BeautifulSoup(r.text, 'html.parser')
 
-    content = soup.find(id='node-' + id)
-    problem = ""
-    for line in traverse_problem(content):
-        problem += str(line)
+    problem_data = fetch_statement(soup, 'node-' + id)
+    statement = problem_data[0]
+    solution = problem_data[1]
 
-    parsed = format_statement(problem)
+    problem = Problem(statement=statement, solution=solution)
+    problem.save()
 
-    problem = Problem(statement = parsed[0], solution = parsed[1]);
+    for tag_name in fetch_tags(soup):
+        if Tag.objects.filter(name=tag_name):
+            tag = Tag.objects.get(name=tag_name)
+        else:
+            tag = Tag(name=tag_name, type_id=tag_types.index('Źródło'))
+            tag.save()
+        
+        problem.tag_set.add(tag)
+
     problem.save()
 
 def download_archom():
