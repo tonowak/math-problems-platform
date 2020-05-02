@@ -1,13 +1,12 @@
 from django.http import HttpResponseRedirect
-from django.views import generic
+from django.views.generic import View
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.utils.decorators import method_decorator
 
 from .models import Problem
 from tags.models import Tag
-from users.permissions import staff_only, url_403, has_access_to_problem
+from users.permissions import StaffOnly, ProblemAccess
 from users.permissions import has_access_to_solution, has_access_to_stats
 
 def problem_tags():
@@ -25,8 +24,7 @@ def process_tags(problem, tag_list):
             problem.tag_set.add(Tag.objects.get(type_id=i, attachable=False))
     return problem
 
-@method_decorator(staff_only, name='dispatch')
-class IndexView(generic.View):
+class IndexView(StaffOnly, View):
     def get(self, request):
         tag_filter = request.GET.getlist('tags[]', [])
         problems = Problem.objects.all()
@@ -46,8 +44,7 @@ class IndexView(generic.View):
             'selected_tags': selected_tags,
         })
 
-@method_decorator(staff_only, name='dispatch')
-class AddView(generic.View):
+class AddView(StaffOnly, View):
     def get(self, request):
         return render(request, 'problems/add.html', {'all_tags': attachable_tags()})
 
@@ -66,11 +63,9 @@ class AddView(generic.View):
         messages.success(request, "Dodano zadanie!")
         return HttpResponseRedirect(reverse('problems:add'))
 
-class DetailsView(generic.View):
+class DetailsView(ProblemAccess, View):
     def get(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
-        if not has_access_to_problem(request.user, problem):
-            return redirect(url_403)
 
         def inside_get(s):
             ret = request.user.is_staff or s in request.GET
@@ -88,25 +83,21 @@ class DetailsView(generic.View):
             'solved_cnt': problem.claiming_user_set.count(),
         })
 
-class ClaimView(generic.View):
+class ClaimView(ProblemAccess, View):
     def post(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
-        if not has_access_to_problem(request.user, problem):
-            return redirect(url_403)
 
         if request.user.problem_set.filter(id=problem.id).exists():
             request.user.problem_set.remove(problem)
         else:
             request.user.problem_set.add(problem)
 
-        print(request.POST)
         if 'stay' in request.POST:
             return redirect('users:back_from_problem')
         else:
             return redirect('problems:details', pk)
 
-@method_decorator(staff_only, name='dispatch')
-class EditView(generic.View):
+class EditView(StaffOnly, View):
     def get(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
         selected_tags = []
@@ -134,8 +125,7 @@ class EditView(generic.View):
         messages.success(request, "Zapisano zmiany!")
         return HttpResponseRedirect(reverse('problems:edit', args=[pk]))
 
-@method_decorator(staff_only, name='dispatch')
-class DeleteView(generic.View):
+class DeleteView(StaffOnly, View):
     def post(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
         problem.delete();

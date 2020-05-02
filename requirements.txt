@@ -4,3 +4,4 @@ python-decouple
 markdown
 Pillow
 django-widget-tweaks
+beautifulsoup4

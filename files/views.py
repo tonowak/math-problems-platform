@@ -8,9 +8,9 @@ from django.urls import reverse_lazy
 
 from .models import SavedImage, save_image
 from .forms import AddImagesForm
-# from users.permissions import staff_only
+from users.permissions import StaffOnly
 
-# @method_decorator(staff_only, name='dispatch')
+# add permissions
 class IndexView(ListView):
     model = SavedImage
     template_name = "files/index.html"
@@ -24,7 +24,6 @@ class AddView(FormView):
         form = self.get_form(self.get_form_class())
         files = request.FILES.getlist('files')
         if form.is_valid():
-            print(form.cleaned_data['description'])
             for f in files:
                 save_image(f, request.user, form.cleaned_data['description'])
             return self.form_valid(form)

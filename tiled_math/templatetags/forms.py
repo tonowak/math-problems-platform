@@ -4,14 +4,14 @@ from django import template
 
 register = template.Library()
 
-@register.inclusion_tag('tags/submit_button.html')
+@register.inclusion_tag('submit_button.html')
 def submit_button(title, form_id):
     return {
         'title': title,
         'form_id': form_id,
     }
 
-@register.inclusion_tag('tags/textarea.html')
+@register.inclusion_tag('textarea.html')
 def textarea(title, rows, form_id, name):
     return {
         'title': title,

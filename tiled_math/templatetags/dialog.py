@@ -4,7 +4,7 @@ from django import template
 
 register = template.Library()
 
-@register.inclusion_tag('tags/redirect_dialog.html')
+@register.inclusion_tag('redirect_dialog.html')
 def dialog(title, url, method, form_values, yes, no, button_id):
     return {
         'title': title,

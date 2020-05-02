@@ -1,12 +1,10 @@
-from django.http import HttpResponseRedirect
-from django.views import generic
+from django.views.generic import View
 from django.urls import reverse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.utils.decorators import method_decorator
 
 from .models import Tag
-from users.permissions import staff_only
+from users.permissions import StaffOnly
 
 tag_types = [
     "Geometria",
@@ -19,8 +17,7 @@ tag_types = [
     "Grupa",
 ]
 
-@method_decorator(staff_only, name='dispatch')
-class IndexView(generic.View):
+class IndexView(StaffOnly, View):
     def get(self, request):
         tag_data = [[] for i in range(len(tag_types))]
         for tag in Tag.objects.filter(attachable=True):
@@ -29,8 +26,7 @@ class IndexView(generic.View):
 
         return render(request, 'tags/index.html', {'tag_data': tag_data});
 
-@method_decorator(staff_only, name='dispatch')
-class AddView(generic.View):
+class AddView(StaffOnly, View):
     def get(self, request):
         return render(request, 'tags/add.html', {'tag_types': tag_types})
 
@@ -38,14 +34,13 @@ class AddView(generic.View):
         tag = Tag(name=request.POST['name'], type_id=request.POST['category'])
         tag.save()
         messages.success(request, "Dodano tag!")
-        return HttpResponseRedirect(reverse('tags:add'))
+        return redirect('tags:add')
 
 
-@method_decorator(staff_only, name='dispatch')
-class EditView(generic.View):
+class EditView(StaffOnly, View):
     def post(self, request, pk):
         tag = get_object_or_404(Tag, pk=pk)
         tag.name = request.POST['name']
         tag.save()
         messages.success(request, "Zapisano zmiany!")
-        return HttpResponseRedirect(reverse('tags:index'))
+        return redirect('tags:index')

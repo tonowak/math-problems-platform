@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'tags.apps.TagsConfig',
     'files.apps.FilesConfig',
+    'submissions.apps.SubmissionsConfig',
+    'tiled_math.apps.TiledMathConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,9 +79,6 @@ ROOT_URLCONF = 'tiled_math.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            'tiled_math/templates',
-        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

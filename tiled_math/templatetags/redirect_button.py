@@ -4,7 +4,7 @@ from django import template
 
 register = template.Library()
 
-@register.inclusion_tag('tags/redirect_button.html')
+@register.inclusion_tag('redirect_button.html')
 def redirect_button(url, title, *args, **kwargs):
     return {
         'url': url,
