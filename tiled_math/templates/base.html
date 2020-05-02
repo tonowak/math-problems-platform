@@ -31,22 +31,26 @@
 
 <body>
 	<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" style="min-height: 200px">
+		{# start backup #}
 		<main class="mdl-layout__content">
 			<div class="nav-bar mdl-shadow--2dp">
-				<a class="mdl-navigation__link" 
-				   href="{% url 'index' %}"
-				   style="margin-left: 1em; color: #000">TiM</a>
-				{% if user.is_authenticated %}
-				<a class="mdl-navigation__link" href="{% url 'folder:index' 'all' %}">Contesty</a>
-				{% endif %}
-				{% if user.is_staff %}
-				<a class="mdl-navigation__link" href="{% url 'problems:index' %}">Zbiór zadań</a>
-				<a class="mdl-navigation__link" href="{% url 'tags:index' %}#Źródło">Tagi</a>
-				<a class="mdl-navigation__link" href="{% url 'users:index' %}">Użytkownicy</a>
-				<a class="mdl-navigation__link" href="{% url 'files:index' %}">Pliki</a>
-				{% endif %}
+				<div class="nav-bar-text"
+					 style="max-width: {% if user.is_staff %}500{% else %}{% if user.is_authenticated %}180{% else %}80{% endif %}{% endif %}px;">
+					<a class="mdl-navigation__link"
+					   href="{% url 'index' %}"
+					   style="color: #000">TiM</a>
+					{% if user.is_authenticated %}
+					<a class="mdl-navigation__link" href="{% url 'folder:index' 'all' %}">Contesty</a>
+					{% endif %}
+					{% if user.is_staff %}
+					<a class="mdl-navigation__link" href="{% url 'problems:index' %}">Zbiór zadań</a>
+					<a class="mdl-navigation__link" href="{% url 'tags:index' %}#Źródło">Tagi</a>
+					<a class="mdl-navigation__link" href="{% url 'users:index' %}">Użytkownicy</a>
+					<a class="mdl-navigation__link" href="{% url 'files:index' %}">Pliki</a>
+					{% endif %}
+				</div>
 
-				<button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon right-action-button" style="top: 0; right: 0;" id="hdrbtn">
+				<button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" style="margin-left: auto;" id="hdrbtn">
 					<i class="material-icons">more_vert</i>
 				</button>
 				<ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
