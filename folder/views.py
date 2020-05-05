@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View
-from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 

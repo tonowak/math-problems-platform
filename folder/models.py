@@ -18,6 +18,16 @@ class Folder(models.Model):
     def __str__(self):
         return self.pretty_name
 
+    def get_path_without_root(self):
+        if parent == None:
+            return ''
+        return self.parent.get_path_without_root() + self.folder_name + '/'
+    
+    def get_path(self):
+        if self.parent == None:
+            return self.folder_name
+        return self.parent.get_path_without_root() + self.folder_name
+
 class ProblemPlace(models.Model):
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE)
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE)

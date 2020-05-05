@@ -27,7 +27,7 @@ js_cookie = get_js_cookie()
 def download_image(url):
     print(url)
     r = requests.get(url)
-    return save_image(ContentFile(r.content))
+    return save_image(ContentFile(r.content)).id
 
 def traverse_problem(soup):
     ret = []

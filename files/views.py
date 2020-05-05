@@ -7,7 +7,7 @@ from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 
 from .models import SavedImage, save_image
-from .forms import AddImagesForm
+from .forms import SubmitFilesTextForm
 from users.permissions import StaffOnly
 
 # add permissions
@@ -16,7 +16,7 @@ class IndexView(ListView):
     template_name = "files/index.html"
 
 class AddView(FormView):
-    form_class = AddImagesForm
+    form_class = SubmitFilesTextForm
     template_name = "files/add.html"
     success_url = reverse_lazy("files:index")
 

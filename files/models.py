@@ -31,4 +31,4 @@ def save_image(image, uploader=None, description=''):
     saved.save()
     saved.image.save(str(saved.id), image)
     saved.save()
-    return saved.id
+    return saved

@@ -75,7 +75,7 @@
 </div>
 
 {% for problem in problems %}
-<div class="problem-cloud">
+<div class="cloud">
 	<button class="mdl-button mdl-js-button mdl-button--icon right-action-button" type="button"
 		id="delete-problem-{{ forloop.counter }}">
 		<i class="material-icons right-action-button">delete_outline</i>
@@ -91,10 +91,13 @@
 	</form>
 	{% endifnotequal %}
 
-	<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--mini-fab problem-cloud-button"
+	<button id="problem_{{ problem.id }}" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab problem-button"
 			onclick="location.href='{% url 'problems:details' problem.id %}'" type="button">
 		{{ forloop.counter }}</button>
-	<p>{{ problem.statement }}</p>
+	<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="problem_{{ problem.id }}">Strona zadania</div>
+
+	{% load markdown %}
+	{% markdown %}{{ problem.statement }}{% endmarkdown %}
 </div>
 {% url 'folder:delete_problem' folder_path as delete_url %}
 {% with forloop.counter|stringformat:"i" as string_id %}

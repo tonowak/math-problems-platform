@@ -1,0 +1,27 @@
+{% load user_link %}
+{% load preview_image %}
+{% load markdown %}
+
+{% for thread, comments, can_comment in threads %}
+<div class="cloud">
+	{% for comment, images in comments %}
+		{% markdown %}{{ comment.description }}{% endmarkdown %}
+
+		<div class="image-container">
+			{% for image in images %}
+				{% preview_image image %} 
+			{% endfor %}
+		</div>
+
+		<p>
+			{% user_link comment.created_by %} 
+			{{ comment.created_at }} 
+			{% if forloop.last %}<a class="green-a" href="{% url 'submissions:details' thread.id %}">Dodaj komentarz</a>{% endif %}
+		</p>
+
+		{% if not forloop.last %}
+			<hr>
+		{% endif %}
+	{% endfor %}
+</div>
+{% endfor %}

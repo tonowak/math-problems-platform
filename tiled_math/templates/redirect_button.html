@@ -1,6 +1,6 @@
-<form action="{{ url }}" method="{{ method }}" {% if form_id %}id="{{ form_id }}"{% endif %} style="display: inline">
+<form action="{{ url }}" method="{{ method }}" {% if form_id %}id="{{ form_id }}"{% endif %} style="display: inline;">
 	{% if method == "post" %}{% csrf_token %}{% endif %}
-	<button type="submit" class="mdl-button mdl-js-button mdl-button--raised {% if color %}mdl-button--accent{% endif %}">
+	<button type="submit" class="mdl-button mdl-js-button mdl-button--raised {% if color %}mdl-button--accent{% endif %} {% if no_margin %}no-margin{% endif %}">
 		{{ title }}
 	</button>
 </form>

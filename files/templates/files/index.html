@@ -9,21 +9,23 @@
 	{% redirect_button add_url "Dodaj" %}
 </div>
 
+{% load preview_image %}
 {% for file in object_list %}
-<div class="cloud" style="min-height: 134px">
-	{% with "/media/images/" as prefix %}
-	<a href="{% url 'files:download' file.id %}" style="float: right; margin: 0">
-		<img src="{% url 'files:download' file.id %}" height="120px" style="float: right;">
-	</a>
-	{% endwith %}
-	<p class="no-margin">ID: {{ file.id }}</p>
-	<p class="no-margin">Data stworzenia: {{ file.created_at }}</p>
-	<p class="no-margin">Użytkownik: <a href="{% url 'users:edit' file.created_by.id %}" class="{% if file.created_by.is_staff %}red-text{% endif %}" style="text-decoration: none; margin: 0;">{{ file.created_by }}</a></p>
-	{% if file.description %}
-	<p class="no-margin">Opis: {{ file.description }}</p>
-	{% endif %}
-	<p class="no-margin">Rozmiar: {{ file.size_str }}</p>
-</div>
+	<div class="cloud" style="min-height: 136px">
+		<div style="float: right">
+			{% preview_image file %}
+		</div>
+		<div>
+			<p class="no-margin">ID: {{ file.id }}</p>
+			<p class="no-margin">Data stworzenia: {{ file.created_at }}</p>
+			{% load user_link %}
+			<p class="no-margin">Użytkownik: {% user_link file.created_by %}</p>
+			<p class="no-margin">Rozmiar: {{ file.size_str }}</p>
+			{% if file.description %}
+				<p class="no-margin">Opis: {{ file.description }}</p>
+			{% endif %}
+		</div>
+	</div>
 {% endfor %}
 
 {% endblock %}

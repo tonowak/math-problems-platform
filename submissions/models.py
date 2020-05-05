@@ -1,0 +1,33 @@
+from django.db import models
+from django.contrib.auth.models import User
+
+from problems.models import Problem
+from folder.models import Folder
+from files.models import SavedImage
+
+class Thread(models.Model):
+    is_public  = models.BooleanField()
+    created_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    parent_problem = models.ForeignKey(Problem, null=True, on_delete=models.SET_NULL)
+    parent_folder  = models.ForeignKey(Folder, null=True, on_delete=models.SET_NULL)
+
+    # make sure that a Thread has a parent Folder *or* Problem
+    def save(self, *args, **kwargs):
+        pr = self.parent_problem
+        fl = self.parent_folder
+        assert (pr == None and fl != None) or (pr != None and fl == None)
+        super().save(*args, **kwargs)
+
+    def can_comment(self, user):
+        return user.is_staff or self.is_public or self.created_by == user
+
+class Comment(models.Model):
+    thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    description = models.TextField()
+
+class Attachment(models.Model):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    image = models.ForeignKey(SavedImage, on_delete=models.CASCADE)

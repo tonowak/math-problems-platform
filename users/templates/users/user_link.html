@@ -1,0 +1,5 @@
+{% if user == None %}
+<strong>System</strong>
+{% else %}
+<a href="{% url 'users:edit' user.id %}" class="{% if user.is_staff %}red-text{% endif %}" style="text-decoration: none; margin: 0;">{{ user.first_name }} {{ user.last_name }}</a>
+{% endif %}

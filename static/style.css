@@ -107,10 +107,10 @@ body {
 .markdown i, .markdown p, .markdown li, .markdown h1, .markdown h2, .markdown h3 {
 	color: #424242 !important;
 }
-.markdown a {
+.green-a, .markdown a {
 	margin: 0;
 	text-decoration: none;
-	color: rgb(139, 195, 74);
+	color: rgb(139, 195, 74) !important;
 }
 .markdown img {
 	max-width: 50%;
@@ -199,6 +199,27 @@ h1, h2, h3, h4, h5, h6 {
 	display: inline-block;
 	height: 100%;
 	line-height: 32px;
+}
+
+/* files */
+
+.preview-image {
+	height: 120px;
+	width: 120px;
+	border: 1px solid #ccc;
+	display: inline-block;
+}
+.preview-image a {
+	margin: 0;
+}
+.preview-image img {
+	height: 100%;
+	width: 100%;
+	object-fit: contain;
+}
+.image-container {
+	margin-left: 1em;
+	margin-right: 1em;
 }
 
 /* colors / chips */

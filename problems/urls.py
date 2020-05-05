@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from submissions import views as ss_views
 
 app_name = 'problems'
 urlpatterns = [
@@ -10,4 +11,5 @@ urlpatterns = [
     path('<int:pk>/edit', views.EditView.as_view(), name='edit'),
     path('<int:pk>/delete', views.DeleteView.as_view(), name='delete'),
     path('<int:pk>/claim', views.ClaimView.as_view(), name='claim'),
+    path('<int:pk>/submissions', ss_views.SubmitFromProblemView.as_view(), name='submissions'),
 ]

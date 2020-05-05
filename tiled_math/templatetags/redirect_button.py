@@ -9,8 +9,9 @@ def redirect_button(url, title, *args, **kwargs):
     return {
         'url': url,
         'title': title,
-        'color': kwargs['color'] if 'color' in kwargs else '',
-        'method': kwargs['method'] if 'method' in kwargs else 'get',
-        'form_id' : kwargs['form_id'] if 'form_id' in kwargs else '',
+        'color': kwargs.get('color', ''),
+        'method': kwargs.get('method', 'get'),
+        'form_id' : kwargs.get('form_id', ''),
+        'no_margin': kwargs.get('no_margin', False),
     }
 

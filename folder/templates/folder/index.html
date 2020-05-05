@@ -14,6 +14,11 @@
 		</button>
 		<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="ranking_button">Ranking</div>
 	{% endif %}
+
+	<button id="submissions_button" class="mdl-button mdl-js-button mdl-button--icon right-action-button" onclick="location.href='{% url 'folder:submissions' folder_path %}'" type="button">
+		<i class="material-icons right-action-button">announcement</i>
+	</button>
+	<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="submissions_button">Ogłoszenia / Submity</div>
 {% endblock %}
 
 {% block subcontent %}
