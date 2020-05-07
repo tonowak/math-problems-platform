@@ -24,49 +24,37 @@ class StaffOnly(UserAccessMixin):
     def has_permission(self, user, **kwargs):
         return user.is_staff
 
-def wrapper(user_test):
-    def decorator(function):
-        @wraps(function)
-        def wrap(request, *args, **kwargs):
-            if user_test(request, **kwargs):
-                return function(request, *args, **kwargs)
-            else:
-                raise PermissionDenied
-        return wrap
-    return decorator
-
 class UserpageAccess(UserAccessMixin):
     def has_permission(self, user, **kwargs):
         return user.is_staff or user.id == kwargs['u_id']
 
-def has_direct_access_to_folder(user, folder):
-    if folder.parent == None:
-        return True
-    for tag in user.tag_set.all():
-        if folder.tag_set.filter(id=tag.id):
-            return True;
-    return False
+def recalculate_indirect_folder_tags():
+    for folder in Folder.objects.all():
+        folder.indirect_tag_set.clear()
 
-def has_access_in_subtree(user, folder):
-    if has_direct_access_to_folder(user, folder):
-        return True
-    for son in Folder.objects.filter(parent=folder.id).all():
-        if has_direct_access_to_folder(user, son):
-            return True
-    return False
+    def add_to_subtree(folder, tag):
+        folder.indirect_tag_set.add(tag)
+        for son in Folder.objects.filter(parent=folder).all():
+            add_to_subtree(son, tag)
+
+    def add_to_ancestors(folder, tag):
+        folder.indirect_tag_set.add(tag)
+        if folder.parent != None:
+            add_to_ancestors(folder.parent, tag)
+
+    for folder in Folder.objects.all():
+        for tag in folder.direct_tag_set.all():
+            add_to_subtree(folder, tag)
+            add_to_ancestors(folder, tag)
 
 def has_access_to_folder(user, folder):
     if not user.is_authenticated:
         return False
     if user.is_staff:
         return True
-    f = folder
-    while f.parent:
-        if has_direct_access_to_folder(user, f):
+    for tag in user.tag_set.all():
+        if folder.indirect_tag_set.filter(id=tag.id).exists():
             return True
-        f = Folder.objects.get(id=f.parent.id)
-    if has_access_in_subtree(user, folder):
-        return True
     return False
 
 class FolderAccess(UserAccessMixin):

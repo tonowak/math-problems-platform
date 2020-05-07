@@ -7,6 +7,7 @@ from tags.models import Tag
 from folder.tests import add_sample_folders
 from tags.tests import add_sample_tags
 from problems.tests import add_sample_problems
+from users.permissions import recalculate_indirect_folder_tags
 
 def add_dummy_users():
     def add_user(username):
@@ -45,8 +46,9 @@ class UserPermissions(TestCase):
         self.client_student2.force_login(self.user_student2)
 
         self.mid_folder = Folder.objects.get(pretty_name='Wielomiany')
-        self.mid_folder.tag_set.add(Tag.objects.get(name="tag student"))
         self.mid_folder.save()
+        self.mid_folder.direct_tag_set.add(Tag.objects.get(name="tag student"))
+        recalculate_indirect_folder_tags()
 
         self.paths = {Folder.objects.get(parent=None): 'all'}
         def dfs(prefix, f):
@@ -63,7 +65,7 @@ class UserPermissions(TestCase):
             response = self.client_staff.get(url)
             self.assertEqual(response.status_code, 200)
             response = self.client_student2.get(url)
-            self.assertEqual(response.status_code, 200 if f.parent == None else 403)
+            self.assertEqual(response.status_code, 403)
 
         access_list = [self.mid_folder, self.mid_folder.parent, Folder.objects.get(parent=None)]
         for son in Folder.objects.filter(parent=self.mid_folder).all():

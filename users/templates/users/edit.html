@@ -33,6 +33,10 @@
 	</button>
 
 	{% if request.user.is_staff %}
+	{% load redirect_button %}
+	{% url 'users:set_score' editing_user.id as set_score_url %}
+	{% redirect_button set_score_url 'Przyznaj ocenę' %}
+
 	<a href="{% url 'users:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
 	{% endif %}
 </div>

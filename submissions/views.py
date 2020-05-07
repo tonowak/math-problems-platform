@@ -9,6 +9,7 @@ from files.models import save_image
 from folder.models import Folder, ProblemPlace, get_folder
 from folder.views import get_context
 from problems.models import Problem
+from tiled_math.views import ArgSuccessUrlMixin
 
 class FileFormView(FormView):
     def post(self, request, *args, **kwargs):
@@ -20,13 +21,6 @@ class FileFormView(FormView):
             return self.form_valid(form, files)
         else:
             return self.form_invalid(form)
-
-class ArgSuccessUrlMixin(object):
-    def get_success_url(self):
-        assert len(self.success_url) == 2
-        return reverse(self.success_url[0], kwargs={
-            self.success_url[1]: self.kwargs.get(self.success_url[1])
-        })
 
 def convert_threads_to_lists(threads, user):
     # returns a list of (thread, list of (comment, comment_files), can_comment)

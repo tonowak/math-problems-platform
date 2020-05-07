@@ -2,23 +2,25 @@ from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 from .models import Folder, ProblemPlace
 from .models import get_parent_path, get_parent_paths, convert_pretty_to_folder_name, fix_path
 from .models import get_folder, add_folder, rename_folder
-from problems.models import Problem
+from problems.models import Problem, has_solved_task, SolutionScore
 from tags.models import Tag
 from tags.views import tag_types
-from users.permissions import FolderAccess, StaffOnly, has_access_to_folder
+from users.permissions import FolderAccess, StaffOnly
+from users.permissions import has_access_to_folder, recalculate_indirect_folder_tags  
 
 def get_context(path):
     path = fix_path(path)
     folder = get_folder(path)
     group_type = tag_types.index("Grupa")
-    all_tags = Tag.objects.filter(type_id=group_type).order_by('type_id', 'id')
+    all_tags = folder.indirect_tag_set.all()
     selected_tags = []
     for tag in all_tags:
-        if folder.tag_set.filter(pk=tag.pk).exists():
+        if folder.direct_tag_set.filter(pk=tag.pk).exists():
             selected_tags.append(tag)
     problems = []
     for fp in ProblemPlace.objects.filter(folder=folder).order_by('place').all():
@@ -48,7 +50,7 @@ class IndexView(FolderAccess, View):
         for fp in ProblemPlace.objects.filter(folder=context['folder']).order_by('place').all():
             problem = fp.problem
             context['problems'].append(
-                    (problem, problem.claiming_user_set.filter(id=request.user.id).exists()))
+                    (problem, has_solved_task(problem, request.user)))
         return render(request, 'folder/index.html', context)
 
 class EditView(StaffOnly, View):
@@ -143,10 +145,11 @@ class EditTags(StaffOnly, View):
     def post(self, request, folder_path):
         f = get_folder(folder_path)
         tags = request.POST.getlist('tags[]')
-        f.tag_set.clear()
-        for tag_id in tags:
-            f.tag_set.add(Tag.objects.get(id=tag_id))
-        f.save()
+        tags = [Tag.objects.get(id=id) for id in tags]
+        f.direct_tag_set.clear()
+        for tag in tags:
+            f.direct_tag_set.add(tag)
+        recalculate_indirect_folder_tags()
         messages.success(request, 'Zmieniono tagi!')
         return redirect('folder:edit', folder_path)
 
@@ -163,10 +166,9 @@ class MoveProblemUp(StaffOnly, View):
         messages.success(request, 'Przesunięto zadanie!')
         return redirect('folder:edit', folder_path)
 
-class Ranking(StaffOnly, View):
-    problem_list = []
-
-    def dfs(self, prefix, f):
+class Ranking(FolderAccess, View):
+    # problem_list = list of (path, problems_in_this_folder) 
+    def dfs(self, prefix, f, problem_list):
         if f.parent == None:
             prefix = '~'
         elif prefix:
@@ -177,62 +179,70 @@ class Ranking(StaffOnly, View):
         for fp in ProblemPlace.objects.filter(folder=f).order_by('place').all():
             problems.append(fp.problem)
         if len(problems) != 0:
-            self.problem_list.append((prefix, problems))
+            problem_list.append((prefix, problems))
         for son in Folder.objects.filter(parent=f).all():
-            self.dfs(prefix, son)
+            if has_access_to_folder(self.request.user, son):
+                self.dfs(prefix, son, problem_list)
 
     def get(self, request, folder_path):
+        # generate problem_list
         f = get_folder(folder_path)
-        self.problem_list = []
-        self.dfs('', f)
+        problem_list = []
+        self.dfs('', f, problem_list)
+
+        # take all users claiming at least one task from problem_list
         userlist = set()
-        for prefix, problems in self.problem_list:
+        for prefix, problems in problem_list:
             for problem in problems:
-                for user in problem.claiming_user_set.all():
+                for solutionscore in SolutionScore.objects.filter(problem=problem).all():
+                    user = solutionscore.user
                     if user not in userlist:
                         userlist.add(user)
+                            
+        # retrieve tags from request
         tags = []
         if 'tags[]' in request.GET:
-            tags = request.GET.getlist('tags[]')
+            tags = [Tag.objects.get(id=id) for id in tags]
+        else:
+            tags = f.indirect_tag_set.all()
+
+        # if request.user has chosen tags, restrict userlist to those users
         if tags:
             new_userlist = []
             for user in userlist:
-                found = False
                 for tag in tags:
-                    if user.tag_set.filter(id=tag).exists():
-                        found = True
+                    if user.tag_set.filter(id=tag.id).exists():
+                        new_userlist.append(user)
                         break
-                if found:
-                    new_userlist.append(user)
             userlist = new_userlist
 
+        # generate context table 
+        # table = list of (user, score, [SolutionScore of problems[i] or None if not submited]
         table = []
         for user in userlist:
-            did = []
-            sum = 0
-            for prefix, problems in self.problem_list:
+            ss_list = []
+            score_sum = 0
+            for prefix, problems in problem_list:
+                ss_inner_list = []
                 for problem in problems:
-                    did.append((
-                        bool(problem.claiming_user_set.filter(id=user.id).exists()),
-                        bool(problem == problems[0]),
-                    ))
-                    if did[-1][0]:
-                        sum += 1
-
-            row = [(-sum, False), (user.last_name, False), (user.first_name, False)]
-            row += did
+                    ss = None
+                    if SolutionScore.objects.filter(problem=problem, user=user).exists():
+                        ss = SolutionScore.objects.get(problem=problem, user=user)
+                    ss_inner_list.append(ss)
+                    if ss != None:
+                        score_sum += ss.get_score()
+                ss_list.append(ss_inner_list)
+            row = [-score_sum, user, ss_list]
             table.append(row)
         table.sort()
         for row in table:
-            name = row[2][0] + ' ' + row[1][0]
-            row[2] = (-row[0][0], False)
-            row.pop(0)
-            row[0] = (name, False)
+            row[0] *= -1
+            row[0], row[1] = row[1], row[0]
 
         context = get_context(folder_path)
-        context['problem_list'] = self.problem_list
+        context['problem_list'] = problem_list
         context['table'] = table
-        context['selected_tags'] = [Tag.objects.get(id=id) for id in tags]
+        context['selected_tags'] = tags
         return render(request, 'folder/ranking.html', context)
 
 class ShowSolution(StaffOnly, View):

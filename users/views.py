@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.generic.edit import FormView
 from django.views.generic import View
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -7,7 +8,10 @@ from django.contrib.auth import logout
 from django.contrib.auth.models import User
 
 from .permissions import StaffOnly, UserpageAccess
+from .forms import SetSolutionScoreForm
 from tags.models import Tag
+from tiled_math.views import ArgSuccessUrlMixin
+from problems.models import Problem, get_solutionscore
 
 def login_view(request):
     return render(request, 'users/login.html')
@@ -53,3 +57,23 @@ class EditUser(UserpageAccess, View):
         user.save()
         return redirect('users:edit', u_id)
 
+class SetSolutionScoreView(ArgSuccessUrlMixin, StaffOnly, FormView):
+    form_class = SetSolutionScoreForm
+    template_name = 'users/set_score.html'
+    success_url = ('users:set_score', 'u_id')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        editing_user = get_object_or_404(User, id=self.kwargs.get(self.success_url[1], -1))
+        context['editing_user'] = editing_user
+        return context
+    
+    def form_valid(self, form):
+        problem = get_object_or_404(Problem, id=form.cleaned_data['problem'])
+        score = form.cleaned_data['score']
+        user = get_object_or_404(User, id=self.kwargs.get(self.success_url[1], -1))
+        ss = get_solutionscore(problem, user)
+        ss.assigned_score = score
+        ss.save()
+        messages.success(self.request, 'Dodano!')
+        return super().form_valid(form)

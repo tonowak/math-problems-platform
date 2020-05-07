@@ -299,8 +299,8 @@ h1, h2, h3, h4, h5, h6 {
 .mdl-data-table {
 	width: 100%;
 }
-.border-left {
-	border-left: 1px solid #ddd;
+.border-right {
+	border-right: 1px solid #ddd;
 }
 .cloud dialog {
 	margin: auto !important;

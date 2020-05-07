@@ -5,7 +5,7 @@ from django import template
 register = template.Library()
 
 @register.inclusion_tag('submit_button.html')
-def submit_button(title, form_id):
+def submit_button(title, form_id=''):
     return {
         'title': title,
         'form_id': form_id,

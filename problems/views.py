@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 
-from .models import Problem
+from .models import Problem, has_solved_task, get_solutionscore
 from tags.models import Tag
 from users.permissions import StaffOnly, ProblemAccess
 from users.permissions import has_access_to_solution, has_access_to_stats
@@ -79,18 +79,17 @@ class DetailsView(ProblemAccess, View):
             'show_solution': inside_get('show_solution'),
             'access_to_solution': has_access_to_solution(request.user, problem),
             'access_to_stats': has_access_to_stats(request.user, problem),
-            'solved_task': request.user.problem_set.filter(id=problem.id).exists(),
-            'solved_cnt': problem.claiming_user_set.count(),
+            'solved_task': has_solved_task(problem, request.user),
+            'solved_cnt': 'TODO',
         })
 
 class ClaimView(ProblemAccess, View):
     def post(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
 
-        if request.user.problem_set.filter(id=problem.id).exists():
-            request.user.problem_set.remove(problem)
-        else:
-            request.user.problem_set.add(problem)
+        ss = get_solutionscore(problem=problem, user=request.user)
+        ss.claiming = not ss.claiming
+        ss.save()
 
         if 'stay' in request.POST:
             return redirect('users:back_from_problem')
