@@ -1,6 +1,7 @@
 # ViM Project stuff
 .env
 .env.asc
+sfiles/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
