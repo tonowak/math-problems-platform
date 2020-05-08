@@ -65,7 +65,7 @@ def deduce_tags(problem):
 
     zespo = check_solve("liczby zespolone", ["zespolon"], 1)
 
-    check_solve("trygonometria", ["\\\\sin", "\\\\tan", "\\\\tg", "\\\\cos", "\\\\cot", "\\\\ctg", "sinus", "[ck]osinus", "tangens", "[ck]otangens"], 5)
+    trygo = check_solve("trygonometria", ["\\\\sin", "\\\\tan", "\\\\tg", "\\\\cos", "\\\\cot", "\\\\ctg", "sinus", "[ck]osinus", "tangens", "[ck]otangens"], 5)
 
     wektor = check_solve("rachunek wektorowy", ["wektor"], 3)
      
@@ -108,7 +108,9 @@ def deduce_tags(problem):
 
     # ATL
     # mimo wszystko solve, bo czasem jest ukryty wątek podzielności
-    podzielnosc = check_solve("podzielności i kongruencje", ["podzieln", "nwd", "reszt", "dziele?ni", "\smodulo", "equiv", "wielokrotnoś"], 2, [not geo])
+    wielomian = check_solve("wielomiany", ["wielomian", "pierwiaste?k"], 1, [count(["kwadratow"], solution) == 0])
+
+    podzielnosc = check_solve("podzielności i kongruencje", ["podzieln", "nwd", "reszt", "dziele?ni", "\smodulo", "equiv", "wielokrotnoś"], 2, [not geo, not wielomian])
 
     check_solve("reszty kwadratowe", ["kwadrat", "sześcian"], 3, [podzielnosc, not geo])
 
@@ -129,11 +131,9 @@ def deduce_tags(problem):
     check_statement("liczby wymierne", ["wymiern"], 1, [not niewym, not geo])
 
     # równanie Diofantyczne
-    diofantyczne = check_statement("równania diofantyczne", ["naturaln", "całkowit", "równani"], 2, [count(["rzeczywist", "ciąg"], solution) == 0, not geo])
+    diofantyczne = check_statement("równania diofantyczne", ["naturaln", "całkowit", "równani"], 2, [count(["rzeczywist", "ciąg"], solution) == 0, not geo, count(["naturaln", "całkowit"], statement) >= 1])
 
     check_solve("równanie Pella", ["pell", "indyjski"], 0.4, [not geo])
-
-    wielomian = check_statement("wielomiany", ["wielomian", "pierwiaste?k"], 1, [count(["kwadratow"], solution) == 0])
 
     check_solve("trójmiany kwadratowe", ["równa.{1,3} kwadratow", "trójmian", "funkcj. kwadratow"], 0.4, [not geo, not wielomian])
 
@@ -143,7 +143,7 @@ def deduce_tags(problem):
     check_solve("zasada indukcji matematycznej", ["indukc"], 1)
      
     # check_solve("zasada minimum/maksimum", ["niech", "śród", "wybierz", "moż", "rozważ", "weź", "rozpatrz"], 2, [count(["minimaln", "maksymaln", "największ", "najmniejsz"]) >= 1, not geo])
-    kombi_geo = check_statement("geometria kombinatoryczna", ["kąt", "ścian", "płaszczyzn"], 2, [not geo, len(tags) < 2])
+    kombi_geo = check_statement("geometria kombinatoryczna", ["kąt", "ścian", "płaszczyzn"], 2, [not geo, not trygo, len(tags) < 2])
 
     check_solve("zasada minimum/maksimum", ["(niech |śród |wybierzmy |rozważ| weźmy| rozpatrz).{1,20}(minimaln|maksymaln|najmniejsz|największ)"], 0.4, [not geo])
      
@@ -173,7 +173,7 @@ def deduce_tags(problem):
 
     check_solve("zasada włączeń i wyłączeń", ["włączeń i wyłączeń"], 0.4, [zbiory])
 
-    check_solve("podwójne zliczanie", ["na dwa sposoby", "liczy"], 2, [len(tags) < 2])
+    check_solve("podwójne zliczanie", ["na dwa sposoby", "zliczy"], 2, [len(tags) < 2])
 
     check_solve("prawdopodobieństwo", ["prawdopodobieństw"], 0.4)
 
@@ -203,7 +203,7 @@ def deduce_tags(problem):
 
     check_statement("granice ciągów", ["\sgranic", "lim\s"], 1, [len(tags) < 2])
 
-    check_statement("równania", ["równanie"], 1, [len(tags) == 0])
+    check_statement("równania", ["równanie", "równość", "="], 1, [len(tags) == 0])
 
     if len(tags) == 0:
         check_statement("brak tagów", [], 0)
