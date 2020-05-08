@@ -5,17 +5,25 @@
 <div class="cloud">
 	<h3> Zbiór zadań </h3>
 
+	<p>Znaleziono {{ found_cnt }} zadań, wyświetlono {% if found_cnt == showed_cnt %}wszystkie{% else %}{{ showed_cnt }} najnowszych{% endif %}.</p>
+
 	<a href="{% url 'problems:add' %}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Dodaj zadania</a>
+
+	<a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Wyczyść filtry</a>
 
 	<button type="submit" form="filter_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
 		Wyszukaj
 	</button>
 
-	<a href="{% url 'problems:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Wyczyść filtry</a>
+	<div style="display: inline-block;">
+		<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+			<input type="checkbox" class="mdl-checkbox__input" name="show_all" form="filter_form" {% if show_all %}checked{% endif %}>
+			<span class="mdl-checkbox__label">Wyświetl wszystkie zadania</span>
+		</label>
+	</div>
 </div>
 
 <form action="{% url 'problems:index' %}" method="get" id="filter_form">
-{% csrf_token %}
 </form>
 
 {% load select_tags %}

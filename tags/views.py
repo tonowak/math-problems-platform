@@ -19,10 +19,14 @@ tag_types = [
 
 class IndexView(StaffOnly, View):
     def get(self, request):
-        tag_data = [[] for i in range(len(tag_types))]
+        tag_data = [[] for i in range(len(tag_types) + 1)]
         for tag in Tag.objects.filter(attachable=True):
             tag_data[tag.type_id].append(tag)
-        tag_data = list(zip(tag_types, tag_data))
+            tag_data[-1].append(tag)
+        for i in range(len(tag_types)):
+            tag_data[i] = sorted(tag_data[i], key=lambda t: t.name.lower())
+        tag_data[-1] = sorted(tag_data[-1], key=lambda t: (-t.problems.count(), t.name.lower()))
+        tag_data = list(zip(tag_types + ["Wszystkie"], tag_data))
 
         return render(request, 'tags/index.html', {'tag_data': tag_data});
 

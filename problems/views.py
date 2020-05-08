@@ -32,17 +32,25 @@ class IndexView(StaffOnly, View):
         for tag_id in tag_filter:
             problems = problems.filter(tag__id=tag_id)
             selected_tags.append(Problem.objects.get(id=tag_id))
+        context = {
+            'all_tags': problem_tags(),
+            'selected_tags': selected_tags,
+        }
         problems = problems.order_by('-id')
+        show_all = 'show_all' in request.GET
+        context['show_all'] = show_all
 
         problems_data = []
         for problem in problems:
             problems_data.append((problem, problem.tag_set.order_by('type_id', 'id').filter(attachable=True)))
+        context['found_cnt'] = len(problems_data)
+        upper_bound = 200
+        if not show_all and len(problems_data) > upper_bound:
+            problems_data = problems_data[:upper_bound]
+        context['showed_cnt'] = len(problems_data)
+        context['problems_data'] = problems_data
 
-        return render(request, 'problems/index.html', {
-            'problems_data': problems_data,
-            'all_tags': problem_tags(),
-            'selected_tags': selected_tags,
-        })
+        return render(request, 'problems/index.html', context)
 
 class AddView(StaffOnly, View):
     def get(self, request):

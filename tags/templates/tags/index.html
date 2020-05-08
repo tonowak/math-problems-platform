@@ -26,13 +26,16 @@
 	<ul class="mdl-list" id="cat{{ forloop.counter }}" style="display: none;">
 		{% for tag in tags %}
 		<li id="reg{{ tag.id }}" class="mdl-list__item">
-			<span class="mdl-list__item-primary-content">{{ tag.name }}</span>
+			<span class="mdl-list__item-primary-content">{{ tag.name }}{% if forloop.parentloop.last %} ({{ tag.problems.count }}){% endif %}</span>
+			{% if not forloop.parentloop.last %}
 			<button id="to_edit{{ tag.id }}" class="mdl-button mdl-js-button mdl-button--icon right-action-button">
 				<i class="material-icons right-action-button">edit</i>
 			</button>
 			<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="to_edit{{ tag.id }}">Edytuj</div>
+			{% endif %}
 		</li>
 
+		{% if not forloop.last %}
 		<li id="edit{{ tag.id }}" class="mdl-list__item" style="display: none;">
 			<form onSubmit="this.action='{% url 'tags:edit' tag.id %}' + location.hash" action="{% url 'tags:edit' tag.id %}" method="post" id="tag_form" style="width: 100%;">
 			{% csrf_token %}
@@ -42,6 +45,7 @@
 				</div>
 			</form>
 		</li>
+		{% endif %}
 		{% endfor %}
 	</ul>
 	{% endfor %}
