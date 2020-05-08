@@ -1,6 +1,7 @@
 # ViM Project stuff
 .env
 .env.asc
+sfiles/
 media
 
 # Byte-compiled / optimized / DLL files
