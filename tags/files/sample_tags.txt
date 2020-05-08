@@ -1,31 +1,91 @@
 #Geo
-Zespo
-Trygo
-Bary
+długości odcinków
+proporcje odcinków
+rachunek kątów
+rachunek pól
+współliniowość
+współpękowość
+cykliczność
+konstrukcje
+stereometria
+geometria analityczna
+trygonometria
+rachunek wektorowy
+nierówność trójkąta
+twierdzenie o czapce krasnoludka
+przystawanie trójkątów
+izometrie płaszczyzny
+twierdzenie Pitagorasa
+twierdzenie o trójliściu
+twierdzenie Talesa
+jednokładności
+podobieństwa trójkątów
+twierdzenie o dwusiecznej
+twierdzenie Menelaosa
+twierdzenie Cevy
+potęga punktu względem okręgu
+czworokąty cykliczne
+inwersja względem okręgu
+osie potęgowe
 #ATL
-Liczby pierwsze
-Funkcja Totient Eulera
-Reszty kwadratowe
-Lemat o zwiększaniu wykładnika
-Największ wspólny dzielnik
+podzielności i kongruencje
+reszty kwadratowe
+rzędy i półrzędy
+wykładniki p-adyczne
+lemat o zwiększaniu wykładnika
+chińskie twierdzenie o resztach
+ciągi rekurencyjne
+ciąg Fibonacciego
+równania diofantyczne
+równanie Pella
+liczby wymierne
+liczby niewymierne
+trójmiany kwadratowe
 #Kombi
-Liczby Catalana
-Twierdzenie o łatach na kapocie
-Zasada Szufladkowa Dirichleta
+grafy
+drzewa
+cykle
+grafy skierowane
+twierdzenie Halla
+gry
+tożsamości kombinatoryczne
+dwumian Newtona
+permutacje
+zasada szufladkowa Dirichleta
+zasada łat na kapocie
+zasada minimum/maksimum
+zasada indukcji matematycznej
+kolorowania
+niezmienniki i półniezmienniki
+zasada włączeń i wyłączeń
+podwójne zliczanie
+prawdopodobieństwo
+wzór Eulera
+geometria kombinatoryczna
 #Analiza
-Nierówność Jensena
-Wielomian
-Równanie funkcyjne
+nierówności
+równania
+nierówności między średnimi
+nierówność Cauchy'ego-Schwarza
+twierdzenie o ciągach jednomonotonicznych
+funkcje wypukłe
+nierówność Jensena
+układy równań
+wzory skróconego mnożenia
+tożsamość nieśmiertelna
+równania funkcyjne
+liczby zespolone
+wielomiany
+twierdzenie Bezout
+wzory Viete'a
+granice ciągów
 #Inne
-Ulubione
+AI
+za krótkie rozwiązanie
+brak tagów
 #Źródło
 Sarbinowo 2019
 Drugi etap OM
 Finał OM
-#Trudność
-Łatwe
-Średnie
-Trudne
+#Trudnosć
 #Grupa
-Podstawówka
-Liceum
