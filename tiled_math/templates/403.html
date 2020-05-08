@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}404 Not Found{% endblock %}
+{% block content %}
+
+<div class="small-cloud-parent">
+	<div class="cloud small-cloud">
+		<h3>403 Forbidden</h3>
+		{% if request.user.tag_set.exists %}
+		<p>Jeżeli uważasz, że jednak powinieneś mieć dostęp do tej strony, zgłoś buga.</p>
+		{% else %}
+		<p>Nauczyciel nie zaakceptował Twojej rejestracji. Zaczekaj cierpliwie.</p>
+		{% endif %}
+	</div>
+</div>
+{% endblock %}

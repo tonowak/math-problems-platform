@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from submissions import views as ss_views
 
 app_name = 'folder'
 urlpatterns = [
@@ -15,5 +16,6 @@ urlpatterns = [
     path('<path:folder_path>/ranking', views.Ranking.as_view(), name='ranking'),
     path('<path:folder_path>/show_solution', views.ShowSolution.as_view(), name='show_solution'),
     path('<path:folder_path>/show_stats', views.ShowStats.as_view(), name='show_stats'),
+    path('<path:folder_path>/submissions', ss_views.SubmitFromFolderView.as_view(), name='submissions'),
     path('<path:folder_path>', views.IndexView.as_view(), name='index'),
 ]

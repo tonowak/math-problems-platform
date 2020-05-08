@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Dodaj komentarz{% endblock %}
+{% block content %}
+
+<div class="cloud">
+	{% load redirect_button %}
+	<div style="float: right; margin-right: 1em;">
+		{% redirect_button back_url "Powrót" %}
+	</div>
+	<h3>Dodaj komentarz</h3>
+	{% url 'submissions:details' thread_id as form_url %}
+	{% include "files/form_files.html" with form_url=form_url %}
+</div>
+
+{% load user_link %}
+{% load preview_image %}
+{% load markdown %}
+
+{# there is only 1 thread #}
+{% for thread, comments, can_comment in threads %}
+{% for comment, images in comments %}
+<div class="cloud">
+	{% markdown %}{{ comment.description }}{% endmarkdown %}
+
+	<div class="image-container">
+		{% for image in images %}
+			{% preview_image image %}
+		{% endfor %}
+	</div>
+
+	<p>
+		{% user_link comment.created_by %}
+		{{ comment.created_at }}
+	</p>
+</div>
+{% endfor %}
+{% endfor %}
+
+
+{% endblock %}

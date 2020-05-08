@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Wyślij rozwiązanie{% endblock %}
+{% block content %}
+
+<div class="cloud {% if solved_task %}green-background{% endif %}">
+	<div style="float: right;">
+		{% url 'problems:details' problem.id as problem_url %}
+		{% load redirect_button %}
+		{% redirect_button problem_url "Powrót" no_margin=True %}
+	</div>
+	<h6>Treść</h6>
+	{% load markdown %}
+	{% markdown %}{{ problem.statement }}{% endmarkdown %}
+</div>
+
+
+<div class="cloud">
+	<p>Tutaj możesz zadać pytanie lub podać rozwiązanie do zadania. Dla zaawansowanych: w opisie można używać latexa i markdown.</p>
+	{% url 'submissions:details' as form_url %}
+	{% include "files/form_files.html" with form_url=form_url %}
+</div>
+
+{% include "submissions/thread_list.html" %}
+
+{% endblock %}

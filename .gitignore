@@ -2,6 +2,7 @@
 .env
 .env.asc
 sfiles/
+media
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

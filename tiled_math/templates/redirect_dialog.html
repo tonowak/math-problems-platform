@@ -1,0 +1,16 @@
+<form action="{{ url }}" method="{{ method }}" id="form-{{ button_id }}" style="display: inline;">
+	{% csrf_token %}
+	{% for name, value in form_values.items %}
+	<input type="hidden" name="{{ name }}" value="{{ value }}" />
+	{% endfor %}
+</form>
+<dialog class="mdl-dialog" id="dialog-{{ button_id }}" width=100>
+	<h5 class>{{ title }}</h5>
+	<div class="mdl-dialog__content">
+	</div>
+	<div class="mdl-dialog__actions">
+		<button form="form-{{ button_id }}" type="submit" class="mdl-button">{{ yes }}</button>
+		<button type="button" class="mdl-button close">{{ no }}</button>
+	</div>
+</dialog>
+<script>activate_dialog('{{ button_id }}');</script>

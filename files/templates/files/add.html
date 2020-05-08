@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Dodaj plik{% endblock %}
+{% block content %}
+
+<div class="cloud">
+	<h3>Dodaj zdjęcia</h3>
+	{% url 'files:add' as form_url %}
+	{% include "files/form_files.html" with form_url=form_url %}
+</div>
+
+{% endblock %}

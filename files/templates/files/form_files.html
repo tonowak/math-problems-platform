@@ -1,0 +1,23 @@
+{% load forms %}
+{% load widget_tweaks %}
+
+<form enctype="multipart/form-data" action="{{ form_url }}" method="post">
+	{% csrf_token %}
+
+	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" 
+		 style="margin-left: 0.5em !important">
+		{% render_field form.description class="mdl-textfield__input" rows="5" style="margin-left: 0.5em" %}
+		<label class="mdl-textfield__label" for="id_description" style="margin-left: 0.5em">Opcjonalny opis / pytanie / wyjaśnienie</label>
+	</div>
+	<div style="display: flex; justify-content: space-between; flex-wrap: wrap; align-items: flex-end;
+				margin: 0 1em 1em 1em;">
+		<div>
+			<p style="display: inline" class="no-margin">Dodaj pliki:</p>
+			{% render_field form.files style="width: auto !important;"%}
+		</div>
+		<div>
+			<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+					style="margin: 0.5em 0 0 0">Dodaj</button>
+		</div>
+	</div>
+</form>

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Przyznaj ocenę{% endblock %}
+{% load widget_tweaks %}
+{% load user_link %}
+{% load forms %}
+{% block content %}
+
+<div class="cloud">
+	<p>{% user_link editing_user %}</p>
+	<p>Przyznaj punkty użytkownikowi w danym zadaniu.</p>
+	<form action="{% url 'users:set_score' editing_user.id %}" method="post">
+		{% csrf_token %}
+
+		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+			{% render_field form.problem class="mdl-textfield__input" pattern="-?[0-9]*(\.[0-9]+)?" %}
+			<label class="mdl-textfield__label" for="sample2">ID Zadania</label>
+			<span class="mdl-textfield__error">ID musi być liczbą całkowitą</span>
+		</div>
+
+		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+			{% render_field form.score class="mdl-textfield__input" pattern="-?[0-9]*(\.[0-9]+)?" %}
+			<label class="mdl-textfield__label" for="sample2">Punkty</label>
+			<span class="mdl-textfield__error">Liczba punktów musi być liczbą całkowitą</span>
+		</div>
+
+		{% submit_button "Dodaj" %}
+	</form>
+</div>
+
+{% endblock %}

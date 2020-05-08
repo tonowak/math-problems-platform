@@ -19,7 +19,7 @@
 
 	{% if not request.user.is_staff %}
 	<div class="chip-container">
-		{% for tag, true in tag_data %}
+		{% for tag in selected_tags %}
 		<span class="mdl-chip">
 			<span class="category-chip category-color-{{ tag.type_id }}"></span>
 			<span class="mdl-chip__text">{{ tag.name }}</span>
@@ -33,41 +33,17 @@
 	</button>
 
 	{% if request.user.is_staff %}
+	{% load redirect_button %}
+	{% url 'users:set_score' editing_user.id as set_score_url %}
+	{% redirect_button set_score_url 'Przyznaj ocenę' %}
+
 	<a href="{% url 'users:index' %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
 	{% endif %}
 </div>
 
 {% if request.user.is_staff %}
-<select form="edit-form" id="select-tags" name="tags[]" multiple placeholder="Dodaj tagi"></select>
-<script>
-$(function() {
-	var $select = $('#select-tags').selectize({
-		plugins: ['remove_button'],
-		persist: false,
-		options: [
-			{% for tag, selected in tag_data %}
-				{id: {{ tag.id }}, value: '{{ tag.id }}', text: '{{ tag.name }}', category: '{{ tag.type_id }}'},
-			{% endfor %}
-		],
-		render: {
-			item: function(data, escape) {
-				return '<span class="mdl-chip mdl-chip--deletable">' +
-							'<span class="category-chip category-color-' + escape(data.category) + '"></span>' +
-							'<span class="mdl-chip__text">' + escape(data.text) + '</span>' +
-						'</span>';
-			}
-		}
-	});
-
-	var selectize = $select[0].selectize;
-	{% for tag, selected in tag_data %}
-		{% if selected %}
-			selectize.addItem({{ tag.id }})
-		{% endif %}
-	{% endfor %}
-
-});
-</script>
+{% load select_tags %}
+{% select_tags "edit-form" %}
 {% endif %}
 
 <div class="small-itemlist-space"/>

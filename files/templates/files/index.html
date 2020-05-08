@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Lista plików{% endblock %}
+{% block content %}
+
+<div class="cloud">
+	<h3>Lista plików</h3>
+	{% load redirect_button %}
+	{% url 'files:add' as add_url %}
+	{% redirect_button add_url "Dodaj" %}
+</div>
+
+{% load preview_image %}
+{% for file in object_list %}
+	<div class="cloud" style="min-height: 136px">
+		<div style="float: right">
+			{% preview_image file %}
+		</div>
+		<div>
+			<p class="no-margin">ID: {{ file.id }}</p>
+			<p class="no-margin">Data stworzenia: {{ file.created_at }}</p>
+			{% load user_link %}
+			<p class="no-margin">Użytkownik: {% user_link file.created_by %}</p>
+			<p class="no-margin">Rozmiar: {{ file.size_str }}</p>
+			{% if file.description %}
+				<p class="no-margin">Opis: {{ file.description }}</p>
+			{% endif %}
+		</div>
+	</div>
+{% endfor %}
+
+{% endblock %}

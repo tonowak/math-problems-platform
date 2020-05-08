@@ -1,87 +1,27 @@
 from django.shortcuts import render, redirect
-from django.views import generic
-from django.urls import reverse
+from django.views.generic import View
 from django.shortcuts import render, get_object_or_404
-from django.http import Http404, HttpResponseRedirect
 from django.contrib import messages
-from django.utils.decorators import method_decorator
+from django.contrib.auth.models import User
 
 from .models import Folder, ProblemPlace
-from problems.models import Problem
+from .models import get_parent_path, get_parent_paths, convert_pretty_to_folder_name, fix_path
+from .models import get_folder, add_folder, rename_folder
+from problems.models import Problem, has_solved_task, SolutionScore
 from tags.models import Tag
 from tags.views import tag_types
-from users.permissions import has_access_to_folder, url_403, staff_only
-
-import unicodedata, re
-def convert_pretty_to_folder_name(pretty):
-    pretty = unicodedata.normalize('NFD', pretty)
-    pretty = u"".join([c for c in pretty if not unicodedata.combining(c)])
-    pretty = pretty.replace('ł', 'l')
-    pretty = pretty.replace('Ł', 'L')
-    folder = ''
-    for c in pretty:
-        if c.isalnum():
-            folder += c
-        else:
-            folder += '-'
-    return re.sub('-+', '-', folder)
-
-# remove '/' and '/' around folder_path
-def fix_path(folder_path):
-    if folder_path[0] == '/':
-        folder_path = folder_path[1:]
-    if folder_path and folder_path[-1] == '/':
-        folder_path = folder_path[:-1]
-    return folder_path
-
-def get_folder(folder_path):
-    folder_path = fix_path(folder_path)
-    root_list = Folder.objects.filter(parent=None)
-    assert len(root_list) == 1
-    root = root_list[0]
-    if folder_path == 'all':
-        return root
-
-    folder_path = folder_path.split('/')
-    folder = root
-    for s in folder_path:
-        folder = Folder.objects.filter(parent=folder, folder_name=s)
-        if len(folder) == 0:
-            raise Http404("Nie istnieje taka ścieżka")
-        assert len(folder) == 1
-        folder = folder[0]
-    return folder
-
-def get_parent_path(path):
-    if path != 'all' and '/' in path:
-        return path[0:path.rindex('/')]
-    else:
-        return 'all'
-
-def get_son_path(parent, folder_name):
-    if parent == 'all':
-        return folder_name
-    return parent + '/' + folder_name
-
-def get_parent_paths(path):
-    ret_list = []
-    path = path.split('/')
-    prefix = ''
-    for s in path:
-        if prefix != '':
-            prefix += '/'
-        prefix += s
-        f = get_folder(prefix)
-        ret_list.append((prefix, f.pretty_name))
-    return ret_list
+from users.permissions import FolderAccess, StaffOnly
+from users.permissions import has_access_to_folder, recalculate_indirect_folder_tags  
 
 def get_context(path):
     path = fix_path(path)
     folder = get_folder(path)
-    tag_data = []
     group_type = tag_types.index("Grupa")
-    for tag in Tag.objects.filter(type_id=group_type).order_by('type_id', 'id'):
-        tag_data.append((tag, folder.tag_set.filter(pk=tag.pk).exists()))
+    all_tags = folder.indirect_tag_set.all()
+    selected_tags = []
+    for tag in all_tags:
+        if folder.direct_tag_set.filter(pk=tag.pk).exists():
+            selected_tags.append(tag)
     problems = []
     for fp in ProblemPlace.objects.filter(folder=folder).order_by('place').all():
         problems.append(fp.problem)
@@ -94,13 +34,12 @@ def get_context(path):
         'parent_path': get_parent_path(path),
         'parent_paths': get_parent_paths(path),
         'problems': problems,
-        'tag_data': tag_data,
+        'all_tags': all_tags,
+        'selected_tags': selected_tags,
     }
 
-class IndexView(generic.View):
+class IndexView(FolderAccess, View):
     def get(self, request, folder_path):
-        if not has_access_to_folder(request.user, get_folder(folder_path)):
-            return redirect(url_403)
         context = get_context(folder_path)
         if not request.user.is_staff:
             context['sons'] = []
@@ -111,16 +50,14 @@ class IndexView(generic.View):
         for fp in ProblemPlace.objects.filter(folder=context['folder']).order_by('place').all():
             problem = fp.problem
             context['problems'].append(
-                    (problem, problem.claiming_user_set.filter(id=request.user.id).exists()))
+                    (problem, has_solved_task(problem, request.user)))
         return render(request, 'folder/index.html', context)
 
-@method_decorator(staff_only, name='dispatch')
-class EditView(generic.View):
+class EditView(StaffOnly, View):
     def get(self, request, folder_path):
         return render(request, 'folder/edit.html', get_context(folder_path))
 
-@method_decorator(staff_only, name='dispatch')
-class AddFolder(generic.View):
+class AddFolder(StaffOnly, View):
     def post(self, request, folder_path):
         folder = get_folder(folder_path)
         pretty_name = request.POST['pretty_name']
@@ -130,22 +67,13 @@ class AddFolder(generic.View):
             return redirect('folder:edit', folder_path)
 
         if not Folder.objects.filter(parent=folder, folder_name=folder_name):
-            son = Folder(
-                parent=folder,
-                pretty_name=pretty_name,
-                folder_name=folder_name,
-                created_by=request.user,
-                show_solution=folder.show_solution,
-                show_stats=folder.show_stats,
-            )
-            son.save()
+            add_folder(folder, pretty_name, request.user)
             messages.success(request, 'Dodano folder!')
         else:
             messages.error(request, 'Taki folder już istnieje.')
         return redirect('folder:edit', folder_path)
 
-@method_decorator(staff_only, name='dispatch')
-class EditFolderName(generic.View):
+class EditFolderName(StaffOnly, View):
     def post(self, request, folder_path):
         f = get_folder(folder_path)
         pretty_name = request.POST['pretty_name']
@@ -160,15 +88,12 @@ class EditFolderName(generic.View):
             messages.error(request, 'Taki folder już istnieje.')
             return redirect('folder:edit', folder_path)
 
-        f.folder_name = folder_name
-        f.pretty_name = pretty_name
-        f.save()
+        rename_folder(f, pretty_name)
         messages.success(request, 'Zmieniono nazwę!')
         new_path = get_son_path(get_parent_path(folder_path), folder_name)
         return redirect('folder:edit', new_path)
 
-@method_decorator(staff_only, name='dispatch')
-class DeleteFolder(generic.View):
+class DeleteFolder(StaffOnly, View):
     def post(self, request, folder_path):
         f = get_folder(folder_path)
         pretty_name = request.POST['pretty_name']
@@ -182,8 +107,7 @@ class DeleteFolder(generic.View):
         messages.success(request, 'Usunięto!')
         return redirect('folder:edit', folder_path)
 
-@method_decorator(staff_only, name='dispatch')
-class AddProblem(generic.View):
+class AddProblem(StaffOnly, View):
     def post(self, request, folder_path):
         f = get_folder(folder_path)
         p_id = request.POST['p_id']
@@ -208,8 +132,7 @@ class AddProblem(generic.View):
         messages.success(request, 'Dodano zadanie!')
         return redirect('folder:edit', folder_path)
 
-@method_decorator(staff_only, name='dispatch')
-class DeleteProblem(generic.View):
+class DeleteProblem(StaffOnly, View):
     def post(self, request, folder_path):
         f = get_folder(folder_path)
         p_id = request.POST['p_id']
@@ -218,20 +141,19 @@ class DeleteProblem(generic.View):
         messages.success(request, 'Usunięto zadanie!')
         return redirect('folder:edit', folder_path)
 
-@method_decorator(staff_only, name='dispatch')
-class EditTags(generic.View):
+class EditTags(StaffOnly, View):
     def post(self, request, folder_path):
         f = get_folder(folder_path)
         tags = request.POST.getlist('tags[]')
-        f.tag_set.clear()
-        for tag_id in tags:
-            f.tag_set.add(Tag.objects.get(id=tag_id))
-        f.save()
+        tags = [Tag.objects.get(id=id) for id in tags]
+        f.direct_tag_set.clear()
+        for tag in tags:
+            f.direct_tag_set.add(tag)
+        recalculate_indirect_folder_tags()
         messages.success(request, 'Zmieniono tagi!')
         return redirect('folder:edit', folder_path)
 
-@method_decorator(staff_only, name='dispatch')
-class MoveProblemUp(generic.View):
+class MoveProblemUp(StaffOnly, View):
     def post(self, request, folder_path):
         f = get_folder(folder_path)
         p_id = request.POST['p_id']
@@ -244,11 +166,9 @@ class MoveProblemUp(generic.View):
         messages.success(request, 'Przesunięto zadanie!')
         return redirect('folder:edit', folder_path)
 
-@method_decorator(staff_only, name='dispatch')
-class Ranking(generic.View):
-    problem_list = []
-
-    def dfs(self, prefix, f):
+class Ranking(FolderAccess, View):
+    # problem_list = list of (path, problems_in_this_folder) 
+    def dfs(self, prefix, f, problem_list):
         if f.parent == None:
             prefix = '~'
         elif prefix:
@@ -259,70 +179,73 @@ class Ranking(generic.View):
         for fp in ProblemPlace.objects.filter(folder=f).order_by('place').all():
             problems.append(fp.problem)
         if len(problems) != 0:
-            self.problem_list.append((prefix, problems))
+            problem_list.append((prefix, problems))
         for son in Folder.objects.filter(parent=f).all():
-            self.dfs(prefix, son)
+            if has_access_to_folder(self.request.user, son):
+                self.dfs(prefix, son, problem_list)
 
     def get(self, request, folder_path):
+        # generate problem_list
         f = get_folder(folder_path)
-        self.problem_list = []
-        self.dfs('', f)
+        problem_list = []
+        self.dfs('', f, problem_list)
+
+        # take all users claiming at least one task from problem_list
         userlist = set()
-        for prefix, problems in self.problem_list:
+        for prefix, problems in problem_list:
             for problem in problems:
-                for user in problem.claiming_user_set.all():
+                for solutionscore in SolutionScore.objects.filter(problem=problem).all():
+                    user = solutionscore.user
                     if user not in userlist:
                         userlist.add(user)
+                            
+        # retrieve tags from request
         tags = []
         if 'tags[]' in request.GET:
-            tags = request.GET.getlist('tags[]')
+            tags = [Tag.objects.get(id=id) for id in tags]
+        else:
+            tags = f.indirect_tag_set.all()
+
+        # if request.user has chosen tags, restrict userlist to those users
         if tags:
             new_userlist = []
             for user in userlist:
-                found = False
                 for tag in tags:
-                    if user.tag_set.filter(id=tag).exists():
-                        found = True
+                    if user.tag_set.filter(id=tag.id).exists():
+                        new_userlist.append(user)
                         break
-                if found:
-                    new_userlist.append(user)
             userlist = new_userlist
 
+        # generate context table 
+        # table = list of (user, score, [SolutionScore of problems[i] or None if not submited]
         table = []
         for user in userlist:
-            did = []
-            sum = 0
-            for prefix, problems in self.problem_list:
+            ss_list = []
+            score_sum = 0
+            for prefix, problems in problem_list:
+                ss_inner_list = []
                 for problem in problems:
-                    did.append((
-                        bool(problem.claiming_user_set.filter(id=user.id).exists()),
-                        bool(problem == problems[0]),
-                    ))
-                    if did[-1][0]:
-                        sum += 1
-
-            row = [(-sum, False), (user.last_name, False), (user.first_name, False)]
-            row += did
+                    ss = None
+                    if SolutionScore.objects.filter(problem=problem, user=user).exists():
+                        ss = SolutionScore.objects.get(problem=problem, user=user)
+                    ss_inner_list.append(ss)
+                    if ss != None:
+                        score_sum += ss.get_score()
+                ss_list.append(ss_inner_list)
+            row = [-score_sum, user, ss_list]
             table.append(row)
         table.sort()
         for row in table:
-            name = row[2][0] + ' ' + row[1][0]
-            row[2] = (-row[0][0], False)
-            row.pop(0)
-            row[0] = (name, False)
+            row[0] *= -1
+            row[0], row[1] = row[1], row[0]
 
         context = get_context(folder_path)
-        context['problem_list'] = self.problem_list
+        context['problem_list'] = problem_list
         context['table'] = table
-        for i in range(len(context['tag_data'])):
-            tag_id = context['tag_data'][i][0].id
-            inside = bool(str(tag_id) in tags)
-            context['tag_data'][i] = (context['tag_data'][i][0], inside)
-        print(context['tag_data'])
+        context['selected_tags'] = tags
         return render(request, 'folder/ranking.html', context)
 
-@method_decorator(staff_only, name='dispatch')
-class ShowSolution(generic.View):
+class ShowSolution(StaffOnly, View):
     def post(self, request, folder_path):
         f = get_folder(folder_path)
         f.show_solution ^= 1
@@ -331,8 +254,7 @@ class ShowSolution(generic.View):
                 ('Włączono' if f.show_solution else 'Wyłączono') + ' rozwiązania/hinty/odpowiedzi!')
         return redirect('folder:edit', folder_path)
 
-@method_decorator(staff_only, name='dispatch')
-class ShowStats(generic.View):
+class ShowStats(StaffOnly, View):
     def post(self, request, folder_path):
         f = get_folder(folder_path)
         f.show_stats ^= 1
@@ -340,3 +262,4 @@ class ShowStats(generic.View):
         messages.success(request,
                 ('Włączono' if f.show_stats else 'Wyłączono') + ' statystyki!')
         return redirect('folder:edit', folder_path)
+

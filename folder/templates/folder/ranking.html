@@ -1,31 +1,12 @@
-{% extends "base.html" %}
-{% block title %}{% if folder.pretty_name != "/" %}{{ folder.pretty_name }}{% else %}Contesty{% endif %} - ranking{% endblock %}
-{% block content %}
-
-<div class="path-cloud">
+{% extends "folder/base.html" %}
+{% block subtitle %}Ranking{% endblock %}
+{% block path-buttons %}
 	<button id="ranking_button" class="mdl-button mdl-js-button mdl-button--icon right-action-button mdl-button--colored" onclick="location.href='{% url 'folder:index' folder_path %}'" type="button">
 		<i class="material-icons right-action-button">list</i>
 	</button>
 	<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="ranking_button">Wyjdź z rankingu</div>
-
-	<div class="center-vert">
-		<a id="first_page" class="center-vert" href="{% url 'folder:index' 'all' %}">
-			<i class="material-icons center-vert">first_page</i>
-		</a>
-		<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="first_page">Strona główna</div>
-		{% for p in parent_paths %}
-		{% if p.0 != 'all' %}
-		<p>/</p> <a href="{% url 'folder:index' p.0 %}">{{ p.1 }}</a>
-		{% endif %}
-		{% endfor %}
-		{% ifnotequal folder_path 'all' %}
-		<a id="back_button" class="center-vert" href="{% url 'folder:index' parent_path %}">
-			<i class="material-icons center-vert">chevron_left</i>
-		</a>
-		<div class="mdl-tooltip mdl-tooltip--top" data-mdl-for="back_button">Cofnij</div>
-		{% endifnotequal %}
-	</div>
-</div>
+{% endblock %}
+{% block subcontent %}
 
 <div class="cloud">
 	<form action="{% url 'folder:ranking' folder_path %}" method="get" id="tags_form">
@@ -35,56 +16,26 @@
 	</form>
 </div>
 
-<select form="tags_form" id="select-tags" name="tags[]" multiple placeholder="Dodaj tagi">
-</select>
-
-<script>
-$(function() {
-	var $select = $('#select-tags').selectize({
-		plugins: ['remove_button'],
-		persist: false,
-		options: [
-			{% for tag, selected in tag_data %}
-				{id: {{ tag.id }}, value: '{{ tag.id }}', text: '{{ tag.name }}', category: '{{ tag.type_id }}'},
-			{% endfor %}
-		],
-		render: {
-			item: function(data, escape) {
-				return '<span class="mdl-chip mdl-chip--deletable">' +
-							'<span class="category-chip category-color-' + escape(data.category) + '"></span>' +
-							'<span class="mdl-chip__text">' + escape(data.text) + '</span>' +
-						'</span>';
-			}
-		}
-	});
-
-	var selectize = $select[0].selectize;
-	{% for tag, selected in tag_data %}
-		{% if selected %}
-			selectize.addItem({{ tag.id }})
-		{% endif %}
-	{% endfor %}
-
-});
-</script>
+{% load select_tags %}
+{% select_tags "tags_form" %}
 
 <div style="overflow-x:auto;">
 	<table class="mdl-data-table mdl-js-data-table">
 	<thead>
 		<tr>
 			<th></th>
-			<th></th>
+			<th class="border-right"></th>
 			{% for prefix, p in problem_list %}
-			<th class="mdl-data-table__cell--non-numeric border-left"
+			<th class="mdl-data-table__cell--non-numeric border-right"
 				colspan={{ p|length }}>{{ prefix }}</td>
 			{% endfor %}
 		</tr>
 		<tr>
 			<th>Imię i nazwisko</th>
-			<th class="small-table-item">Σ</th>
+			<th class="small-table-item border-right">Σ</th>
 			{% for prefix, pl in problem_list %}
 			{% for p in pl %}
-			<th class="small-table-item {% ifequal forloop.counter0 0 %}border-left{% endifequal %}">
+			<th class="small-table-item {% if forloop.last %}border-right{% endif %}">
 				{{ forloop.counter }}
 			</th>
 			{% endfor %}
@@ -94,18 +45,26 @@ $(function() {
 	<tbody>
 		{% for row in table %}
 		<tr>
-			{% for val, add_border_left in row %}
-			<th class="small-table-item {% if add_border_left %}border-left{% endif %}">
-				{% if forloop.counter0 <= 1 %}
-				{{ val }}
-				{% else %}
-				{% ifequal val True %}
-				<i class="material-icons green-text">done</i>
-				{% else %}
-				<i class="material-icons red-text">clear</i>
-				{% endifequal %}
-				{% endif %}
-			</th>
+			<th class="small-table-item">{{ row.0.first_name }} {{ row.0.last_name }}</th>
+			<th class="small-table-item border-right">{{ row.1 }}</th>
+			{% for ss_list in row.2 %}
+				{% for ss in ss_list %}
+				<th class="small-table-item {% if forloop.last %}border-right{% endif %}">
+					{% if ss.assigned_score != -1 %}
+						{% if ss.assigned_score != 0 and ss.assigned_score != 2 %}
+							<span class="green-text">{{ ss.assigned_score }}</span>
+						{% else %}
+							<span class="red-text">{{ ss.assigned_score }}</span>
+						{% endif %}
+					{% else %}
+						{% if ss.claiming %}
+							<i class="material-icons green-text">done</i>
+						{% else %}
+							<i class="material-icons red-text">clear</i>
+						{% endif %}
+					{% endif %}
+				</th>
+				{% endfor %}
 			{% endfor %}
 		</tr>
 		{% endfor %}

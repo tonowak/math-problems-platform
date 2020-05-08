@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% load forms %}
+{% load redirect_button %}
+{% load select_tags %}
 {% block title %}Edytuj zadanie{% endblock %}
 {% block content %}
 
@@ -9,15 +12,12 @@
 	{% csrf_token %}
 	</form>
 
-	<button form="problem_form" type="submit" form="problem_form" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-		Zapisz zmiany
-	</button>
-
-	<a href="{% url 'problems:details' problem.id %}" class="mdl-button mdl-js-button mdl-button--raised">Powrót</a>
+	{% submit_button "Zapisz zmiany" "problem_form" %}
+	{% url 'problems:details' problem.id as details_url %}
+	{% redirect_button details_url "Powrót" %}
 </div>
 
-<select form="problem_form" id="select-tags" name="tags[]" multiple placeholder="Dodaj tagi">
-</select>
+{% select_tags "problem_form" %}
 
 <div class="cloud">
 	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -28,53 +28,37 @@
 
 <div class="cloud">
 	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="hints" id="text_statement">{{ problem.hints }}</textarea>
-		<label class="mdl-textfield__label" for="text_statement">Hinty</label>
+		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="hints" id="text_hints">{{ problem.hints }}</textarea>
+		<label class="mdl-textfield__label" for="text_hints">Wskazówki</label>
 	</div>
 </div>
 
 <div class="cloud">
 	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="answer" id="text_statement">{{ problem.answer }}</textarea>
-		<label class="mdl-textfield__label" for="text_statement">Odpowiedź</label>
+		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="answer" id="text_answer">{{ problem.answer }}</textarea>
+		<label class="mdl-textfield__label" for="text_answer">Odpowiedź</label>
 	</div>
 </div>
 
 <div class="cloud">
 	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "5" name="solution" id="text_statement">{{ problem.solution }}</textarea>
-		<label class="mdl-textfield__label" for="text_statement">Rozwiązanie</label>
+		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "5" name="solution" id="text_solution">{{ problem.solution }}</textarea>
+		<label class="mdl-textfield__label" for="text_solution">Rozwiązanie</label>
 	</div>
 </div>
 
-<script>
-$(function() {
-	var $select = $('#select-tags').selectize({
-		plugins: ['remove_button'],
-		persist: false,
-		options: [
-			{% for tag, selected in tag_data %}
-				{id: {{ tag.id }}, value: '{{ tag.id }}', text: '{{ tag.name }}', category: '{{ tag.type_id }}'},
-			{% endfor %}
-		],
-		render: {
-			item: function(data, escape) {
-				return '<span class="mdl-chip mdl-chip--deletable">' +
-							'<span class="category-chip category-color-' + escape(data.category) + '"></span>' +
-							'<span class="mdl-chip__text">' + escape(data.text) + '</span>' +
-						'</span>';
-			}
-		}
-	});
+<div class="cloud">
+	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "2" name="solution_comment" id="text_solution_comment">{{ problem.solution_comment }}</textarea>
+		<label class="mdl-textfield__label" for="text_solution_comment">Komentarz do rozwiązania</label>
+	</div>
+</div>
 
-	var selectize = $select[0].selectize;
-	{% for tag, selected in tag_data %}
-		{% if selected %}
-			selectize.addItem({{ tag.id }})
-		{% endif %}
-	{% endfor %}
-
-});
-</script>
+<div class="cloud">
+	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="staff_comment" id="text_staff_comment">{{ problem.staff_comment }}</textarea>
+		<label class="mdl-textfield__label" for="text_staff_comment">Komentarz do nauczycieli</label>
+	</div>
+</div>
 
 {% endblock %}
