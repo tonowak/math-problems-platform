@@ -44,7 +44,7 @@ class IndexView(StaffOnly, View):
         for problem in problems:
             problems_data.append((problem, problem.tag_set.order_by('type_id', 'id').filter(attachable=True)))
         context['found_cnt'] = len(problems_data)
-        upper_bound = 200
+        upper_bound = 100
         if not show_all and len(problems_data) > upper_bound:
             problems_data = problems_data[:upper_bound]
         context['showed_cnt'] = len(problems_data)
