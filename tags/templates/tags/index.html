@@ -35,7 +35,7 @@
 			{% endif %}
 		</li>
 
-		{% if not forloop.last %}
+		{% if not forloop.parentloop.last %}
 		<li id="edit{{ tag.id }}" class="mdl-list__item" style="display: none;">
 			<form onSubmit="this.action='{% url 'tags:edit' tag.id %}' + location.hash" action="{% url 'tags:edit' tag.id %}" method="post" id="tag_form" style="width: 100%;">
 			{% csrf_token %}
