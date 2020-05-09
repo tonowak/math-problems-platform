@@ -26,6 +26,13 @@
 		{% for image in images %}
 			{% preview_image image %}
 		{% endfor %}
+		{% if forloop.first %}
+			{% for number in thread.get_answer_checker_list %}
+				{% load answer_element %}
+				{% answer_element number.0 number.1 number.2 number.3 %}
+				{% if not forloop.last %},{% endif %}
+			{% endfor %}
+		{% endif %}
 	</div>
 
 	<p>

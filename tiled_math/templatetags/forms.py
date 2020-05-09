@@ -12,10 +12,11 @@ def submit_button(title, form_id=''):
     }
 
 @register.inclusion_tag('textarea.html')
-def textarea(title, rows, form_id, name):
+def textarea(title, rows, form_id, name, value=''):
     return {
         'title': title,
         'rows': rows,
         'form_id': form_id,
         'name': name,
+        'value': value,
     }

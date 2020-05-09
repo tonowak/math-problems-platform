@@ -15,6 +15,10 @@
 
 
 <div class="cloud">
+	<p>Do tego zadania włączone jest automatyczne sprawdzanie odpowiedzi. Można podać zbiór liczb postaci $\frac{a + b \sqrt{c}}{d}$ dla $a, b, c, d$ będącymi liczbami całkowitymi. Jeżeli odpowiedź jest zbiorem, na przykład $[a, b] \cup (c, d) \cup [e, f) \setminus {g}$, podaj jedynie liczby $a, b, c, d, e, f, g$. Jeżeli to możliwe, umieść również zdjęcie rozwiązania.</p>
+
+	{% include "problems/answer_checker.html" %}
+
 	<p>Tutaj możesz zadać pytanie lub podać rozwiązanie do zadania. Dla zaawansowanych: w opisie można używać latexa i markdown.</p>
 	{% url 'submissions:details' as form_url %}
 	{% include "files/form_files.html" with form_url=form_url %}

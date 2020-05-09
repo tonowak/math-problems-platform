@@ -1,7 +1,7 @@
 {% load forms %}
 {% load widget_tweaks %}
 
-<form enctype="multipart/form-data" action="{{ form_url }}" method="post">
+<form enctype="multipart/form-data" action="{{ form_url }}" method="post" id="form">
 	{% csrf_token %}
 
 	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" 

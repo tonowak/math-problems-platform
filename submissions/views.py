@@ -8,7 +8,7 @@ from files.forms import SubmitFilesTextForm
 from files.models import save_image
 from folder.models import Folder, ProblemPlace, get_folder
 from folder.views import get_context
-from problems.models import Problem
+from problems.models import Problem, has_solved_task, reformat_string_number_list, get_solutionscore
 from tiled_math.views import ArgSuccessUrlMixin
 
 class FileFormView(FormView):
@@ -65,7 +65,6 @@ class SubmitFromFolderView(ArgSuccessUrlMixin, FolderAccess, FileFormView):
         context.update(get_context(folder_path))
         user = self.request.user
         context['threads'] = convert_threads_to_lists(self.get_threads(user, folder), user)
-        print(context['threads'])
         return context
 
     def form_valid(self, form, files):
@@ -101,7 +100,7 @@ class SubmitFromProblemView(ArgSuccessUrlMixin, ProblemAccess, FileFormView):
         user = self.request.user
         context['threads'] = convert_threads_to_lists(self.get_threads(user, problem), user)
         context['problem'] = problem
-        context['solved_task'] = user.problem_set.filter(id=problem.id).exists()
+        context['solved_task'] = has_solved_task(problem, user)
         return context
 
     def form_valid(self, form, files):
@@ -110,12 +109,24 @@ class SubmitFromProblemView(ArgSuccessUrlMixin, ProblemAccess, FileFormView):
         problem = Problem.objects.get(id=self.kwargs.get(self.success_url[1]))
 
         t = Thread(parent_problem=problem, created_by=user, is_public=make_public)
+        if 'answer_checker_enabled' in self.request.POST:
+            t.answer_checker = reformat_string_number_list(self.request.POST['answer_checker_list_string'])
         t.save()
         c = Comment(thread=t, created_by=user, description=form.cleaned_data['description'])
         c.save()
         for f in files:
             a = Attachment(comment=c, image=save_image(f))
             a.save()
+
+        if t.answer_checker:
+            ss = get_solutionscore(problem, user)
+            if t.correct_answer():
+                ss.assigned_score = 1
+                messages.success(self.request, 'Poprawna odpowiedź!')
+            else:
+                ss.assigned_score = 0
+                messages.error(self.request, 'Błędna odpowiedź.')
+            ss.save()
         return super().form_valid(form)
 
 class DetailsView(ArgSuccessUrlMixin, FileFormView):
@@ -129,7 +140,7 @@ class DetailsView(ArgSuccessUrlMixin, FileFormView):
         thread = Thread.objects.get(id=self.kwargs.get(self.success_url[1]))
         context['threads'] = convert_threads_to_lists([thread], user)
         if thread.parent_problem:
-            back_url = reverse('problems:index', kwargs={'pk': thread.parent_problem.id})
+            back_url = reverse('problems:details', kwargs={'pk': thread.parent_problem.id})
         else:
             back_url = reverse('folder:submissions', kwargs={'folder_path': thread.parent_folder.get_path()})
         context['back_url'] = back_url

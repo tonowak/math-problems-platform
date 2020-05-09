@@ -4,6 +4,14 @@
 
 {% for thread, comments, can_comment in threads %}
 <div class="cloud">
+	{% if thread.answer_checker %}
+		Status: {% if thread.correct_answer %}<span class="green-text">OK</span>{% else %}<span class="red-text">Błędna odpowiedź</span>{% endif %}
+	{% endif %}
+	{% if can_comment %}
+	<a class="green-a" href="{% url 'submissions:details' thread.id %}">Dodaj komentarz</a>
+	{% endif %}
+	<hr>
+
 	{% for comment, images in comments %}
 		{% markdown %}{{ comment.description }}{% endmarkdown %}
 
@@ -11,12 +19,18 @@
 			{% for image in images %}
 				{% preview_image image %} 
 			{% endfor %}
+			{% if forloop.first %}
+				{% for number in thread.get_answer_checker_list %}
+					{% load answer_element %}
+					{% answer_element number.0 number.1 number.2 number.3 %}
+					{% if not forloop.last %},{% endif %}
+				{% endfor %}
+			{% endif %}
 		</div>
 
 		<p>
 			{% user_link comment.created_by %} 
 			{{ comment.created_at }} 
-			{% if forloop.last %}<a class="green-a" href="{% url 'submissions:details' thread.id %}">Dodaj komentarz</a>{% endif %}
 		</p>
 
 		{% if not forloop.last %}

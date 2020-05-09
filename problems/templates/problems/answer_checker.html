@@ -1,0 +1,133 @@
+<script>
+	function get_int(s) {
+		return parseInt(document.getElementById('add-' + s).value);
+	}
+
+	function is_divisible_by_square(n) {
+		for (i = 2; i * i <= n; ++i) {
+			if (n % (i * i) == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	function gcd(a, b) {
+		if(a < 0) {
+			a = -a;
+		}
+		if(b < 0) {
+			b = -b;
+		}
+		if(b == 0) {
+			return a;
+		}
+		return gcd(b, a % b);
+	}
+
+	function set_error(s) {
+		txt = document.getElementById('answer-checker-error');
+		txt.innerHTML = '<p class="red-text">' + s + '.</p>';
+	}
+
+	function add_answer() {
+		var a = get_int('a'),
+			b = get_int('b'),
+			c = get_int('c'),
+			d = get_int('d');
+		if (c < 0) {
+			return;
+		}
+		if (is_divisible_by_square(c)) {
+			set_error("Liczba pod pierwiastkiem nie może być podzielna przez kwadrat");
+			return;
+		}
+		if (c == 1) {
+			set_error("Liczba pod pierwiastkiem może być tylko 0 lub liczbą całkowitą większą od 2");
+			return;
+		}
+		if (d <= 0) {
+			set_error("Mianownik musi być niedodatni");
+			return;
+		}
+		if(gcd(gcd(a, b), d) > 1) {
+			set_error("Mianownik i licznik nie mogą posiadać wspólnego dzielnika");
+			return;
+		}
+		if (b == 0) {
+			c = 0
+		}
+		if (c == 0) {
+			b = 0
+		}
+		document.getElementById('answer-checker-error').innerHTML = '';
+
+		list = document.getElementById('id_answer_list_string');
+		if (list.value.length > 0)
+			list.value += ',';
+		list.value += '' + a + ',' + b + ',' + c + ',' + d;
+		// console.log(list.value);
+
+		selected_answers = document.getElementById('answer-list-html');
+		if (selected_answers.innerHTML.length) {
+			selected_answers.innerHTML += ',';
+		}
+		else {
+			selected_answers.innerHTML = "<p>Wpisany zbiór odpowiedzi:</p>"
+		}
+		selected_answers.innerHTML += '<div class="answer-checker">' +
+			'<div class="numerator">' + 
+			'<input type="number" value="' + a + '" disabled>' + '+' +
+			'<input type="number" value="' + b + '" disabled>' + '√' +
+			'<input type="number" value="' + c + '" disabled>' + 
+			'</div><div class="denominator">' +
+			'<input type="number" value="' + d + '" disabled>' + 
+			'</div></div>';
+	}
+	
+	function clear_answers() {
+		document.getElementById('answer-list-html').innerHTML = '';
+		document.getElementById('answer-checker-error').innerHTML = '';
+		document.getElementById('id_answer_list_string').value = '';
+	}
+</script>
+
+<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="answer-checkbox">
+	<input type="checkbox" id="answer-checkbox" class="mdl-checkbox__input" name="answer_checker_enabled" form="form" checked>
+	<span class="mdl-checkbox__label">Skorzystaj z automatycznego sprawdzania odpowiedzi</span>
+</label>
+
+<span id="answer-checker-error"></span>
+
+<div style="display: flex; align-items: center; flex-wrap: wrap;">
+	<div class="answer-checker">
+		<div class="numerator">
+			<input type="number" id="add-a" value="0">
+			+
+			<input type="number" id="add-b" value="1">
+			√
+			<input type="number" id="add-c" value="0">
+		</div>
+		<div class="denominator">
+			<input type="number" id="add-d" value="1">
+		</div>
+	</div>
+
+	<button onclick="add_answer()" class="mdl-button mdl-js-button mdl-button--raised">
+		Dodaj
+	</button>
+
+	<button onclick="clear_answers()" class="mdl-button mdl-js-button mdl-button--raised">
+		Wyczyść
+	</button>
+</div>
+
+{% load answer_element %}
+<div id="answer-list-html">{% if answer_checker %}
+<p>Wpisany zbiór odpowiedzi:</p>
+{% for number in answer_checker %}
+{% answer_element number.0 number.1 number.2 number.3 %}
+{% if not forloop.last %},{% endif %}
+{% endfor %}
+{% endif %}</div>
+<input type="hidden" id="id_answer_list_string" name="answer_checker_list_string" value="{% if answer_checker %}{{ problem.answer_checker }}{% endif %}" form="form">

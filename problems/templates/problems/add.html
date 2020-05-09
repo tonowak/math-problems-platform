@@ -9,21 +9,25 @@
 	<h3>Dodaj zadanie</h3>
 </div>
 
-<form action="{% url 'problems:add' %}" method="post" id="problem_form">
+<form action="{% url 'problems:add' %}" method="post" id="form">
 {% csrf_token %}
 </form>
 
-{% select_tags 'problem_form' %}
+{% select_tags 'form' %}
 
-{% textarea "Treść zadania" 5 "problem_form" "statement" %}
-{% textarea "Wskazówki" 2 "problem_form" "hints" %}
-{% textarea "Odpowiedź" 1 "problem_form" "answer" %}
-{% textarea "Rozwiązanie" 5 "problem_form" "solution" %}
-{% textarea "Komentarz do rozwiązania" 2 "problem_form" "solution_comment" %}
-{% textarea "Komentarz do nauczycieli" 1 "problem_form" "staff_comment" %}
+{% textarea "Treść zadania" 5 "form" "statement" %}
+{% textarea "Wskazówki" 2 "form" "hints" %}
+{% textarea "Odpowiedź" 1 "form" "answer" %}
+{% textarea "Rozwiązanie" 5 "form" "solution" %}
+{% textarea "Komentarz do rozwiązania" 2 "form" "solution_comment" %}
+{% textarea "Komentarz do nauczycieli" 1 "form" "staff_comment" %}
 
 <div class="cloud">
-	{% submit_button "Dodaj zadanie" "problem_form" %}
+	{% include "problems/answer_checker.html" %}
+</div>
+
+<div class="cloud">
+	{% submit_button "Dodaj zadanie" "form" %}
 
 	{% url 'users:back_from_problem' as back_from_problem %}
 	{% redirect_button back_from_problem "Powrót" %}

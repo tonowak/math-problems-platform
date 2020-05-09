@@ -10,7 +10,7 @@
 <div class="cloud">
 	<h3>Zadanie {{ problem.id }}.</h3>
 
-	{% if access_to_stats %}
+	{% if solved_cnt %}
 	<p>Liczba osób, które zrobiły to zadanie: {{ solved_cnt }}</p>
 	{% endif %}
 
@@ -25,27 +25,29 @@
 	{% dialog "Czy na pewno chcesz usunąć zadanie?" delete_url "post" "{}" "USUŃ" "Nie" "show-delete" %}
 	{% endif %}
 
-	{% if access_to_solution and problem.answer %}
+	{% if can_see_sol and problem.answer %}
 	<button id="show-answer" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Odpowiedź</button>
 	{% dialog "Czy na pewno chcesz zobaczyć odpowiedź?" details_url "get" "{'show_answer': 1}" "Tak :(" "Nie" "show-answer" %}
 	{% endif %}
 
-	{% if access_to_solution and problem.hints %}
+	{% if can_see_sol and problem.hints %}
 	<button id="show-hints" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Wskazówki</button>
 	{% dialog "Czy na pewno chcesz zobaczyć wskazówki?" details_url "get" "{'show_hints': 1}" "Tak :(" "Nie" "show-hints" %}
 	{% endif %}
 
-	{% if access_to_solution and problem.solution %}
+	{% if can_see_sol and problem.solution %}
 	<button id="show-solution" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Rozwiązanie</button>
 	{% dialog "Czy na pewno chcesz zobaczyć rozwiązanie?" details_url "get" "{'show_solution': 1}" "Tak :(" "Nie" "show-solution" %}
 	{% endif %}
 
+	{% if not problem.answer_checker %}
 	<form action="{% url 'problems:claim' problem.id %}", method="post", style="display: inline;">
 		{% csrf_token %}
 		<button type="submit" class="mdl-button mdl-js-button mdl-button--raised">
 			{% if solved_task %}Zmień na niezrobione{% else %}Zmień na zrobione{% endif %}
 		</button>
 	</form>
+	{% endif %}
 
 	{% url 'problems:submissions' problem.id as submissions_url %}
 	{% redirect_button submissions_url "Wyślij" %}
@@ -66,39 +68,52 @@
 	{% endif %}
 </div>
 
-{% if access_to_solution %}
-{% if show_answer %}
-<div class="cloud">
-	<h6>Odpowiedź</h6>
-	{% markdown %}{{ problem.answer }}{% endmarkdown %}
-</div>
-{% endif %}
-
-{% if show_hints %}
+{% if hints %}
 <div class="cloud">
 	<h6>Wskazówki</h6>
-	{% markdown %}{{ problem.hints }}{% endmarkdown %}
+	{% markdown %}{{ hints }}{% endmarkdown %}
 </div>
 {% endif %}
 
-{% if show_solution %}
+{% if answer %}
+<div class="cloud">
+	<h6>Odpowiedź</h6>
+	{% markdown %}{{ answer }}{% endmarkdown %}
+</div>
+{% endif %}
+
+{% if solution %}
 <div class="cloud">
 	<h6>Rozwiązanie</h6>
-	{% markdown %}{{ problem.solution }}{% endmarkdown %}
+	{% markdown %}{{ solution }}{% endmarkdown %}
 </div>
+{% endif %}
 
+{% if solution and problem.solution_comment %}
 <div class="cloud">
 	<h6>Komentarz do rozwiązania</h6>
 	{% markdown %}{{ problem.solution_comment }}{% endmarkdown %}
 </div>
 {% endif %}
 
-{% if request.user.is_staff %}
+{% if request.user.is_staff and problem.staff_comment %}
 <div class="cloud">
 	<h6>Komentarz do nauczycieli</h6>
 	{% markdown %}{{ problem.staff_comment }}{% endmarkdown %}
 </div>
 {% endif %}
+
+{% if answer_checker %}
+{% load answer_element %}
+<div class="cloud">
+	<h6>Odpowiedzi do systemu</h6>
+	<div>
+		{% for number in answer_checker %}
+		{% answer_element number.0 number.1 number.2 number.3 %}
+		{% if not forloop.last %},{% endif %}
+		{% endfor %}
+	</div>
+</div>
 {% endif %}
 
 {% endblock %}

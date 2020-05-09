@@ -8,57 +8,26 @@
 <div class="cloud">
 	<h3>Edycja zadania {{ problem.id }}.</h3>
 
-	<form action="{% url 'problems:edit' problem.id %}" method="post" id="problem_form">
+	<form action="{% url 'problems:edit' problem.id %}" method="post" id="form">
 	{% csrf_token %}
 	</form>
 
-	{% submit_button "Zapisz zmiany" "problem_form" %}
+	{% submit_button "Zapisz zmiany" "form" %}
 	{% url 'problems:details' problem.id as details_url %}
 	{% redirect_button details_url "Powrót" %}
 </div>
 
-{% select_tags "problem_form" %}
+{% select_tags "form" %}
+
+{% textarea "Treść zadania" 5 "form" "statement" problem.statement %}
+{% textarea "Wskazówki" 2 "form" "hints" problem.hints %}
+{% textarea "Odpowiedź" 1 "form" "answer" problem.answer %}
+{% textarea "Rozwiązanie" 5 "form" "solution" problem.solution %}
+{% textarea "Komentarz do rozwiązania" 2 "form" "solution_comment" problem.solution_comment%}
+{% textarea "Komentarz do nauczycieli" 1 "form" "staff_comment" problem.staff_comment %}
 
 <div class="cloud">
-	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "5" name="statement" id="text_statement">{{ problem.statement }}</textarea>
-		<label class="mdl-textfield__label" for="text_statement">Treść zadania</label>
-	</div>
-</div>
-
-<div class="cloud">
-	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="hints" id="text_hints">{{ problem.hints }}</textarea>
-		<label class="mdl-textfield__label" for="text_hints">Wskazówki</label>
-	</div>
-</div>
-
-<div class="cloud">
-	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="answer" id="text_answer">{{ problem.answer }}</textarea>
-		<label class="mdl-textfield__label" for="text_answer">Odpowiedź</label>
-	</div>
-</div>
-
-<div class="cloud">
-	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "5" name="solution" id="text_solution">{{ problem.solution }}</textarea>
-		<label class="mdl-textfield__label" for="text_solution">Rozwiązanie</label>
-	</div>
-</div>
-
-<div class="cloud">
-	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "2" name="solution_comment" id="text_solution_comment">{{ problem.solution_comment }}</textarea>
-		<label class="mdl-textfield__label" for="text_solution_comment">Komentarz do rozwiązania</label>
-	</div>
-</div>
-
-<div class="cloud">
-	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		<textarea form="problem_form" class="mdl-textfield__input" type="text" rows= "1" name="staff_comment" id="text_staff_comment">{{ problem.staff_comment }}</textarea>
-		<label class="mdl-textfield__label" for="text_staff_comment">Komentarz do nauczycieli</label>
-	</div>
+	{% include "problems/answer_checker.html" %}
 </div>
 
 {% endblock %}

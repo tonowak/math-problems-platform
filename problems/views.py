@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 
-from .models import Problem, has_solved_task, get_solutionscore
+from .models import Problem, has_solved_task, get_solutionscore, convert_string_to_number_list, reformat_string_number_list
 from tags.models import Tag
 from users.permissions import StaffOnly, ProblemAccess
 from users.permissions import has_access_to_solution, has_access_to_stats
@@ -66,6 +66,8 @@ class AddView(StaffOnly, View):
             solution_comment = request.POST['solution_comment'],
             created_by = request.user,
         )
+        if 'answer_checker_enabled' in request.POST:
+            problem.answer_checker = reformat_string_number_list(request.POST['answer_checker_list_string'])
         problem.save()
         process_tags(problem, request.POST.getlist('tags[]')).save()
         messages.success(request, "Dodano zadanie!")
@@ -79,21 +81,33 @@ class DetailsView(ProblemAccess, View):
             ret = request.user.is_staff or s in request.GET
             return ret
 
-        return render(request, 'problems/details.html', {
+        can_see_sol = has_access_to_solution(request.user, problem)
+        context = {
             'problem': problem,
-            'tags': problem.tag_set.order_by('type_id', 'id').filter(attachable=True),
-            'show_hints': inside_get('show_hints') or inside_get('show_solution'),
-            'show_answer': inside_get('show_answer') or inside_get('show_solution'),
-            'show_solution': inside_get('show_solution'),
-            'access_to_solution': has_access_to_solution(request.user, problem),
-            'access_to_stats': has_access_to_stats(request.user, problem),
+            'statement': problem.statement,
             'solved_task': has_solved_task(problem, request.user),
-            'solved_cnt': 'TODO',
-        })
+            'can_see_solution': can_see_sol,
+        }
+        if can_see_sol and inside_get('show_hints'):
+            context['hints'] = problem.hints
+        if can_see_sol and inside_get('show_answer'):
+            context['answer'] = problem.answer
+            context['answer_checker'] = convert_string_to_number_list(problem.answer_checker)
+        if can_see_sol and inside_get('show_solution'):
+            context['solution'] = problem.solution
+        if request.user.is_staff:
+            context['tags'] = problem.tag_set.order_by('type_id', 'id').filter(attachable=True)
+        if has_access_to_stats(request.user, problem):
+            context['solved_cnt'] = 'TODO'
+
+        return render(request, 'problems/details.html', context)
 
 class ClaimView(ProblemAccess, View):
     def post(self, request, pk):
         problem = get_object_or_404(Problem, pk=pk)
+
+        if problem.has_answer_checker():
+            return redirect('problems:submissions', pk)
 
         ss = get_solutionscore(problem=problem, user=request.user)
         ss.claiming = not ss.claiming
@@ -116,6 +130,7 @@ class EditView(StaffOnly, View):
             'problem': problem,
             'all_tags': attachable_tags(),
             'selected_tags': selected_tags,
+            'answer_checker': convert_string_to_number_list(problem.answer_checker),
         })
 
     def post(self, request, pk):
@@ -128,9 +143,13 @@ class EditView(StaffOnly, View):
         problem.solution_comment = request.POST['solution_comment']
         tags = request.POST.getlist('tags[]')
         problem = process_tags(problem, request.POST.getlist('tags[]'))
+        if 'answer_checker_enabled' in request.POST:
+            problem.answer_checker = reformat_string_number_list(request.POST['answer_checker_list_string'])
+        else:
+            problem.answer_checker = ''
         problem.save()
         messages.success(request, "Zapisano zmiany!")
-        return HttpResponseRedirect(reverse('problems:edit', args=[pk]))
+        return redirect('problems:edit', pk)
 
 class DeleteView(StaffOnly, View):
     def post(self, request, pk):
