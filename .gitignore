@@ -1,8 +1,10 @@
-# ViM Project stuff
+# TiM Project stuff
 .env
 .env.asc
 sfiles/
 media
+.backup
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

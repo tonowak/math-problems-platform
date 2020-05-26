@@ -232,12 +232,9 @@ class Ranking(FolderAccess, View):
                     if ss != None:
                         score_sum += ss.get_score()
                 ss_list.append(ss_inner_list)
-            row = [-score_sum, user, ss_list]
+            row = [user, score_sum, ss_list]
             table.append(row)
-        table.sort()
-        for row in table:
-            row[0] *= -1
-            row[0], row[1] = row[1], row[0]
+        table.sort(key=lambda row: (-row[1], row[0].username))
 
         context = get_context(folder_path)
         context['problem_list'] = problem_list
